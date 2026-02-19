@@ -1,0 +1,29 @@
+{
+  "lisVal": {
+    "home": {
+      "title": "Lista Valori",
+      "titleSearchToolbar": "Lista Valori",
+      "labelSearchString": "Trova Lista Valori"
+    },
+    "detail": {
+      "title": "Gestione Lista Valori",
+      "titleModify": "Dettaglio lista valori",
+      "titleNew": "Nuova lista valori"
+    },
+    "descrizione": "Descrizione",
+    "tipoLista": "Tipo Lista",
+    "desnil": "Descrizione",
+    "desnilForm": "Descrizione*",
+    "municipio": "Municipio",
+    "num_progetti": "Num.progetti",
+    "resources": "Risorse del fondo",
+    "csvFileName": "Lista Valori",
+    "code": {
+      "AVAFASINT": "Fase intervento",
+      "AVACRI": "Livello criticità",
+      "AVATIPAPP": "Tipo appalto",
+      "AVASTAANT": "Stato anticipazione",
+      "TIPOLFAS": "Tipologia di fase"
+    }
+  }
+}

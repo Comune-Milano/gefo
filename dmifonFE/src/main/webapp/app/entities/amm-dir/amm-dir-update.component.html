@@ -1,0 +1,103 @@
+<jhi-spinner></jhi-spinner>
+<div class="container-fluid mt-4">
+  <div class="row justify-content-between mb-4">
+    <div class="col d-flex align-items-center">
+      <h5 class="bold" *ngIf="this.id != ''" jhiTranslate="ammDir.detail.titleModify">Dettaglio direzione</h5>
+      <h5 class="bold" *ngIf="this.id == ''" jhiTranslate="ammDir.detail.titleNew">Nuovo direzione</h5>
+    </div>
+  </div>
+  <!--alert modifica / inserimento -->
+  <jhi-alert *ngIf="viewAlert"></jhi-alert>
+  <jhi-alert-error *ngIf="viewError"></jhi-alert-error>
+
+  <!-- Form modifica utente / inserimento nuovo utente-->
+  <form [formGroup]="formDirezione" *ngIf="formDirezione">
+    <div class="d-grid gap-3 d-md-block">
+      <button
+        class="btn btn-primary btn-sml btn-xs btn-me min-wh-25"
+        (click)="submitForm()"
+        *ngIf="modifica ? rolesCheckService.isPresent('/modificaDirezione') : rolesCheckService.isPresent('/inserisciDirezione')"
+        data-bs-target="#myNotification"
+        data-bs-timeout="5000"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-pencil"></use>
+        </svg>
+        <span>{{ stringSalva }}</span>
+      </button>
+      <button
+        class="btn btn-danger btn-sml btn-xs btn-me min-wh-25"
+        *ngIf="this.id != '' && rolesCheckService.isPresent('/cancellaDirezione')"
+        (click)="submitDelete()"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use>
+        </svg>
+        <span jhiTranslate="global.buttons.labelDelete">Cancella</span>
+      </button>
+      <button class="btn btn-primary btn-sml btn-xs btn-me min-wh-25 btnReload" *ngIf="this.id != ''" (click)="reload()">
+        <div class="rotateRefresh d-inline-block">
+          <svg class="icon icon-white ms-1">
+            <use href="content/bootstrap-italia/svg/sprites.svg#it-restore"></use>
+          </svg>
+        </div>
+        <span jhiTranslate="global.buttons.labelReload">Ricarica informazioni</span>
+      </button>
+    </div>
+    <!-- Prima riga con Username, nome e cognome-->
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label-sm" jhiTranslate="ammDir.coddirForm">Codice direzione*</label>
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="!getFormElement('coddir').valid && getFormElement('coddir').touched ? 'is-invalid' : ''"
+            id="coddir"
+            formControlName="coddir"
+            value="coddir"
+            placeholder=" "
+          />
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('coddir').errors?.['required'] && getFormElement('coddir').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('coddir').errors?.['pattern']"
+            jhiTranslate="entity.validation.sanitize"
+            >Ci sono caratteri non validi</small
+          >
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label-sm" jhiTranslate="ammDir.desdirForm">Descrizione direzione*</label>
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="!getFormElement('desdir').valid && getFormElement('desdir').touched ? 'is-invalid' : ''"
+            id="desdir"
+            formControlName="desdir"
+            value="desdir"
+            placeholder=" "
+          />
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('desdir').errors?.['required'] && getFormElement('desdir').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('desdir').errors?.['pattern']"
+            jhiTranslate="entity.validation.sanitize"
+            >Ci sono caratteri non validi</small
+          >
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

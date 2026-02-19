@@ -1,0 +1,22 @@
+{
+  "nil": {
+    "home": {
+      "title": "Nil",
+      "titleSearchToolbar": "Nil",
+      "labelSearchString": "Trova nil"
+    },
+    "detail": {
+      "title": "Nil",
+      "titleModify": "Dettaglio nil",
+      "titleNew": "Nuovo nil"
+    },
+    "codnil": "Codice",
+    "codnilForm": "Codice*",
+    "desnil": "Descrizione",
+    "desnilForm": "Descrizione*",
+    "municipio": "Municipio",
+    "num_progetti": "Num.progetti",
+    "resources": "Risorse del fondo",
+    "csvFileName": "Nil"
+  }
+}

@@ -1,0 +1,63 @@
+.text-danger {
+  color: red !important;
+}
+
+.float-right {
+  float: right;
+}
+
+.red {
+  background-color: #d8042c;
+}
+
+.white {
+  color: white;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.txt-sm {
+  font-size: 0.9em;
+}
+
+.float-left {
+  float: left;
+}
+
+.odd {
+  background-color: white;
+}
+
+.even {
+  background-color: whitesmoke;
+}
+
+.top-spinner {
+  margin-top: 10%;
+}
+
+.importo {
+  text-align: right;
+}
+
+@media (min-width: 1690px) {
+  .min-wh-20 {
+    min-width: 19%;
+    margin-bottom: 10px;
+  }
+  .modal-dialog {
+    width: 75%;
+  }
+}
+
+@media (max-width: 1690px) {
+  .min-wh-20 {
+    min-width: 15%;
+    margin-bottom: 10px;
+  }
+  .modal-dialog {
+    overflow: scroll;
+  }
+}

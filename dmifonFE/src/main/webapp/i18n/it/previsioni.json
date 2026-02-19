@@ -1,0 +1,35 @@
+{
+  "Prev": {
+    "home": {
+      "title": "Previsioni",
+      "titleSearchToolbar": "Previsioni"
+    },
+    "detail": {
+      "title": "Previsione",
+      "titleModify": "Dettaglio previsione",
+      "titleNew": "Nuova previsione"
+    },
+    "idProg": "Progetto",
+    "dtapre": "Data",
+    "dtapreForm": "Data*",
+    "imppre": "Importo",
+    "imppreForm": "Importo*",
+    "notpre": "Note",
+    "id_prog": "Progetto",
+    "id_progForm": "Progetto*",
+    "id_tipfin": "Tipo finanziamento",
+    "id_dir": "Direzione",
+    "dataPreDa": "Da data",
+    "dataPreA": "A data",
+    "select": {
+      "title": "Tipo livello",
+      "default": "Scegli un'opzione",
+      "livuno": "Livello uno",
+      "livdue": "Livello due",
+      "livtre": "Livello tre",
+      "livba": "Livello basso",
+      "livpb": "Livello prec. al basso"
+    },
+    "csvFileName": "Gest_previsioni"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "ammRuoli": {
+    "home": {
+      "title": "Ruoli",
+      "titleSearchToolbar": "Gestione ruoli",
+      "labelSearchString": "Cerca ruolo"
+    },
+    "detail": {
+      "title": "Ruolo",
+      "titleModify": "Dettaglio ruolo",
+      "titleNew": "Nuovo ruolo"
+    },
+    "codruo": "Codice ruolo",
+    "codruoForm": "Codice ruolo*",
+    "desruo": "Descrizione ruolo",
+    "desruoForm": "Descrizione ruolo*",
+    "csvFileName": "Ruoli"
+  }
+}

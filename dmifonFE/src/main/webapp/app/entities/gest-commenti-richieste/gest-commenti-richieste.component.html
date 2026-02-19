@@ -1,0 +1,286 @@
+<h5 class="fw-bold" jhiTranslate="commRic.home.titleSearchToolbar">Gestione commenti / richieste</h5>
+<jhi-alert *ngIf="viewDelete || viewAlert"></jhi-alert>
+<jhi-alert-error *ngIf="viewError"></jhi-alert-error>
+<form [formGroup]="formFilter">
+  <div [ngClass]="innerWidth > 820 ? 'row mb-4 mt-4' : 'mb-4 mt-4'">
+    <!-- Campo ricerca-->
+    <div [ngClass]="innerWidth > 820 ? 'col-3 min-wh-25' : 'w-100 mb-3'">
+      <div class="form-group mx-sm-0 mb-0">
+        <label for="autocomplete" class="visually-hidden">Cerca progetto</label>
+        <input
+          type="text"
+          class="form-control-md"
+          name="searchString"
+          [placeholder]="'commRic.home.labelSearchString' | translate"
+          formControlName="autocomplete"
+          id="autocomplete"
+        />
+        <span class="autocomplete-icon" aria-hidden="true">
+          <svg class="icon icon-sm"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+        </span>
+      </div>
+    </div>
+    <div class="min-wh-25 mt-1" *ngIf="isFetching1">
+      <div class="progress-spinner progress-spinner-double size-sm progress-spinner-active">
+        <div class="progress-spinner-inner"></div>
+        <div class="progress-spinner-inner"></div>
+        <span class="visually-hidden">Caricamento...</span>
+      </div>
+    </div>
+    <div class="col-9 d-flex justify-content-end" [ngClass]="innerWidth > 820 ? 'col-9 d-flex justify-content-end' : 'row w-100 mb-3 mx-2'">
+      <!-- <div class="d-flex d-grid gap-2 d-md-block justify-content-end"> -->
+      <!-- Bottone filtra -->
+      <button
+        class="btn btn-primary btn-sml btn-xs btn-me min-wh-25"
+        [ngClass]="innerWidth < 820 ? 'mb-3' : ''"
+        type="button"
+        data-bs-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <svg class="icon icon-white">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-list"></use>
+        </svg>
+        <span jhiTranslate="global.buttons.labelFilter">Filtra</span> <span *ngIf="countFiltri != 0"> ({{ countFiltri }})</span>
+      </button>
+      <div class="dropdown-menu dismissible w-50" role="menu">
+        <div class="container-fluid">
+          <div class="row justify-content-between mb-2">
+            <div class="col">
+              <h5 class="fw-bold" jhiTranslate="entity.filters.title">Filtra ricerca</h5>
+            </div>
+            <div class="col">
+              <button type="button" class="btn-close float-right" data-bs-dismiss="menu" aria-label="Chiudi avviso"></button>
+            </div>
+          </div>
+          <div class="row" (click)="$event.stopPropagation()">
+            <div class="col-4">
+              <div class="mb-3">
+                <label for="prog" class="form-label-sm" jhiTranslate="commRic.filter.idPro">Progetto</label>
+                <div class="input-group">
+                  <input
+                    id="prog"
+                    type="text"
+                    class="form-control"
+                    [ngbTypeahead]="searchPro"
+                    [resultFormatter]="formatterPro"
+                    [inputFormatter]="formatterPro"
+                    [editable]="false"
+                    formControlName="progetto"
+                  />
+                  <span class="autocomplete-icon" aria-hidden="true">
+                    <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="mb-3">
+                <label for="tipFin" class="form-label-sm" jhiTranslate="commRic.filter.idTipFin">Tipo finanziamento</label>
+                <div class="input-group">
+                  <input
+                    id="tipFin"
+                    type="text"
+                    class="form-control"
+                    [ngbTypeahead]="searchTipFin"
+                    [resultFormatter]="formatterTipFin"
+                    [inputFormatter]="formatterTipFin"
+                    [editable]="false"
+                    formControlName="tipoFinanziamento"
+                  />
+                  <span class="autocomplete-icon" aria-hidden="true">
+                    <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-4 mb-3">
+              <label for="selectTipRic" class="form-label-sm" jhiTranslate="commRic.filter.tipric">Tipo</label>
+              <div class="select-wrapper">
+                <select id="selectTipRic" formControlName="tipo">
+                  <option value="R" [defaultSelected]="true" jhiTranslate="commRic.filter.optionsTipRic.ric">Richiesta</option>
+                  <option value="C" jhiTranslate="commRic.filter.optionsTipRic.com">Commento</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-2" (click)="$event.stopPropagation()">
+            <div class="col-4 mb-3">
+              <label for="staric" class="form-label-sm" jhiTranslate="commRic.filter.staric">Stato</label>
+              <div class="select-wrapper">
+                <select id="staric" formControlName="stato">
+                  <option value="" jhiTranslate="gestProg.select.default">Scegli un'opzione</option>
+                  <option value="INI" jhiTranslate="commRic.filter.optionsStaRic.ini">Richiesta iniziale</option>
+                  <option value="INV" jhiTranslate="commRic.filter.optionsStaRic.inv">Richiesta inviata</option>
+                  <option value="ESE" jhiTranslate="commRic.filter.optionsStaRic.ese">Richiesta eseguita</option>
+                  <option value="ANN" jhiTranslate="commRic.filter.optionsStaRic.ann">Richiesta annullata</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="mb-3">
+                <label for="dir" class="form-label-sm" jhiTranslate="commRic.filter.proRicute">Utente</label>
+                <div class="input-group">
+                  <input
+                    id="dir"
+                    type="text"
+                    class="form-control"
+                    [ngbTypeahead]="searchUte"
+                    [resultFormatter]="formatterUte"
+                    [inputFormatter]="formatterUte"
+                    [editable]="false"
+                    formControlName="utenteAuto"
+                  />
+                  <span class="autocomplete-icon" aria-hidden="true">
+                    <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-4 mb-3">
+              <label for="dir" class="form-label-sm" jhiTranslate="commRic.filter.idRicpad">Commento padre</label>
+              <div class="input-group">
+                <input
+                  id="ric"
+                  type="text"
+                  class="form-control"
+                  [ngbTypeahead]="searchRic"
+                  [resultFormatter]="formatterRic"
+                  [inputFormatter]="formatterRic"
+                  [editable]="false"
+                  formControlName="proRicPadre"
+                />
+                <span class="autocomplete-icon" aria-hidden="true">
+                  <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">
+              <button class="btn btn-danger btn-sml btn-xs btn-me h-100 w-100" type="button" (click)="applicaFiltri()">
+                <span jhiTranslate="entity.filters.apply">Applica</span>
+              </button>
+            </div>
+            <div class="col-4">
+              <button class="btn btn-primary btn-sml btn-xs btn-me h-100 w-100" type="button" (click)="resetFilter()">
+                <span jhiTranslate="entity.filters.remove">Rimuovi</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Bottone Esporta -->
+      <button
+        class="btn btn-primary btn-sml btn-xs btn-me min-wh-25"
+        [ngClass]="innerWidth < 820 ? 'mb-3' : ''"
+        type="button"
+        (click)="exportToCSV()"
+      >
+        <svg class="icon icon-white">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-download"></use>
+        </svg>
+        <span jhiTranslate="global.buttons.labelExport">Esporta dati</span>
+      </button>
+      <!-- Bottone inserimento nuovo-->
+      <button
+        class="btn btn-danger btn-sml btn-xs btn-me min-wh-25"
+        [ngClass]="innerWidth < 820 ? 'mb-3' : ''"
+        type="button"
+        (click)="nuovoCommRic()"
+        *ngIf="rolesCheckService.isPresent('/inserisciRichiesta')"
+      >
+        <svg class="icon icon-white">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-plus"></use>
+        </svg>
+        <span jhiTranslate="global.buttons.labelNew">Inserisci nuovo</span>
+      </button>
+    </div>
+  </div>
+
+  <!--<div class="table-responsive">   -->
+  <!-- <span class="fw-bold" *ngIf="service.loading$ | async" jhiTranslate="global.waitLoad">Attendere...</span> -->
+  <!-- Tabella ruoli -->
+  <div class="alert alert-warning" role="alert" *ngIf="warningMessage != '' && !isFetching">
+    {{ warningMessage }}
+  </div>
+  <jhi-search-spinner *ngIf="isFetching"></jhi-search-spinner>
+
+  <table class="table table-borderless table-responsive" *ngIf="!isFetching">
+    <thead>
+      <tr>
+        <th scope="col" sortable="prog" (sort)="onSort($event)" class="col-2">
+          <span jhiTranslate="commRic.idPro">Progetto</span>
+        </th>
+        <th scope="col" sortable="tipric" (sort)="onSort($event)" class="col-1">
+          <span [jhiTranslate]="formFilter.get('tipric')?.value === 'R' ? 'commRic.tipRicR' : 'commRic.tipRicC'">Tipo richiesta</span>
+        </th>
+        <th scope="col" sortable="desric" (sort)="onSort($event)" class="col-1">
+          <span jhiTranslate="commRic.desric">Descrizione</span>
+        </th>
+        <th scope="col" sortable="username" (sort)="onSort($event)" class="col-1">
+          <span jhiTranslate="commRic.user">Utente</span>
+        </th>
+        <th scope="col" sortable="staric" (sort)="onSort($event)" class="col-1">
+          <span jhiTranslate="commRic.staric">Stato della richiesta</span>
+        </th>
+        <th scope="col" sortable="dtasca" (sort)="onSort($event)" class="col-1">
+          <span jhiTranslate="commRic.dtasca">Data scadenza richiesta</span>
+        </th>
+        <th scope="col" sortable="risric" (sort)="onSort($event)" class="col-1">
+          <span jhiTranslate="commRic.risric">Risposta alla richiesta </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody *ngIf="richieste != null">
+      <tr
+        *ngFor="let ric of richieste | paginate: config; index as i"
+        [ngClass]="i % 2 == 0 ? 'even border-smoke border-left' : 'odd border-white border-left'"
+        (click)="apriDettaglio(ric.proRic.id)"
+      >
+        <td>{{ ric.proRic.proProByIdPro.codpro + ' - ' + ric.proRic.proProByIdPro.despro || '-' }}</td>
+        <td>{{ ric.proRic.tipric === 'R' ? 'Richiesta' : 'Commento' || '-' }}</td>
+        <td>{{ ric.proRic.desric || '-' }}</td>
+        <td>{{ ric.username || '-' }}</td>
+        <td>{{ getStaRicValue(ric.proRic.staric) || '-' }}</td>
+        <td>{{ ric.proRic.dtasca || '-' | date: 'MM/dd/yyyy' }}</td>
+        <td>{{ ric.proRic.risric || '-' }}</td>
+      </tr>
+      <tr>
+        <td *ngIf="richieste.length == 0" class="bold border-white" colspan="6" style="color: gray" jhiTranslate="noRes">
+          Nessun risultato trovato
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="richieste != null">
+    <nav class="pagination-wrapper justify-content-center" aria-label="Navigazione centrata">
+      <!-- <pagination-controls class="my-pagination" [maxSize]="9" previousLabel="" nextLabel="" (pageChange)="pageChanged($event)"></pagination-controls> -->
+      <pagination-template #p="paginationApi" (pageChange)="config.currentPage = $event" [maxSize]="9">
+        <ul class="pagination custom-pagination">
+          <li class="page-item" [class.disabled]="p.isFirstPage()">
+            <a class="page-link" (click)="p.previous()" tabindex="-1" aria-hidden="true">
+              <svg class="icon icon-primary"><use href="content/bootstrap-italia/svg/sprites.svg#it-chevron-left"></use></svg>
+              <span class="visually-hidden" jhiTranslate="page.previous">Pagina precedente</span>
+            </a>
+          </li>
+          <li *ngFor="let page of p.pages" [class.current]="p.getCurrent() === page.value" class="page-item">
+            <a (click)="p.setCurrent(page.value)" *ngIf="p.getCurrent() !== page.value" class="page-link">
+              <span>{{ page.label }}</span>
+            </a>
+            <a (click)="p.setCurrent(page.value)" *ngIf="p.getCurrent() === page.value" class="page-link" aria-current="page">
+              <span class="d-inline-block d-sm-none">Pagina </span>{{ page.label }}
+            </a>
+          </li>
+          <li class="page-item pagination-next" [class.disabled]="p.isLastPage()">
+            <a class="page-link" (click)="p.next()" tabindex="-1" aria-hidden="true">
+              <span class="visually-hidden" jhiTranslate="page.next">Pagina successiva</span>
+              <svg class="icon icon-primary"><use href="content/bootstrap-italia/svg/sprites.svg#it-chevron-right"></use></svg>
+            </a>
+          </li>
+        </ul>
+        <p class="text-center">Totale {{ p.getTotalItems() }} elementi</p>
+      </pagination-template>
+    </nav>
+  </div>
+</form>

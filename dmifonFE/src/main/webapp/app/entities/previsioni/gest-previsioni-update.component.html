@@ -1,0 +1,151 @@
+<jhi-spinner></jhi-spinner>
+<div class="container-fluid mt-4">
+  <div class="row justify-content-between mb-4">
+    <div class="col d-flex align-items-center">
+      <h5 class="bold" *ngIf="this.id != ''" jhiTranslate="Prev.detail.titleModify">Dettaglio macro progetto</h5>
+      <h5 class="bold" *ngIf="this.id == ''" jhiTranslate="Prev.detail.titleNew">Nuovo macro progetto</h5>
+    </div>
+  </div>
+  <!--alert modifica / inserimento -->
+  <jhi-alert *ngIf="viewAlert"></jhi-alert>
+  <jhi-alert-error *ngIf="viewError"></jhi-alert-error>
+
+  <!-- Form modifica / inserimento nuovo -->
+  <form [formGroup]="formPrev" *ngIf="formPrev">
+    <div class="d-grid gap-3 d-md-block">
+      <button
+        class="btn btn-primary btn-sml btn-xs btn-me min-wh-25"
+        (click)="submitForm()"
+        *ngIf="modifica ? rolesCheckService.isPresent('/modificaPrevisione') : rolesCheckService.isPresent('/inserisciPrevisione')"
+        data-bs-target="#myNotification"
+        data-bs-timeout="5000"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-pencil"></use>
+        </svg>
+        <span>{{ stringSalva }}</span>
+      </button>
+      <button
+        class="btn btn-danger btn-sml btn-xs btn-me min-wh-25"
+        (click)="submitDelete()"
+        *ngIf="this.id != '' && rolesCheckService.isPresent('/cancellaPrevisione')"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use>
+        </svg>
+        <span jhiTranslate="global.buttons.labelDelete">Cancella</span>
+      </button>
+      <button class="btn btn-primary btn-sml btn-xs btn-me min-wh-25 btnReload" (click)="reload()" *ngIf="this.id != ''">
+        <div class="rotateRefresh d-inline-block">
+          <svg class="icon icon-white ms-1">
+            <use href="content/bootstrap-italia/svg/sprites.svg#it-restore"></use>
+          </svg>
+        </div>
+        <span jhiTranslate="global.buttons.labelReload">Ricarica informazioni</span>
+      </button>
+    </div>
+    <!-- Prima riga con codice, descrizione e tipfinda-->
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="proProByIdPro" class="form-label-sm" jhiTranslate="Prev.id_progForm">Progetto*</label>
+          <input
+            id="proProByIdPro"
+            *ngIf="modifica"
+            type="text"
+            class="form-control"
+            [ngbTypeahead]="searchPro"
+            [resultFormatter]="formatterPro"
+            [inputFormatter]="formatterPro"
+            [editable]="false"
+            [ngClass]="!getFormElement('proProByIdPro').valid && getFormElement('proProByIdPro').touched ? 'is-invalid' : ''"
+            [attr.disabled]="true"
+            formControlName="proProByIdPro"
+          />
+          <div class="input-group">
+            <input
+              id="proProByIdPro1"
+              *ngIf="!modifica"
+              type="text"
+              class="form-control"
+              [ngbTypeahead]="searchPro"
+              [resultFormatter]="formatterPro"
+              [inputFormatter]="formatterPro"
+              [editable]="false"
+              [ngClass]="!getFormElement('proProByIdPro').valid && getFormElement('proProByIdPro').touched ? 'is-invalid' : ''"
+              formControlName="proProByIdPro"
+            />
+            <span class="autocomplete-icon" aria-hidden="true">
+              <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+            </span>
+          </div>
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('proProByIdPro').value != '' && getFormElement('proProByIdPro').value == null"
+            jhiTranslate="entity.validation.nullValue"
+            >Questo campo contiene un valore non valido. Selezionare un valore valido dalla lista oppure lasciarla vuota</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('proProByIdPro').errors?.['required'] && getFormElement('proProByIdPro').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio</small
+          >
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="dtapre" class="form-label-sm" jhiTranslate="Prev.dtapreForm">Data*</label>
+          <input
+            type="date"
+            class="form-control"
+            *ngIf="modifica"
+            [attr.disabled]="true"
+            [ngClass]="!getFormElement('dtapre').valid && getFormElement('dtapre').touched ? 'is-invalid' : ''"
+            id="dtapreMod"
+            formControlName="dtapre"
+            placeholder=" "
+          />
+          <input
+            type="date"
+            class="form-control"
+            *ngIf="!modifica"
+            [ngClass]="!getFormElement('dtapre').valid && getFormElement('dtapre').touched ? 'is-invalid' : ''"
+            id="dtapre"
+            formControlName="dtapre"
+            placeholder=" "
+          />
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('dtapre').errors?.['required'] && getFormElement('dtapre').touched"
+            jhiTranslate="entity.validation.required"
+          >
+            Questo campo contiene un valore non valido. Selezionare un valore valido dalla lista oppure lasciarla vuota</small
+          >
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="imppre" class="form-label-sm" jhiTranslate="Prev.imppreForm">Importo*</label>
+          <input type="text" class="form-control" id="imppre" aria-describedby="imppre" formControlName="imppre" value="imppre" importo />
+        </div>
+      </div>
+    </div>
+
+    <!-- Seconda riga con tipfina-->
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="notpre" class="form-label-sm" jhiTranslate="Prev.notpre">Note</label>
+          <input type="text" class="form-control" id="notpre" aria-describedby="notpre" formControlName="notpre" value="notpre" />
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('notpre').errors?.['pattern']"
+            jhiTranslate="entity.validation.sanitize"
+            >Ci sono caratteri non validi</small
+          >
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,444 @@
+<jhi-spinner></jhi-spinner>
+<div class="container-fluid mt-4">
+  <div class="row justify-content-between mb-4">
+    <div class="col d-flex align-items-center">
+      <h5 class="bold" *ngIf="this.id != ''" jhiTranslate="ammUtenti.detail.titleModify">Dettaglio Utente</h5>
+      <h5 class="bold" *ngIf="this.id == ''" jhiTranslate="ammUtenti.detail.titleNew">Nuovo utente</h5>
+    </div>
+    <div class="col d-flex justify-content-end" *ngIf="modifica">
+      <div class="form-check mt-0 mx-sm-0 mb-0">
+        <div class="toggles">
+          <label for="toggleEsempio1a">
+            <span class="badge bg-success" *ngIf="abilitato" jhiTranslate="ammUtenti.abilitato">Abilitato</span>
+            <span class="badge bg-secondary" *ngIf="!abilitato" jhiTranslate="ammUtenti.disabilitato">Disabilitato</span>
+            <input
+              type="checkbox"
+              id="toggleEsempio1a"
+              [(ngModel)]="abilitato"
+              value="abilitato"
+              data-bs-toggle="modal"
+              href="#myModal"
+              *ngIf="rolesCheckService.isPresent('/abilitazioneUtente')"
+            />
+            <span class="lever"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--alert modifica / inserimento -->
+  <jhi-alert *ngIf="viewAlert"></jhi-alert>
+  <jhi-alert-error *ngIf="viewError"></jhi-alert-error>
+
+  <!-- Form modifica utente / inserimento nuovo utente-->
+  <form [formGroup]="formUtente" *ngIf="formUtente">
+    <div class="d-grid gap-4 d-md-block">
+      <button
+        class="btn btn-primary btn-sml btn-xs btn-me min-wh-20 mb-1"
+        (click)="submitForm()"
+        *ngIf="modifica ? rolesCheckService.isPresent('/modificaUtente') : rolesCheckService.isPresent('/inserisciUtente')"
+        data-bs-target="#myNotification"
+        data-bs-timeout="5000"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-pencil"></use>
+        </svg>
+        <span>{{ stringSalva }}</span>
+      </button>
+      <button class="btn btn-primary btn-sml btn-xs btn-me min-wh-20 mb-1 btnReload" *ngIf="this.id != ''" (click)="reload()">
+        <div class="rotateRefresh d-inline-block">
+          <svg class="icon icon-white ms-1">
+            <use href="content/bootstrap-italia/svg/sprites.svg#it-restore"></use>
+          </svg>
+        </div>
+        <span jhiTranslate="global.buttons.labelReload">Ricarica informazioni</span>
+      </button>
+      <!--<button class="btn btn-primary btn-sml btn-xs btn-me min-wh-20 mb-1" *ngIf="this.id != ''" (click)="goToRuoli()">
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-list"></use>
+        </svg>
+        <span>Ruoli</span>
+      </button>
+      <button class="btn btn-primary btn-sml btn-xs btn-me min-wh-20 mb-1" *ngIf="this.id != ''" (click)="goToDirezioniCentrali()">
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-list"></use>
+        </svg>
+        <span>Direzioni centrali</span>
+      </button> -->
+    </div>
+    <!-- Prima riga con Username, nome e cognome-->
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="usernameDis" class="form-label-sm" jhiTranslate="ammUtenti.usernameForm">Username*</label>
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="!getFormElement('username').valid && getFormElement('username').touched ? 'is-invalid' : ''"
+            id="usernameDis"
+            aria-describedby="emailHelp"
+            formControlName="username"
+            value="username"
+            placeholder=" "
+            [attr.disabled]="modifica ? '' : null"
+            *ngIf="sessionStorageService.retrieve('tipcondat') === 'C'"
+          />
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="!getFormElement('username').valid && getFormElement('username').touched ? 'is-invalid' : ''"
+            id="username"
+            aria-describedby="emailHelp"
+            formControlName="username"
+            value="username"
+            placeholder=" "
+            *ngIf="sessionStorageService.retrieve('tipcondat') === 'N'"
+          />
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="!getFormElement('username').valid && getFormElement('username').touched ? 'is-invalid' : ''"
+            id="username"
+            aria-describedby="emailHelp"
+            formControlName="username"
+            value="username"
+            placeholder=" "
+            *ngIf="!sessionStorageService.retrieve('tipcondat')"
+          />
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('username').errors?.['minlength'] && getFormElement('username').touched"
+            >L'username deve essere minimo di 4 caratteri</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('username').errors?.['required'] && getFormElement('username').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('username').errors?.['pattern']"
+            jhiTranslate="entity.validation.sanitize"
+            >Ci sono caratteri non validi</small
+          >
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="nome" class="form-label-sm" jhiTranslate="ammUtenti.nomeForm">Nome*</label>
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="!getFormElement('nome').valid && getFormElement('nome').touched ? 'is-invalid' : ''"
+            id="nome"
+            aria-describedby="nome"
+            formControlName="nome"
+            value="nome"
+            placeholder=" "
+          />
+          <small class="form-text text-danger" *ngIf="getFormElement('nome').errors?.['minlength'] && getFormElement('nome').touched"
+            >Il nome deve essere minimo di 2 caratteri</small
+          >
+          <small class="form-text text-danger" *ngIf="getFormElement('nome').errors?.['pattern']" jhiTranslate="entity.validation.sanitize"
+            >Ci sono caratteri non validi</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('nome').errors?.['required'] && getFormElement('nome').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio</small
+          >
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="cognome" class="form-label-sm" jhiTranslate="ammUtenti.cognomeForm">Cognome*</label>
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="!getFormElement('cognome').valid && getFormElement('cognome').touched ? 'is-invalid' : ''"
+            id="cognome"
+            aria-describedby="cognome"
+            formControlName="cognome"
+            value="cognome"
+            placeholder=" "
+          />
+          <small class="form-text text-danger" *ngIf="getFormElement('cognome').errors?.['minlength']"
+            >Il cognome deve essere minimo di 2 caratteri</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('cognome').errors?.['pattern']"
+            jhiTranslate="entity.validation.sanitize"
+            >Ci sono caratteri non validi</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('cognome').errors?.['required'] && getFormElement('cognome').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio</small
+          >
+        </div>
+      </div>
+    </div>
+    <!-- Seconda riga con email e email alternativa -->
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="email" class="form-label-sm" jhiTranslate="ammUtenti.email">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            [ngClass]="!getFormElement('email').valid ? 'is-invalid' : ''"
+            id="email"
+            aria-describedby="emailHelp"
+            formControlName="email"
+            value="email"
+            placeholder=" "
+          />
+          <small class="form-text text-danger" *ngIf="getFormElement('email').errors?.email">La mail inserita non è valida</small>
+          <small class="form-text text-danger" *ngIf="getFormElement('email').errors?.['pattern']" jhiTranslate="entity.validation.sanitize"
+            >Ci sono caratteri non validi</small
+          >
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="emailalt" class="form-label-sm"
+            ><span jhiTranslate="ammUtenti.emailAlt">Email Alternativa</span>
+            <span tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Inserisci la mail alternativa"
+              ><svg class="icon icon-secondary icon-sm py-1" style="float: right">
+                <use href="content/bootstrap-italia/svg/sprites.svg#it-help-circle"></use></svg></span
+          ></label>
+          <input
+            type="email"
+            class="form-control"
+            id="emailalt"
+            aria-describedby="emailHelp"
+            [ngClass]="!getFormElement('emailalt').valid ? 'is-invalid' : ''"
+            formControlName="emailalt"
+            value="emailalt"
+            placeholder=" "
+          />
+          <small class="form-text text-danger" *ngIf="getFormElement('emailalt').errors?.email">La mail inserita non è valida</small>
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('emailalt').errors?.['pattern']"
+            jhiTranslate="entity.validation.sanitize"
+            >Ci sono caratteri non validi</small
+          >
+        </div>
+      </div>
+    </div>
+    <!-- Modale disabilitazione utente -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="myModal" aria-labelledby="modalDis">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title h5 no_toc" id="modalDis" jhiTranslate="modals.warn">Attenzione</h2>
+          </div>
+          <div class="modal-body">
+            <p>
+              Stai per <span *ngIf="!abilitato">disabilitare </span> <span *ngIf="abilitato">abilitare </span> l'utente corrente. Vuoi
+              procedere?
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              class="btn btn-success btn-sm"
+              data-bs-dismiss="modal"
+              type="button"
+              (click)="changeAbilitato(abilitato)"
+              jhiTranslate="modals.confirm"
+            >
+              Conferma
+            </button>
+            <button
+              class="btn btn-danger btn-sm"
+              data-bs-dismiss="modal"
+              type="button"
+              (click)="resetAbilitato()"
+              jhiTranslate="modals.cancel"
+              jhiTranslate="modals.cancel"
+            >
+              Annulla
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <!-- Tabella associazione ruoli / utenti -->
+  <form [formGroup]="formAssociazione">
+    <table class="table table-borderless table-responsive mt-5 w-75">
+      <thead>
+        <tr>
+          <th scope="col"><span jhiTranslate="ammUtenti.formAssociazione.id_ruo">Ruolo</span></th>
+          <th scope="col"><span jhiTranslate="ammUtenti.formAssociazione.flgdef">Flag Default</span></th>
+          <th scope="col"><span jhiTranslate="ammUtenti.formAssociazione.tipcondat">Tipo Controllo</span></th>
+          <th scope="col"><span jhiTranslate="ammUtenti.formAssociazione.id_dir">Direzione</span></th>
+          <td scope="col" *ngIf="length == 0">
+            <svg class="icon icon-primary icon-md" (click)="onAddRow()">
+              <use href="content/bootstrap-italia/svg/sprites.svg#it-plus"></use>
+            </svg>
+          </td>
+        </tr>
+      </thead>
+      <tbody *ngIf="0 == 0">
+        <tr class="border-smoke border-left-no-hover" *ngFor="let row of rows.controls; index as i" tappable (click)="onEdit(i)">
+          <td class="col-md-3">
+            <div class="input-group">
+              <input
+                id="typeahead-prevent-manual-entry"
+                type="text"
+                class="form-control"
+                [formControl]="convertToFormControl(row.get('id_ruo'))"
+                [ngbTypeahead]="searchRuo"
+                [resultFormatter]="formatterRuo"
+                [inputFormatter]="formatterRuo"
+                [editable]="false"
+                [ngClass]="
+                  !convertToFormControl(row.get('id_ruo')).valid && convertToFormControl(row.get('id_ruo')).touched ? 'is-invalid' : ''
+                "
+              />
+              <span class="autocomplete-icon" aria-hidden="true">
+                <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+              </span>
+            </div>
+            <small
+              class="form-text text-danger"
+              *ngIf="convertToFormControl(row.get('id_ruo')).errors?.['required'] && convertToFormControl(row.get('id_ruo')).touched"
+              jhiTranslate="entity.validation.required"
+              >Questo campo è obbligatorio</small
+            >
+          </td>
+          <td>
+            <div class="select-wrapper">
+              <select
+                id="selectFlgDef"
+                [formControl]="convertToFormControl(row.get('flgdef'))"
+                [ngClass]="
+                  !convertToFormControl(row.get('flgdef')).valid && convertToFormControl(row.get('flgdef')).touched ? 'is-invalid' : ''
+                "
+              >
+                <option selected value="" jhiTranslate="tipFin.select.default">Scegli un'opzione</option>
+                <option value="S" jhiTranslate="ammUtenti.formAssociazione.selected">Selezionato</option>
+                <option value="N" jhiTranslate="ammUtenti.formAssociazione.notSelected">Non selezionato</option>
+              </select>
+            </div>
+            <small
+              class="form-text text-danger"
+              *ngIf="convertToFormControl(row.get('flgdef')).errors?.['required'] && convertToFormControl(row.get('flgdef')).touched"
+              jhiTranslate="entity.validation.required"
+              >Questo campo è obbligatorio</small
+            >
+          </td>
+          <td>
+            <div class="select-wrapper">
+              <select
+                id="selectTipcondat"
+                [formControl]="convertToFormControl(row.get('tipcondat'))"
+                [ngClass]="
+                  !convertToFormControl(row.get('tipcondat')).valid && convertToFormControl(row.get('tipcondat')).touched
+                    ? 'is-invalid'
+                    : ''
+                "
+              >
+                <option selected value="" jhiTranslate="tipFin.select.default">Scegli un'opzione</option>
+                <option value="C" jhiTranslate="ammUtenti.formAssociazione.dirContr">Direzione controllata</option>
+                <option value="N" jhiTranslate="ammUtenti.formAssociazione.dirNotContr">Nessun controllo</option>
+              </select>
+            </div>
+            <small
+              class="form-text text-danger"
+              *ngIf="convertToFormControl(row.get('tipcondat')).errors?.['required'] && convertToFormControl(row.get('tipcondat')).touched"
+              jhiTranslate="entity.validation.required"
+              >Questo campo è obbligatorio</small
+            >
+          </td>
+          <td class="col-md-4">
+            <div class="input-group">
+              <input
+                id="typeahead-prevent-manual-entry"
+                type="text"
+                class="form-control"
+                [formControl]="convertToFormControl(row.get('id_dir'))"
+                [ngbTypeahead]="searchDir"
+                [resultFormatter]="formatterDir"
+                [inputFormatter]="formatterDir"
+                [editable]="false"
+                [ngClass]="
+                  !convertToFormControl(row.get('id_dir')).valid && convertToFormControl(row.get('id_dir')).touched ? 'is-invalid' : ''
+                "
+              />
+              <span class="autocomplete-icon" aria-hidden="true">
+                <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+              </span>
+            </div>
+            <small
+              class="form-text text-danger"
+              *ngIf="convertToFormControl(row.get('id_dir')).errors?.['required'] && convertToFormControl(row.get('id_dir')).touched"
+              jhiTranslate="entity.validation.required"
+              >Questo campo è obbligatorio</small
+            >
+          </td>
+          <td *ngIf="rolesCheckService.isPresent('/cancellaRuoloDirezione')">
+            <span tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Elimina riga">
+              <svg
+                class="icon icon-danger icon-sm"
+                data-bs-toggle="modal"
+                href="#modalCancel"
+                *ngIf="convertToFormControl(row.get('isNew')).value == false"
+              >
+                <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use></svg
+            ></span>
+            <span tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Elimina riga">
+              <svg class="icon icon-danger icon-sm" (click)="onRemoveRow(i)" *ngIf="convertToFormControl(row.get('isNew')).value == true">
+                <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use>
+              </svg>
+            </span>
+          </td>
+          <td *ngIf="i == length - 1 && rolesCheckService.isPresent('/modificaUtente')">
+            <span tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Inserisci riga">
+              <svg class="icon icon-primary icon-md" (click)="onAddRow()">
+                <use href="content/bootstrap-italia/svg/sprites.svg#it-plus"></use>
+              </svg>
+            </span>
+          </td>
+          <!-- Modale conferma cancellazione -->
+          <div class="modal fade" tabindex="-2" role="dialog" id="modalCancel" aria-labelledby="exampleModalTitle">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h2 class="modal-title h5 no_toc" id="exampleModalTitle" jhiTranslate="modals.warn">Attenzione</h2>
+                </div>
+                <div class="modal-body">
+                  <p jhiTranslate="modals.canc">Confermi la cancellazione?</p>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-danger btn-sm" data-bs-dismiss="modal" type="button" jhiTranslate="modals.cancel">Annulla</button>
+                  <button
+                    class="btn btn-success btn-sm"
+                    data-bs-dismiss="modal"
+                    type="button"
+                    (click)="onRemoveRow(i)"
+                    jhiTranslate="modals.confirm"
+                  >
+                    Ok
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </tr>
+        <tr>
+          <!--
+        <td *ngIf="(usersFiltered$ | async)?.length == 0" class="bold border-white" colspan="6" style="color: gray">
+          Nessun risultato trovato
+        </td> -->
+        </tr>
+      </tbody>
+    </table>
+  </form>
+</div>

@@ -1,0 +1,182 @@
+<jhi-spinner></jhi-spinner>
+<div class="container-fluid mt-2">
+  <div class="row justify-content-between mb-4">
+    <div class="col d-flex align-items-center">
+      <h5 class="bold" *ngIf="this.id != ''" jhiTranslate="ddra.detail.titleModify">Dettaglio Ddr</h5>
+      <h5 class="bold" *ngIf="this.id == ''" jhiTranslate="ddra.detail.titleNew">Nuovo Ddr</h5>
+    </div>
+  </div>
+  <!--alert modifica / inserimento -->
+  <jhi-alert *ngIf="viewAlert"></jhi-alert>
+  <jhi-alert-error *ngIf="viewError"></jhi-alert-error>
+
+  <!-- Form modifica / inserimento nuovo -->
+  <form [formGroup]="formDdr" *ngIf="formDdr">
+    <div class="d-grid gap-4 d-md-block">
+      <button
+        class="btn btn-primary btn-sml btn-xs btn-me min-wh-20"
+        (click)="submitForm()"
+        *ngIf="modifica ? rolesCheckService.isPresent('/modificaDdra') : rolesCheckService.isPresent('/inserisciDdra')"
+        data-bs-target="#myNotification"
+        data-bs-timeout="5000"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-pencil" *ngIf="modifica"></use>
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-plus" *ngIf="!modifica"></use>
+        </svg>
+        <span>{{ stringSalva }}</span>
+      </button>
+      <button class="btn btn-primary btn-sml btn-xs btn-me min-wh-20 btnReload" (click)="reload()" *ngIf="this.id != ''">
+        <div class="rotateRefresh d-inline-block">
+          <svg class="icon icon-white ms-1">
+            <use href="content/bootstrap-italia/svg/sprites.svg#it-restore"></use>
+          </svg>
+        </div>
+        <span jhiTranslate="global.buttons.labelReload">Ricarica informazioni</span>
+      </button>
+      <!-- Pulsante elimina ddra -->
+      <button
+        class="btn btn-danger btn-sml btn-xs btn-me min-wh-20"
+        *ngIf="this.id != '' && rolesCheckService.isPresent('/cancellaDdra')"
+        (click)="submitDelete()"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use>
+        </svg>
+        <span jhiTranslate="global.buttons.labelDelete">Cancella</span>
+      </button>
+      <!-- Pulsante più azioni (tre puntini)-->
+      <button
+        *ngIf="(this.id != '' && rolesCheckService.isPresent('/ricercaDdr')) || rolesCheckService.isPresent('/associaDdrADdra')"
+        class="btn btn-danger btn-sml btn-xs btn-me min-wh-20"
+        data-bs-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-more-actions"></use>
+        </svg>
+      </button>
+      <div class="dropdown-menu">
+        <div class="link-list-wrapper">
+          <ul class="link-list">
+            <li *ngIf="rolesCheckService.isPresent('/ricercaDdr')">
+              <a class="list-item" href="javascript:void(0)" (click)="goToElencoDdr()">
+                <span>Elenco DDR</span>
+              </a>
+            </li>
+            <li *ngIf="rolesCheckService.isPresent('/associaDdrADdra')">
+              <a class="list-item" href="javascript:void(0)" (click)="goToAggiungiDdr()">
+                <span>Aggiungi DDR</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="codddr" class="form-label-sm" jhiTranslate="ddra.codddraForm">Codice*</label>
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="!getFormElement('codddra').valid && getFormElement('codddra').touched ? 'is-invalid' : ''"
+            id="codddr"
+            formControlName="codddra"
+            value="codddr"
+            placeholder=" "
+          />
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('codddra').errors?.['required'] && getFormElement('codddra').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('codddra').errors?.['maxlength'] && getFormElement('codddra').touched"
+            jhiTranslate="entity.validation.maxlength"
+            >Superato il numero massimo di caratteri</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('codddra').errors?.['pattern']"
+            jhiTranslate="entity.validation.sanitize"
+            >Ci sono caratteri non validi</small
+          >
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="desddra" class="form-label-sm" jhiTranslate="ddra.desddraForm">Descrizione*</label>
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="!getFormElement('desddra').valid && getFormElement('desddra').touched ? 'is-invalid' : ''"
+            id="desddra"
+            formControlName="desddra"
+            placeholder=" "
+          />
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('desddra').errors?.['required'] && getFormElement('desddra').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('desddra').errors?.['maxlength'] && getFormElement('desddra').touched"
+            jhiTranslate="entity.validation.maxlength"
+            >Superato il numero massimo di caratteri</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('desddra').errors?.['pattern']"
+            jhiTranslate="entity.validation.sanitize"
+            >Ci sono caratteri non validi</small
+          >
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="dtaddra" class="form-label-sm" jhiTranslate="ddra.dtaddraForm">Data ddra*</label>
+        <input id="dtaddra" type="date" class="form-control" formControlName="dtaddra" />
+      </div>
+    </div>
+    <!-- Seconda riga con data DDr, DDRA e importo DDR  -->
+    <div class="row mt-4">
+      <div class="col-md-4 mb-3" *ngIf="modifica">
+        <label for="impamm" class="form-label-sm" jhiTranslate="ddra.importoddra">Importo Ammissibile*</label>
+        <input
+          type="text"
+          class="form-control"
+          id="impamm"
+          aria-describedby="impamm"
+          formControlName="importoDdra"
+          importo
+          [attr.disabled]="true"
+        />
+      </div>
+      <div class="col-md-4">
+        <label for="notddr" class="form-label-sm" jhiTranslate="ddra.notddra">Note</label>
+        <input
+          type="text"
+          class="form-control"
+          [ngClass]="!getFormElement('notddra').valid && getFormElement('notddra').touched ? 'is-invalid' : ''"
+          id="notddr"
+          formControlName="notddra"
+          placeholder=" "
+        />
+        <small
+          class="form-text text-danger"
+          *ngIf="getFormElement('notddra').errors?.['maxlength'] && getFormElement('notddra').touched"
+          jhiTranslate="entity.validation.maxlength"
+          >Superato il numero massimo di caratteri</small
+        >
+        <small class="form-text text-danger" *ngIf="getFormElement('notddra').errors?.['pattern']" jhiTranslate="entity.validation.sanitize"
+          >Ci sono caratteri non validi</small
+        >
+      </div>
+    </div>
+  </form>
+</div>

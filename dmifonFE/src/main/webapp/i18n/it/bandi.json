@@ -1,0 +1,46 @@
+{
+  "bandi": {
+    "home": {
+      "title": "Bandi",
+      "titleSearchToolbar": "Bandi",
+      "labelSearchString": "Cerca bando"
+    },
+    "detail": {
+      "title": "Bando",
+      "titleModify": "Dettaglio bando",
+      "titleNew": "Nuovo bando",      
+      "titleTotali": "Totali"
+    },
+    "codban": "Codice",
+    "codbanForm": "Codice*",
+    "desban": "Descrizione",
+    "desbanForm": "Descrizione*",
+    "tipfin": "Tipo finanziamento",
+    "tipfinForm": "Tipo finanziamento*",
+    "num_progetti": "Num.progetti",
+    "imprisfon": "Risorse fondo",
+    "stateban": "Stato bando",
+    "statebanForm": "Stato bando*",
+    "statefin": "Stato finanziamento*",
+    "id_ban": "Bando",
+    "id_banForm": "Bando",
+    "id_tem": "Tematica",    
+    "id_temForm": "Tematica",
+    "desent": "Ministero investimento",
+    "desprvent": "Provvedimento Min.",
+    "refmin": "Referente Min.",
+    "desben": "Beneficiario",
+    "impinvForm": "Valore Invest.*",
+    "impbanForm": "Valore Bando*",
+    "impmasproForm": "Imp. mas. fin. per progetto*",
+    "impmasparForm": "Tot. mas. fin. per partecipante*",
+    "dtapubban": "Data Pubblicazione Bando",
+    "dtachiatt": "Data Deadline chiusura attività",
+    "dtascaban": "Data Scadenza Bando",
+    "desdecfin": "Decreto di finanz.",
+    "select": {      
+      "default": "Scegli un'opzione"      
+    },    
+    "csvFileName": "Gestione_bandi"
+  }
+}

@@ -1,0 +1,96 @@
+.text-danger {
+  color: red !important;
+}
+
+.float-right {
+  float: right;
+}
+
+.red {
+  background-color: #d8042c;
+}
+
+.white {
+  color: white;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.txt-sm {
+  font-size: 0.9em;
+}
+
+.float-left {
+  float: left;
+}
+
+.odd {
+  background-color: white;
+}
+
+input:focus {
+  color: black !important;
+}
+
+.even {
+  background-color: whitesmoke;
+}
+
+.top-spinner {
+  margin-top: 10%;
+}
+
+.importo {
+  text-align: right;
+}
+
+.no-border {
+  border: 0;
+  box-shadow: none;
+  /* You may want to include this as bootstrap applies these styles too */
+}
+
+textarea {
+  border-style: none;
+  border-color: Transparent;
+  overflow: auto;
+}
+
+.callout-title {
+  text-transform: capitalize !important;
+  color: black !important;
+}
+
+.w-mil {
+  min-width: 210px !important;
+  max-width: 2300px !important;
+}
+
+@media (min-width: 1690px) {
+  .min-wh-20 {
+    min-width: 19%;
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 1690px) {
+  .min-wh-20 {
+    min-width: 15%;
+    margin-bottom: 10px;
+  }
+}
+
+.dropdown-menuCol {
+  max-height: 18vh;
+  border-radius: 5px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.44);
+  box-shadow: 1px 2px #888888;
+}
+
+.mt-05 {
+  margin-top: 1px !important;
+}

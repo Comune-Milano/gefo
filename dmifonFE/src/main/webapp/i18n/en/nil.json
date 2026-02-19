@@ -1,0 +1,22 @@
+{
+  "nil": {
+    "home": {
+      "title": "Nil",
+      "titleSearchToolbar": "Nil",
+      "labelSearchString": "Trova nil"
+    },
+    "detail": {
+      "title": "Municipio",
+      "titleModify": "Dettaglio municipio",
+      "titleNew": "Nuovo municipio"
+    },
+    "codnil": "Code",
+    "codnilForm": "Code*",
+    "desnil": "Description",
+    "desnilForm": "Description*",
+    "municipio": "Town hall",
+    "num_progetti": "Project Num.",
+    "resources": "Fund resources",
+    "csvFileName": "Nil"
+  }
+}

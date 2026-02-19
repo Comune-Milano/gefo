@@ -1,0 +1,24 @@
+<!--<div class="modal-content modal-dialog-centered">-->
+<div style="overflow: hidden">
+  <form name="modalConfirm" (ngSubmit)="confirm()">
+    <div class="modal-header">
+      <!--<h4 class="modal-title">{{title || ''}}</h4> -->
+      <h2 class="modal-title h5 no_toc" id="exampleModalTitle" jhiTranslate="modals.warn">Attenzione</h2>
+    </div>
+    <div class="modal-body">
+      <!--<p>{{title || 'Testo da mostrare'}}</p> -->
+      <div *ngIf="this.messages.length > 0">
+        <p *ngFor="let message of messages">{{ message }}</p>
+      </div>
+      <p *ngIf="this.messages.length == 0" jhiTranslate="modals.navigate">
+        Se abbandoni la pagina, perderai le modfiche effettuate. Procedere comunque?
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal" (click)="clear()" jhiTranslate="modals.cancel">
+        Annulla
+      </button>
+      <button id="modal-confirm" type="submit" class="btn btn-success btn-sm" jhiTranslate="modals.confirm">Conferma</button>
+    </div>
+  </form>
+</div>

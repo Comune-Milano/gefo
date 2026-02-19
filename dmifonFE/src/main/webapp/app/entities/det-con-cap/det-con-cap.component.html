@@ -1,0 +1,231 @@
+<h5 class="fw-bold" jhiTranslate="DetCon.home.titleCapEnt" *ngIf="capent">Capitoli di entrata</h5>
+<h5 class="fw-bold" jhiTranslate="DetCon.home.titleCapUsc" *ngIf="!capent">Capitoli di uscita</h5>
+<!--alert modifica / inserimento -->
+<jhi-alert *ngIf="viewAlert"></jhi-alert>
+<jhi-alert-error *ngIf="viewError"></jhi-alert-error>
+<form [formGroup]="formFilter">
+  <div class="d-flex flex-row-reverse mb-4 mt-4">
+    <!-- Bottone Esporta -->
+    <button class="btn btn-primary btn-sml btn-xs btn-me min-wh-25" type="button" (click)="exportToCSV()">
+      <svg class="icon icon-white">
+        <use href="content/bootstrap-italia/svg/sprites.svg#it-download"></use>
+      </svg>
+      <span jhiTranslate="global.buttons.labelExport">Esporta dati</span>
+    </button>
+    <!-- Bottone filtra -->
+    <button
+      class="btn btn-primary btn-sml btn-xs btn-me min-wh-25"
+      type="button"
+      data-bs-toggle="dropdown"
+      href="#dropdownCap"
+      aria-haspopup="true"
+      aria-expanded="false"
+      (click)="showFilterCap()"
+    >
+      <svg class="icon icon-white">
+        <use href="content/bootstrap-italia/svg/sprites.svg#it-list"></use>
+      </svg>
+      <span jhiTranslate="global.buttons.labelFilter">Filtra</span> <span *ngIf="countFiltri != 0"> ({{ countFiltri }})</span>
+    </button>
+    <div class="dropdown-menu dismissible w-50" id="dropdownCap" role="menu" [ngClass]="{ show: shPanCap }">
+      <div class="container-fluid">
+        <div class="row justify-content-between mb-2">
+          <div class="col">
+            <h5 class="fw-bold" jhiTranslate="entity.filters.title">Filtra ricerca</h5>
+          </div>
+          <div class="col">
+            <button
+              type="button"
+              class="btn-close float-right"
+              data-bs-dismiss="menu"
+              data-bs-toggle="collapse"
+              href="#dropdownCap"
+              aria-label="Chiudi avviso"
+              (click)="shPanCap = false"
+            ></button>
+          </div>
+        </div>
+        <div class="row" (click)="$event.stopPropagation()">
+          <div class="col-4">
+            <div class="mb-3">
+              <label for="id" class="form-label-sm" jhiTranslate="DetCon.id">Codice</label>
+              <input id="id" type="text" class="form-control" formControlName="id" />
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="mb-3">
+              <label for="desimp" class="form-label-sm" jhiTranslate="DetCon.desimp">Descrizione</label>
+              <input id="desimp" type="text" class="form-control" formControlName="descrizione" />
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="mb-3">
+              <label for="ban" class="form-label-sm" jhiTranslate="DetCon.codtit">Titolo</label>
+              <input id="ban" type="text" class="form-control" formControlName="titolo" />
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2" (click)="$event.stopPropagation()">
+          <div class="col-4 mb-3">
+            <label for="idcro" class="form-label-sm" jhiTranslate="DetCon.codmacMac" *ngIf="capent">Macro</label>
+            <label for="idcro" class="form-label-sm" jhiTranslate="DetCon.codmacTip" *ngIf="!capent">Tipologia</label>
+            <input id="idcro" type="text" class="form-control" formControlName="macro" />
+          </div>
+          <div class="col-4 mb-3" *ngIf="!capent">
+            <label for="cup" class="form-label-sm" jhiTranslate="DetCon.codmis">Missione</label>
+            <input id="cup" type="text" class="form-control" formControlName="missione" />
+          </div>
+          <div class="col-4 mb-3" *ngIf="!capent">
+            <label for="cig" class="form-label-sm" jhiTranslate="DetCon.codprg">Programma</label>
+            <input id="cig" type="text" class="form-control" formControlName="programma" />
+          </div>
+        </div>
+        <!-- <div class="row mb-2" *ngIf="prog">
+          <div class="col-4 mb-3">
+            <label for="prog" class="form-label-sm" jhiTranslate="DetCon.prog">Progetto</label>
+            <input id="prog" type="text" class="form-control" />
+          </div>
+        </div> -->
+        <div class="row">
+          <div class="col-4">
+            <button
+              class="btn btn-danger btn-sml btn-xs btn-me h-100 w-100"
+              type="button"
+              [disabled]="formFilter.pristine || !formFilter.valid"
+              (click)="applicaFiltri()"
+            >
+              <span jhiTranslate="entity.filters.apply">Applica</span>
+            </button>
+          </div>
+          <div class="col-4">
+            <button class="btn btn-primary btn-sml btn-xs btn-me h-100 w-100" type="button" (click)="resetFilter()">
+              <span jhiTranslate="entity.filters.remove">Rimuovi</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--<div class="table-responsive">   -->
+  <!-- <span class="fw-bold" *ngIf="service.loading$ | async" jhiTranslate="global.waitLoad">Attendere...</span> -->
+  <!-- Tabella capitoli -->
+  <div class="alert alert-warning" role="alert" *ngIf="warningMessage != '' && !isFetching">
+    {{ warningMessage }}
+  </div>
+  <jhi-search-spinner *ngIf="isFetching"></jhi-search-spinner>
+
+  <table class="table table-borderless table-responsive" *ngIf="!isFetching">
+    <thead>
+      <tr>
+        <th scope="col" sortable="id" (sort)="onSort($event)" style="min-width: 125px">
+          <span jhiTranslate="DetCon.idcap">Capitolo</span>
+        </th>
+        <th scope="col" sortable="descrizione" (sort)="onSort($event)" class="min-wh-250">
+          <span jhiTranslate="DetCon.desimp">Descrizione</span>
+        </th>
+        <th scope="col" sortable="titolo" (sort)="onSort($event)">
+          <span jhiTranslate="DetCon.codtit">Titolo</span>
+        </th>
+        <th scope="col" sortable="macro" (sort)="onSort($event)">
+          <span jhiTranslate="DetCon.codmacMac" *ngIf="capent">Macro</span>
+          <span jhiTranslate="DetCon.codmacTip" *ngIf="!capent">Tipol.</span>
+        </th>
+        <th scope="col" sortable="missione" (sort)="onSort($event)" *ngIf="!capent">
+          <span jhiTranslate="DetCon.codmis">Missione</span>
+        </th>
+        <th scope="col" sortable="programma" (sort)="onSort($event)" *ngIf="!capent">
+          <span jhiTranslate="DetCon.codprg">Programma</span>
+        </th>
+        <th scope="col" sortable="previsione" (sort)="onSort($event)">
+          <span jhiTranslate="DetCon.impprv">Previsione anno</span>
+        </th>
+        <th scope="col" sortable="assestato" (sort)="onSort($event)">
+          <span jhiTranslate="DetCon.impass">Assestato anno</span>
+        </th>
+        <th scope="col" sortable="impegnato" (sort)="onSort($event)">
+          <span jhiTranslate="DetCon.impimpAcc" *ngIf="capent">Accertato anno</span>
+          <span jhiTranslate="DetCon.impimp" *ngIf="!capent">Impegnato anno</span>
+        </th>
+        <th scope="col" sortable="previsione_1" (sort)="onSort($event)">
+          <span jhiTranslate="DetCon.impprv1">Previsione anno +1</span>
+        </th>
+        <th scope="col" sortable="assestato_1" (sort)="onSort($event)">
+          <span jhiTranslate="DetCon.impass1">Assestato anno + 1</span>
+        </th>
+        <th scope="col" sortable="impegnato_1" (sort)="onSort($event)">
+          <span jhiTranslate="DetCon.impimpAcc1" *ngIf="capent">Accertato anno +1</span>
+          <span jhiTranslate="DetCon.impimp1" *ngIf="!capent">Impegnato anno +1</span>
+        </th>
+        <th scope="col" sortable="previsione_2" (sort)="onSort($event)" *ngIf="!this.tipo">
+          <span jhiTranslate="DetCon.impprv2">Previsione anno +2</span>
+        </th>
+        <th scope="col" sortable="assestato_2" (sort)="onSort($event)" *ngIf="!this.tipo">
+          <span jhiTranslate="DetCon.impass2">Assestato anno + 2</span>
+        </th>
+        <th scope="col" sortable="impegnato_2" (sort)="onSort($event)" *ngIf="!this.tipo">
+          <span jhiTranslate="DetCon.impimpAcc2" *ngIf="capent">Accertato anno +2</span>
+          <span jhiTranslate="DetCon.impimp2" *ngIf="!capent">Impegnato anno +2</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody *ngIf="entCon != null">
+      <tr
+        *ngFor="let ent of entCon | paginate: config; index as i"
+        [ngClass]="i % 2 == 0 ? 'even border-smoke border-left' : 'odd border-white border-left'"
+        (click)="setCodCap(ent.id)"
+      >
+        <td>{{ ent.id }}</td>
+        <td class="min-wh-250">{{ ent.descrizione }}</td>
+        <td class="text-end">{{ ent.titolo }}</td>
+        <td class="text-end">{{ ent.macro }}</td>
+        <td class="text-end" *ngIf="!capent">{{ ent.missione }}</td>
+        <td class="text-end" *ngIf="!capent">{{ ent.programma }}</td>
+        <td class="text-end">{{ ent.previsione | number: '1.2' }}</td>
+        <td class="text-end">{{ ent.assestato | number: '1.2' }}</td>
+        <td class="text-end">{{ ent.impegnato | number: '1.2' }}</td>
+        <td class="text-end">{{ ent.previsione_1 | number: '1.2' }}</td>
+        <td class="text-end">{{ ent.assestato_1 | number: '1.2' }}</td>
+        <td class="text-end">{{ ent.impegnato_1 | number: '1.2' }}</td>
+        <td class="text-end" *ngIf="!this.tipo">{{ ent.previsione_2 | number: '1.2' }}</td>
+        <td class="text-end" *ngIf="!this.tipo">{{ ent.assestato_2 | number: '1.2' }}</td>
+        <td class="text-end" *ngIf="!this.tipo">{{ ent.impegnato_2 | number: '1.2' }}</td>
+      </tr>
+      <tr>
+        <td *ngIf="entCon.length == 0" class="bold border-white" colspan="6" style="color: gray" jhiTranslate="noRes">
+          Nessun risultato trovato
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="!isFetching">
+    <nav class="pagination-wrapper justify-content-center" aria-label="Navigazione centrata">
+      <!-- <pagination-controls class="my-pagination" [maxSize]="9" previousLabel="" nextLabel="" (pageChange)="pageChanged($event)"></pagination-controls> -->
+      <pagination-template #p="paginationApi" (pageChange)="config.currentPage = $event" [maxSize]="9">
+        <ul class="pagination custom-pagination">
+          <li class="page-item" [class.disabled]="p.isFirstPage()">
+            <a class="page-link" (click)="p.previous()" tabindex="-1" aria-hidden="true">
+              <svg class="icon icon-primary"><use href="content/bootstrap-italia/svg/sprites.svg#it-chevron-left"></use></svg>
+              <span class="visually-hidden" jhiTranslate="page.previous">Pagina precedente</span>
+            </a>
+          </li>
+          <li *ngFor="let page of p.pages" [class.current]="p.getCurrent() === page.value" class="page-item">
+            <a (click)="p.setCurrent(page.value)" *ngIf="p.getCurrent() !== page.value" class="page-link">
+              <span>{{ page.label }}</span>
+            </a>
+            <a (click)="p.setCurrent(page.value)" *ngIf="p.getCurrent() === page.value" class="page-link" aria-current="page">
+              <span class="d-inline-block d-sm-none">Pagina </span>{{ page.label }}
+            </a>
+          </li>
+          <li class="page-item pagination-next" [class.disabled]="p.isLastPage()">
+            <a class="page-link" (click)="p.next()" tabindex="-1" aria-hidden="true">
+              <span class="visually-hidden" jhiTranslate="page.next">Pagina successiva</span>
+              <svg class="icon icon-primary"><use href="content/bootstrap-italia/svg/sprites.svg#it-chevron-right"></use></svg>
+            </a>
+          </li>
+        </ul>
+        <p class="text-center">Totale {{ p.getTotalItems() }} elementi</p>
+      </pagination-template>
+    </nav>
+  </div>
+</form>

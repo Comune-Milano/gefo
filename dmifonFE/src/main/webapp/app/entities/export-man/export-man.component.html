@@ -1,0 +1,199 @@
+<div class="container-fluid mt-2">
+  <h5 class="fw-bold" jhiTranslate="export.home.titleMan">Export Mandati</h5>
+  <!--alert modifica / inserimento -->
+  <jhi-alert *ngIf="viewAlert"></jhi-alert>
+  <jhi-alert-error *ngIf="viewError"></jhi-alert-error>
+  <form [formGroup]="formExport" *ngIf="formExport">
+    <div class="d-flex pt-2">
+      <button class="btn btn-danger btn-sml btn-xs btn-me min-wh-25" (click)="sendExport()">
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-file-csv"></use>
+        </svg>
+        <span jhiTranslate="export.home.labelExport">Esporta</span>
+      </button>
+    </div>
+    <!-- Tab parametri di estrazione -->
+    <div class="tab-pane p-4 fade show active" id="nav-tab1" role="tabpanel" aria-labelledby="nav-tab1-tab">
+      <!-- Prima riga -->
+      <div class="row mt-2">
+        <div class="col-md-4 mb-3">
+          <label for="prog" class="form-label-sm" jhiTranslate="export.idPro">Progetto</label>
+          <div class="input-group">
+            <input
+              id="prog"
+              type="text"
+              class="form-control"
+              [ngbTypeahead]="searchPro"
+              [resultFormatter]="formatterPro"
+              [inputFormatter]="formatterPro"
+              [editable]="false"
+              formControlName="ProProByIdPro"
+            />
+            <span class="autocomplete-icon" aria-hidden="true">
+              <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+            </span>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="tipLiv" class="form-label-sm" jhiTranslate="export.tipLiv">Livello</label>
+          <div class="select-wrapper">
+            <select id="tipLiv" formControlName="tipLiv">
+              <option selected value="" jhiTranslate="gestProg.select.default">Scegli un'opzione</option>
+              <option value="01" jhiTranslate="gestProg.select.livuno">Livello 1</option>
+              <option value="02" jhiTranslate="gestProg.select.livdue">Livello 2</option>
+              <option value="03" jhiTranslate="gestProg.select.livtre">Livello 3</option>
+              <option value="BA" jhiTranslate="gestProg.select.livba">Livello basso</option>
+              <option value="PB" jhiTranslate="gestProg.select.livpb">Livello prec. al basso</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="tipFin" class="form-label-sm" jhiTranslate="export.idTipFin">Tipo finanziamento</label>
+          <div class="input-group">
+            <input
+              id="tipFin"
+              type="text"
+              class="form-control"
+              [ngbTypeahead]="searchTipFin"
+              [resultFormatter]="formatterTipFin"
+              [inputFormatter]="formatterTipFin"
+              [editable]="false"
+              formControlName="ProTipFinByIdTipFin"
+            />
+            <span class="autocomplete-icon" aria-hidden="true">
+              <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+            </span>
+          </div>
+        </div>
+      </div>
+      <!-- Seconda riga -->
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <label for="dir" class="form-label-sm" jhiTranslate="export.idDir">Direzione</label>
+          <div class="input-group">
+            <input
+              id="dir"
+              type="text"
+              class="form-control"
+              [ngbTypeahead]="searchDir"
+              [resultFormatter]="formatterDir"
+              [inputFormatter]="formatterDir"
+              [editable]="false"
+              formControlName="dir"
+            />
+            <span class="autocomplete-icon" aria-hidden="true">
+              <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+            </span>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <!--<label for="flgdatanapro" class="form-label-sm">Dati Anagrafici Progetto</label>
+            <div class="form-check">
+              <input id="flgdatanapro" type="checkbox" formControlName="flgdatanapro" />
+              <label for="flgdatanapro"></label>
+            </div> -->
+          <label for="ProMacProByIdMacPro" class="form-label-sm" jhiTranslate="export.idMacPro">Macro progetto</label>
+          <div class="input-group">
+            <input
+              id="ProMacProByIdMacPro"
+              type="text"
+              class="form-control"
+              [ngbTypeahead]="searchMacPro"
+              [resultFormatter]="formatterMacPro"
+              [inputFormatter]="formatterMacPro"
+              [editable]="false"
+              formControlName="ProMacProByIdMacPro"
+            />
+            <span class="autocomplete-icon" aria-hidden="true">
+              <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+            </span>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="ProBanByIdBan" class="form-label-sm" jhiTranslate="export.idBan">Bando</label>
+          <div class="input-group">
+            <input
+              id="ProBanByIdBan"
+              type="text"
+              class="form-control"
+              [ngbTypeahead]="searchBan"
+              [resultFormatter]="formatterBan"
+              [inputFormatter]="formatterBan"
+              [editable]="false"
+              formControlName="ProBanByIdBan"
+            />
+            <span class="autocomplete-icon" aria-hidden="true">
+              <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+            </span>
+          </div>
+        </div>
+      </div>
+      <!-- Terza riga -->
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <label for="ProBanByIdBan" class="form-label-sm" jhiTranslate="export.idTem">Tematica</label>
+          <div class="input-group">
+            <input
+              id="ProTemByIdTem"
+              type="text"
+              class="form-control"
+              [ngbTypeahead]="searchTem"
+              [resultFormatter]="formatterTem"
+              [inputFormatter]="formatterTem"
+              [editable]="false"
+              formControlName="ProTemByIdTem"
+            />
+            <span class="autocomplete-icon" aria-hidden="true">
+              <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+            </span>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="stateprog" class="form-label-sm" jhiTranslate="export.idStaPro">Stato progetto</label>
+          <div class="select-wrapper">
+            <select id="stateprog" formControlName="idStaPro">
+              <option selected value="null" jhiTranslate="gestProg.select.default">Scegli un'opzione</option>
+              <option *ngFor="let staPro of statPro" [value]="staPro.id">{{ staPro.dessta }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="statefin" class="form-label-sm" jhiTranslate="export.idStaFin">Stato finanziario</label>
+          <div class="select-wrapper">
+            <select id="statefin" formControlName="idStaFin">
+              <option selected value="null" jhiTranslate="gestProg.select.default">Scegli un'opzione</option>
+              <option *ngFor="let staFin of statFin" [value]="staFin.id">{{ staFin.dessta }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <!-- Quarta riga -->
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <label for="annEse" class="form-label-sm">Esercizio </label>
+          <input
+            type="number"
+            id="annEse"
+            formControlName="annEse"
+            class="form-control"
+            [ngClass]="!getFormElement('annEse').valid && getFormElement('annEse').touched ? 'is-invalid' : ''"
+          />
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('annEse').errors?.['required'] && getFormElement('annEse').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio</small
+          >
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="dtaPagDa" class="form-label-sm">Data pagamento da </label>
+          <input type="date" id="dtaPagDa" formControlName="dtaPagDa" />
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="dtaPagA" class="form-label-sm">Data pagamento a </label>
+          <input type="date" id="dtaPagA" formControlName="dtaPagA" />
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

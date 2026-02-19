@@ -1,0 +1,17 @@
+{
+  "tipFas": {
+    "home": {
+      "title": "Phase Types",
+      "titleSearchToolbar": "Phase Types",
+      "labelSearchString": "Find Phase Types"
+    },
+    "detail": {
+      "title": "Phase Type Management",
+      "titleModify": "Phase Type Detail",
+      "titleNew": "New Phase Type"
+    },
+    "descrizione": "Description",
+    "ordinamento": "Sorting",
+    "csvFileName": "Phase Types"
+  }
+}

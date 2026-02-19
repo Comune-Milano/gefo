@@ -1,0 +1,46 @@
+{
+  "commRic": {
+    "home": {
+      "title": "Commenti - Richieste",
+      "titleSearchToolbar": "Commenti - Richieste",
+      "labelSearchString": "Cerca commenti - richieste"
+    },
+    "detail": {
+      "title": "Commento - Richiesta",
+      "titleModify": "Dettaglio commento - richiesta",
+      "titleNew": "Nuovo commento - richiesta"
+    },
+    "filter": {
+      "idPro": "Project",
+      "idTipFin": "Financing type",
+      "tipric": "Type",
+      "optionsTipRic": {
+        "ric": "Request",
+        "com": "Comment"
+      },
+      "staric": "State",
+      "optionsStaRic": {
+        "ini": "Initial",
+        "inv": "Request sent",
+        "ese": "Request done",
+        "res": "Request denied",
+        "ann": "Request cancelled"
+      },
+      "proRicute": "User",
+      "idRicpad": "Father comment"
+    },
+    "idPro": "Progetto",
+    "idProForm": "Progetto*",
+    "tipRicR": "Tipo richiesta",
+    "tipRicC": "Tipo commento",
+    "tipRicForm": "Tipo*",
+    "desric": "Descrizione",
+    "desricForm": "Descrizione*",
+    "user": "Username",
+    "staric": "Stato richiests",
+    "dtasca": "Data scadenza richiests",
+    "dtainv": "Data invio",
+    "risric": "Risposta alla richiesta",
+    "csvFileName": "Commenti.csv"
+  }
+}

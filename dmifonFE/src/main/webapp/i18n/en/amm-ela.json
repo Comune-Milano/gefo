@@ -1,0 +1,12 @@
+{
+  "ammEla": {
+    "home": {
+      "title": "Elaborations"
+    },
+    "desela": "Description",
+    "staela": "Status",
+    "dtaini": "Activated on",
+    "dtafin": "Finished on",
+    "usrCreate": "User"
+  }
+}

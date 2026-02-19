@@ -1,0 +1,48 @@
+{
+  "ammUtenti": {
+    "home": {
+      "title": "Users",
+      "titleSearchToolbar": "Users management",
+      "labelSearchString": "Search user",
+      "labelNuovoUtente": "Insert new user"
+    },
+    "created": "È stato creato un nuovo utente con identificativo {{ param }}",
+    "updated": "Sono stato aggiornati i dati dell'utente identificato da {{ param }}",
+    "deleted": "È stato eliminato l'utente identificato da {{ param }}",
+    "delete": {
+      "question": "Si è sicuri di volere eliminare l'utente {{ login }}?"
+    },
+    "detail": {
+      "title": "User",
+      "titleModify": "User detail",
+      "titleNew": "New user"
+    },
+    "username": "Username",
+    "usernameForm": "Username*",
+    "nome": "Name",
+    "nomeForm": "Name*",
+    "cognome": "Surname",
+    "cognomeForm": "Surname*",
+    "email": "Email",
+    "emailAlt": "Alternative email",
+    "abilitato": "Enabled",
+    "disabilitato": "Disabled",
+    "profiles": "Profili",
+    "langKey": "Lingua",
+    "createdBy": "Creato da",
+    "createdDate": "Creato il",
+    "lastModifiedBy": "Modificato da",
+    "lastModifiedDate": "Modificato il",
+    "csvFileName": "Users",
+    "formAssociazione": {
+      "id_ruo": "Role",
+      "flgdef": "Flag default",
+      "tipcondat": "Control type",
+      "id_dir": "Direction",
+      "selected": "Selected",
+      "notSelected": "Not selected",
+      "dirContr": "Direction controlled",
+      "dirNotContr": "Direction not controlled"
+    }
+  }
+}

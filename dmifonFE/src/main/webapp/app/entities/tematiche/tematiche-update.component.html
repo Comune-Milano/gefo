@@ -1,0 +1,192 @@
+<jhi-spinner></jhi-spinner>
+<div class="container-fluid mt-4">
+  <div class="row justify-content-between mb-4">
+    <div class="col d-flex align-items-center">
+      <h5 class="bold" *ngIf="this.id != ''" jhiTranslate="tematiche.detail.titleModify">Dettaglio tematica</h5>
+      <h5 class="bold" *ngIf="this.id == ''" jhiTranslate="tematiche.detail.titleNew">Nuova tematica</h5>
+    </div>
+  </div>
+  <!--alert modifica / inserimento -->
+  <jhi-alert *ngIf="viewAlert"></jhi-alert>
+  <jhi-alert-error *ngIf="viewError"></jhi-alert-error>
+
+  <!-- Form modifica / inserimento nuovo -->
+  <form [formGroup]="formTematiche" *ngIf="formTematiche">
+    <div class="d-grid gap-4 d-md-block">
+      <button
+        class="btn btn-primary btn-sml btn-xs btn-me min-wh-20"
+        [disabled]="formTematiche.pristine || !formTematiche.valid"
+        (click)="submitForm()"
+        *ngIf="modifica ? rolesCheckService.isPresent('/modificaTematica') : rolesCheckService.isPresent('/inserisciTematica')"
+        data-bs-target="#myNotification"
+        data-bs-timeout="5000"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-pencil"></use>
+        </svg>
+        <span>{{ stringSalva }}</span>
+        <!--<svg class="fa-save icon icon-white ms-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+          </svg> -->
+      </button>
+      <button
+        class="btn btn-danger btn-sml btn-xs btn-me min-wh-20"
+        *ngIf="this.id != '' && rolesCheckService.isPresent('/cancellaTematica')"
+        (click)="submitDelete()"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use>
+        </svg>
+        <span jhiTranslate="global.buttons.labelDelete">Cancella</span>
+      </button>
+      <button class="btn btn-primary btn-sml btn-xs btn-me min-wh-20 btnReload" *ngIf="this.id != ''" (click)="reload()">
+        <div class="rotateRefresh d-inline-block">
+          <svg class="icon icon-white ms-1">
+            <use href="content/bootstrap-italia/svg/sprites.svg#it-restore"></use>
+          </svg>
+        </div>
+        <span jhiTranslate="global.buttons.labelReload">Ricarica informazioni</span>
+      </button>
+      <!-- Pulsante più azioni (tre puntini)-->
+      <button
+        class="btn btn-danger btn-sml btn-xs btn-me min-wh-20"
+        *ngIf="this.id != ''"
+        data-bs-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-more-actions"></use>
+        </svg>
+      </button>
+      <div class="dropdown-menu">
+        <div class="link-list-wrapper">
+          <ul class="link-list">
+            <li>
+              <a class="list-item right-icon" (click)="goToTotali()">
+                <span jhiTranslate="gestProg.detail.titleTotali">Totali</span>
+                <svg class="icon icon-sm icon-primary float-right">
+                  <use href="content/bootstrap-italia/svg/sprites.svg#it-file"></use>
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- Prima riga con livello uno e livello due -->
+    <div class="row mt-4">
+      <div class="col-md-2">
+        <div class="mb-3">
+          <label for="livuno" class="form-label-sm" jhiTranslate="tematiche.livunoForm">Livello 1*</label>
+          <input
+            [attr.disabled]="modifica ? '' : null"
+            type="number"
+            class="form-control"
+            [ngClass]="!getFormElement('livuno').valid && getFormElement('livuno').touched ? 'is-invalid' : ''"
+            id="livuno"
+            formControlName="livuno"
+            value="livuno"
+            min="0"
+            placeholder=" "
+          />
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('livuno').errors?.['required'] && getFormElement('livuno').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('livuno').errors?.['min'] && getFormElement('livuno').touched"
+            jhiTranslate="entity.validation.min"
+            >Il valore deve essere maggiore o uguale a 0</small
+          >
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="mb-3">
+          <label for="livdue" class="form-label-sm" jhiTranslate="tematiche.livdueForm">Livello 2*</label>
+          <input
+            type="number"
+            [attr.disabled]="modifica ? '' : null"
+            class="form-control"
+            [ngClass]="!getFormElement('livdue').valid && getFormElement('livdue').touched ? 'is-invalid' : ''"
+            id="livdue"
+            formControlName="livdue"
+            value="livdue"
+            min="0"
+            placeholder=" "
+          />
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('livdue').errors?.['required'] && getFormElement('livdue').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('livdue').errors?.['min'] && getFormElement('livdue').touched"
+            jhiTranslate="entity.validation.min"
+            >Il valore deve essere maggiore o uguale a 0</small
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Seconda riga con codice e  descrizione-->
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="codtem" class="form-label-sm" jhiTranslate="tematiche.codtemForm">Codice*</label>
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="!getFormElement('codtem').valid && getFormElement('codtem').touched ? 'is-invalid' : ''"
+            id="codtem"
+            formControlName="codtem"
+            value="codtem"
+            placeholder=" "
+          />
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('codtem').errors?.['required'] && getFormElement('codtem').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('codtem').errors?.['pattern']"
+            jhiTranslate="entity.validation.sanitize"
+            >Ci sono caratteri non validi</small
+          >
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="destem" class="form-label-sm" jhiTranslate="tematiche.destemForm">Descrizione*</label>
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="!getFormElement('destem').valid && getFormElement('destem').touched ? 'is-invalid' : ''"
+            id="destem"
+            formControlName="destem"
+            value="destem"
+            placeholder=" "
+          />
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('destem').errors?.['required'] && getFormElement('destem').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('destem').errors?.['pattern']"
+            jhiTranslate="entity.validation.sanitize"
+            >Ci sono caratteri non validi</small
+          >
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

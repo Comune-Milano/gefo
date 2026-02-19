@@ -1,0 +1,119 @@
+<jhi-spinner></jhi-spinner>
+<div class="container-fluid mt-4">
+  <div class="row justify-content-between mb-4">
+    <div class="col d-flex align-items-center">
+      <h5 class="bold" *ngIf="this.id != ''" jhiTranslate="nil.detail.titleModify">Dettaglio nil</h5>
+      <h5 class="bold" *ngIf="this.id == ''" jhiTranslate="nil.detail.titleNew">Nuovo nil</h5>
+    </div>
+  </div>
+  <!--alert modifica / inserimento -->
+  <jhi-alert *ngIf="viewAlert"></jhi-alert>
+  <jhi-alert-error *ngIf="viewError"></jhi-alert-error>
+
+  <!-- Form modifica / inserimento nuovo -->
+  <form [formGroup]="formNil" *ngIf="formNil">
+    <div class="d-grid gap-3 d-md-block">
+      <button
+        class="btn btn-primary btn-sml btn-xs btn-me min-wh-20"
+        (click)="submitForm()"
+        *ngIf="modifica ? rolesCheckService.isPresent('/modificaNil') : rolesCheckService.isPresent('/inserisciNil')"
+        data-bs-target="#myNotification"
+        data-bs-timeout="5000"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-pencil"></use>
+        </svg>
+        <span>{{ stringSalva }}</span>
+      </button>
+      <button
+        class="btn btn-danger btn-sml btn-xs btn-me min-wh-20"
+        (click)="submitDelete()"
+        *ngIf="this.id != '' && rolesCheckService.isPresent('/cancellaNil')"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use>
+        </svg>
+        <span jhiTranslate="global.buttons.labelDelete">Cancella</span>
+      </button>
+      <button class="btn btn-primary btn-sml btn-xs btn-me min-wh-20 btnReload" (click)="reload()" *ngIf="this.id != ''">
+        <div class="rotateRefresh d-inline-block">
+          <svg class="icon icon-white ms-1">
+            <use href="content/bootstrap-italia/svg/sprites.svg#it-restore"></use>
+          </svg>
+        </div>
+        <span jhiTranslate="global.buttons.labelReload">Ricarica informazioni</span>
+      </button>
+      <button
+        *ngIf="this.id != ''"
+        class="btn btn-danger btn-sml btn-xs btn-me min-wh-20"
+        data-bs-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-more-actions"></use>
+        </svg>
+      </button>
+      <div class="dropdown-menu">
+        <div class="link-list-wrapper">
+          <ul class="link-list">
+            <li>
+              <a class="list-item right-icon" (click)="goToTotali()">
+                <span jhiTranslate="gestProg.detail.titleTotali">Totali</span>
+                <img class="icon icon-sm float-right" src="content/images/icon-eur.png" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- Prima riga con codice, descrizione e tipfinda-->
+    <div class="row mt-4">
+      <div class="col-md-4 mb-3 mb-3">
+        <label for="codnil" class="form-label-sm" jhiTranslate="nil.codnilForm">Codice*</label>
+        <input
+          type="text"
+          class="form-control"
+          [ngClass]="!getFormElement('codnil').valid && getFormElement('codnil').touched ? 'is-invalid' : ''"
+          id="codnil"
+          formControlName="codnil"
+          min="0"
+          placeholder=" "
+        />
+        <small
+          class="form-text text-danger"
+          *ngIf="getFormElement('desnil').errors?.['required'] && getFormElement('desnil').touched"
+          jhiTranslate="entity.validation.required"
+          >Questo campo è obbligatorio</small
+        >
+      </div>
+      <div class="col-md-4 mb-3 mb-3">
+        <label for="desmun" class="form-label-sm" jhiTranslate="nil.desnilForm">Descrizione*</label>
+        <input
+          type="text"
+          class="form-control"
+          [ngClass]="!getFormElement('desnil').valid && getFormElement('desnil').touched ? 'is-invalid' : ''"
+          id="desmun"
+          formControlName="desnil"
+          min="0"
+          placeholder=" "
+        />
+        <small
+          class="form-text text-danger"
+          *ngIf="getFormElement('desnil').errors?.['required'] && getFormElement('desnil').touched"
+          jhiTranslate="entity.validation.required"
+          >Questo campo è obbligatorio</small
+        >
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="desmun" class="form-label-sm" jhiTranslate="gestProg.id_munForm">Municipio*</label>
+        <div class="select-wrapper">
+          <select formControlName="idMun">
+            <option [ngValue]="null" jhiTranslate="gestProg.select.default">Scegli un'opzione</option>
+            <option *ngFor="let mun of municipi" [ngValue]="mun.id">{{ mun.desmun }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

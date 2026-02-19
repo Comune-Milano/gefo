@@ -1,0 +1,18 @@
+div {
+  animation: fadeInRight 0.5s ease-in-out !important;
+  max-width: 650px;
+}
+
+.alert {
+  background-color: white !important;
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(300px);
+  }
+  to {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "home": {
+    "title": "Application for the management of funds",
+    "subtitle": "This is your homepage",
+    "logged": {
+      "title": "Successfully authenticated",
+      "nome": "Name: ",
+      "cognome": "Surname: ",
+      "username": "Username: ",
+      "message": "You are logged in as user \"{{username}}\"."
+    },
+    "question": "If you have any question on JHipster:",
+    "link": {
+      "homepage": "JHipster homepage",
+      "stackoverflow": "JHipster on Stack Overflow",
+      "bugtracker": "JHipster bug tracker",
+      "chat": "JHipster public chat room",
+      "follow": "follow @jhipster on Twitter",
+      "profiles": "Go to profiles"
+    },
+    "fun": "FUNCTIONALITY",
+    "ciao": "Hi",
+    "prog": "Projects",
+    "detcon": "Accounting data",
+    "exp": "Export",
+    "adm": "Administration",
+    "descrizioni": {
+      "gestpro": "Project management",
+      "dizpro": "Dictionary projects",
+      "ricCon": "Accounting search",
+      "expfil": "File export",
+      "gestamm": "Administration management"
+    },
+    "like": "If you like JHipster, don't forget to give us a star on",
+    "github": "GitHub"
+  }
+}

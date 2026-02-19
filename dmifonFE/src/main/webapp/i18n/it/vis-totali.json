@@ -1,0 +1,90 @@
+{
+  "visTotali": {
+    "home": {
+      "title": "Totali per: "
+    },
+    "tabAccertImpegni": {
+      "title": "Accertamenti / Impegni",
+      "totRisorse": "Totale risorse",
+      "numProgetti": "Num. Progetti",
+      "accertamenti": "Accertamenti",
+      "daAccertare": "Da accertare",
+      "insussist": "Insussist.",
+      "reversali": "Reversali",
+      "impegni": "Impegni",
+      "daImpegnare": "Da impegnare",
+      "economie": "Economie",
+      "liquidazioni": "Liquidazioni",
+      "mandati": "Mandati"
+    },
+    "tabDDRPrev": {
+      "title": "DDR / Previsioni",
+      "totRisorse": "Totale risorse",
+      "ddr": "DDR",
+      "ddrAmmesso": "DDR ammesso",
+      "ddrTrasferito": "DDR trasferito",
+      "ddrIncassato": "DDR incassato",
+      "previsioniAnno": "Previsioni anno",
+      "previsioniAnno1": "Previsioni anno+1",
+      "previsioniAnniSuc": "Previsioni anni suc."
+    },
+    "tabTabellaRis": {
+      "title": "Tabella risorse",
+      "titleTabellaRisorse": "Tabella risorse",
+      "tipoImporto": "Tipo importo",
+      "importo": "Importo risorse",
+      "accertato": "Accertato",
+      "reversali": "Reversali",
+      "impegni": "Impegni",
+      "mandati": "Mandati"
+    },
+    "tabTabellaRisDiCui": {
+      "title": "Tabella risorse di cui",
+      "titleTabellaRisDiCui": "Tabella risorse di cui",
+      "tipoImporto": "Tipo importo",
+      "importo": "Importo"
+    },
+
+    "accImp": {
+      "acc": {
+        "codetcon": "Accertamento",
+        "desimp": "Descrizione",
+        "idcap": "Capitolo",
+        "idcro": "Crono",
+        "impass": "Assestato",
+        "impeco": "Insussist",
+        "impman": "Reversali",
+        "despdd": "PDD",
+        "notent": "Note"
+      },
+      "imp": {
+        "codentcon": "Impegno",
+        "codentcol": "Accertamento",
+        "desimp": "Descrizione",
+        "idcap": "Capitolo",
+        "idcro": "Crono",
+        "impass": "Assestato",
+        "impeco": "Economie",
+        "impliq": "Liquidazioni",
+        "impman": "Mandati",
+        "despdd": "PDD",
+        "nroconapp": "Num. CA",
+        "codgami": "Cod. Gami",
+        "notent": "Note",
+        "id_tipimp": "Tipo importo"
+      },
+      "cro": {
+        "codentcon": "Crono",
+        "descro": "Descrizione",
+        "id_tipimp": "Tipo importo",
+        "notent": "Note"
+      }
+    },
+    "allegati": {
+      "fileName": "Nome file",
+      "dataCaricamento": "Data caricamento",
+      "nota": "Nota"
+    },
+    "csvFileName": "Gestione_progetti"
+  }
+}

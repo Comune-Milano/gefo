@@ -1,0 +1,38 @@
+{
+  "home": {
+    "title": "Applicazione per la gestione fondi",
+    "subtitle": "Questa è la tua home page",
+    "logged": {
+      "title": "Autenticato correttamente",
+      "nome": "Nome: ",
+      "cognome": "Cognome: ",
+      "username": "Username: ",
+      "message": "Autenticato come \"{{username}}\".",
+      "messageNoRoles": "L'utente \"{{username}}\" non ha ruoli associati."
+    },
+    "question": "In caso di domande su JHipster:",
+    "link": {
+      "homepage": "Homepage JHipster",
+      "stackoverflow": "JHipster su Stack Overflow",
+      "bugtracker": "JHipster tracciamento errori",
+      "chat": "Chat room pubblica di JHipster",
+      "follow": "segui @jhipster su Twitter",
+      "profiles": "Vai ai profili"
+    },
+    "fun": "FUNZIONALITÀ",
+    "ciao": "Ciao",
+    "prog": "Progetti",
+    "detcon": "Dati contabili",
+    "exp": "Export",
+    "adm": "Amministrazione",
+    "descrizioni": {
+      "gestpro": "Gestione progetti",
+      "dizpro": "Dizionario progetti",
+      "ricCon": "Ricerche contabilità",
+      "expfil": "Esporta file",
+      "gestamm": "Gestione amministrazione"
+    },
+    "like": "Se ti piace JHipster, non dimenticarti di darci una stella su",
+    "github": "GitHub"
+  }
+}

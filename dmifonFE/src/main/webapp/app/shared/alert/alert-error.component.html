@@ -1,0 +1,21 @@
+<!--<div class="alerts" role="alert">
+  <div *ngFor="let alert of alerts" [ngClass]="setClasses(alert)">
+    <ngb-alert *ngIf="alert.message" [type]="alert.type" (closed)="close(alert)">
+      <pre [innerHTML]="alert.message"></pre>
+    </ngb-alert>
+  </div>
+</div> -->
+
+<div
+  class="alert alert-danger alert-dismissible"
+  style="position: absolute; top: 60px !important; z-index: 999 !important; right: 0 !important"
+  role="alert"
+  id="alert"
+>
+  <span>{{ testo }}</span>
+  <button type="button" class="btn-close px-1" data-bs-dismiss="alert" aria-label="Chiudi avviso">
+    <svg class="icon">
+      <use href="content/bootstrap-italia/svg/sprites.svg#it-close"></use>
+    </svg>
+  </button>
+</div>

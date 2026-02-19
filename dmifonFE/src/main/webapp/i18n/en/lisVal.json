@@ -1,0 +1,30 @@
+{
+  "lisVal": {
+    "home": {
+      "title": "Value List",
+      "titleSearchToolbar": "Value List",
+      "labelSearchString": "Find Value List"
+    },
+    "detail": {
+      "title": "Value List Management",
+      "titleModify": "Detail Value List",
+      "titleNew": "New Value List"
+    },
+    "descrizione": "Description",
+    "tipoLista": "Type List",
+    "codnilForm": "Code*",
+    "desnil": "Description",
+    "desnilForm": "Description*",
+    "municipio": "Town hall",
+    "num_progetti": "Project Num.",
+    "resources": "Fund resources",
+    "csvFileName": "Value List",
+    "code": {
+      "AVAFASINT": "Intervention phase",
+      "AVACRI": "Criticality level",
+      "AVATIPAPP": "Contract type",
+      "AVASTAANT": "State anticipation",
+      "TIPOLFAS": "Phase typology"
+    }
+  }
+}

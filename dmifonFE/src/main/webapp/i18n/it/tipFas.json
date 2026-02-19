@@ -1,0 +1,18 @@
+{
+  "tipFas": {
+    "home": {
+      "title": "Tipi Fase ",
+      "titleSearchToolbar": "Tipi Fase",
+      "labelSearchString": "Trova Tipo fase"
+    },
+    "detail": {
+      "title": "Gestione Tipo Fase",
+      "titleModify": "Dettaglio Tipo Fase",
+      "titleNew": "Nuovo Tipo Fase"
+    },
+    "descrizione": "Descrizione",
+    "ordinamento": "Ordinamento",
+    "desnilForm": "Descrizione*",
+    "csvFileName": "Tipi Fase"
+  }
+}

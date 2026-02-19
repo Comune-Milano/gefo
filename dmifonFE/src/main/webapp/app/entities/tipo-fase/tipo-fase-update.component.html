@@ -1,0 +1,90 @@
+<jhi-spinner></jhi-spinner>
+<div class="container-fluid mt-4">
+  <div class="row justify-content-between mb-4">
+    <div class="col d-flex align-items-center">
+      <h5 class="bold" *ngIf="this.id != ''" jhiTranslate="tipFas.detail.titleModify">Dettaglio Tipo Fase</h5>
+      <h5 class="bold" *ngIf="this.id == ''" jhiTranslate="tipFas.detail.titleNew">Nuovo Tipo Fase</h5>
+    </div>
+  </div>
+  <!--alert modifica / inserimento -->
+  <jhi-alert *ngIf="viewAlert"></jhi-alert>
+  <jhi-alert-error *ngIf="viewError"></jhi-alert-error>
+
+  <!-- Form modifica / inserimento nuovo -->
+  <form [formGroup]="formTip" *ngIf="formTip">
+    <div class="d-grid gap-3 d-md-block">
+      <button
+        (click)="submitForm()"
+        class="btn btn-primary btn-sml btn-xs btn-me min-wh-20"
+        *ngIf="modifica ? rolesCheckService.isPresent('/modificaTipoFase') : rolesCheckService.isPresent('/inserisciTipoFase')"
+        data-bs-target="#myNotification"
+        data-bs-timeout="5000"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-pencil"></use>
+        </svg>
+        <span>{{ stringSalva }}</span>
+      </button>
+      <button
+        (click)="submitDelete()"
+        class="btn btn-danger btn-sml btn-xs btn-me min-wh-20"
+        *ngIf="this.id != '' && rolesCheckService.isPresent('/cancellaTipoFase')"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use>
+        </svg>
+        <span jhiTranslate="global.buttons.labelDelete">Cancella</span>
+      </button>
+      <button class="btn btn-primary btn-sml btn-xs btn-me min-wh-20 btnReload" (click)="reload()" *ngIf="this.id != ''">
+        <div class="rotateRefresh d-inline-block">
+          <svg class="icon icon-white ms-1">
+            <use href="content/bootstrap-italia/svg/sprites.svg#it-restore"></use>
+          </svg>
+        </div>
+        <span jhiTranslate="global.buttons.labelReload">Ricarica informazioni</span>
+      </button>
+    </div>
+    <!-- Prima riga con codice, descrizione e tipfinda-->
+    <div class="row mt-4">
+      <div class="col-md-4 mb-3 mb-3">
+        <label for="vallis" class="form-label-sm" jhiTranslate="tipFas.descrizione">Descrizione*</label>
+        <input
+          type="text"
+          class="form-control"
+          [ngClass]="!getFormElement('desfas').valid && getFormElement('desfas').touched ? 'is-invalid' : ''"
+          id="vallis"
+          formControlName="desfas"
+          min="0"
+          placeholder=" "
+        />
+        <small
+          class="form-text text-danger"
+          *ngIf="getFormElement('desfas').errors?.['required'] && getFormElement('desfas').touched"
+          jhiTranslate="entity.validation.required"
+          >Questo campo è obbligatorio</small
+        >
+        <small class="form-text text-danger" *ngIf="getFormElement('desfas').errors?.['pattern']" jhiTranslate="entity.validation.sanitize"
+          >Ci sono caratteri non validi</small
+        >
+      </div>
+      <div class="col-md-4 mb-3 mb-3">
+        <label for="vallis" class="form-label-sm" jhiTranslate="tipFas.ordinamento">Ordinamento*</label>
+        <input
+          type="number"
+          class="form-control"
+          [ngClass]="!getFormElement('ordfas').valid && getFormElement('ordfas').touched ? 'is-invalid' : ''"
+          id="ordfas"
+          formControlName="ordfas"
+          min="0"
+          placeholder=" "
+        />
+        <small
+          class="form-text text-danger"
+          *ngIf="getFormElement('ordfas').errors?.['required'] && getFormElement('ordfas').touched"
+          jhiTranslate="entity.validation.required"
+          >Questo campo è obbligatorio</small
+        >
+      </div>
+    </div>
+  </form>
+</div>

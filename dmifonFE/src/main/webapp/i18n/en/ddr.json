@@ -1,0 +1,42 @@
+{
+  "ddr": {
+    "home": {
+      "title": "DDR",
+      "titleSearchToolbar": "DDR",
+      "labelSearchString": "Search DDR"
+    },
+    "detail": {
+      "title": "DDR",
+      "titleModify": "DDR detail",
+      "titleNew": "New DDR"
+    },
+    "codddr": "Code",
+    "codddrForm": "Code*",
+    "desddr": "Description",
+    "desddrForm": "Description*",
+    "id_ddra": "DDRA",
+    "id_ddraForm": "DDRA*",
+    "id_prog": "Project",
+    "id_progForm": "Project*",
+    "id_tipfin": "Financing type",
+    "id_dir": "Direction",
+    "flgnoddra": "Flag no DDRA",
+    "dtaddr": "DDR date*",
+    "impddr": "DDR amount*",
+    "imptra": "Transferred amount",
+    "impamm": "Eligible amount*",
+    "impinc": "Amount collected*",
+    "prgrev": "Progressive collection",
+    "notddr": "Notes",
+    "select": {
+      "title": "Level type",
+      "default": "Select an option",
+      "livuno": "Level one",
+      "livdue": "Level two",
+      "livtre": "Level three",
+      "livpa": "Bottom level",
+      "livpb": "Previous level to the bottom"
+    },
+    "csvFileName": "ddr_management"
+  }
+}

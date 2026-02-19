@@ -1,0 +1,83 @@
+.text-danger {
+  color: red !important;
+}
+
+.float-right {
+  float: right;
+}
+
+.red {
+  background-color: #d8042c;
+}
+
+.white {
+  color: white;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.txt-sm {
+  font-size: 0.9em;
+}
+
+.float-left {
+  float: left;
+}
+
+.odd {
+  background-color: white;
+}
+
+.even {
+  background-color: whitesmoke;
+}
+
+.top-spinner {
+  margin-top: 10%;
+}
+
+.importo {
+  text-align: right;
+}
+
+.no-border {
+  border: 0;
+  box-shadow: none; /* You may want to include this as bootstrap applies these styles too */
+}
+
+textarea {
+  border-style: none;
+  border-color: Transparent;
+  overflow: auto;
+}
+
+.callout-title {
+  text-transform: capitalize !important;
+  color: black !important;
+}
+
+.c-pointer {
+  cursor: pointer;
+}
+
+@media (min-width: 1690px) {
+  .min-wh-20 {
+    min-width: 19%;
+    margin-bottom: 10px;
+  }
+  .modal-dialog {
+    width: 75%;
+  }
+}
+
+@media (max-width: 1690px) {
+  .min-wh-20 {
+    min-width: 15%;
+    margin-bottom: 10px;
+  }
+  .modal-dialog {
+    overflow: scroll;
+  }
+}

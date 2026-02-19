@@ -1,0 +1,508 @@
+<jhi-spinner></jhi-spinner>
+<div class="container-fluid mt-4">
+  <div class="row justify-content-between mb-1">
+    <div class="col d-flex align-items-center">
+      <h5 class="bold"><span jhiTranslate="visTotali.home.title">Totali per:</span></h5>
+    </div>
+  </div>
+  <div class="row mb-2" *ngIf="this.curVisTotali">
+    <div class="col d-flex">
+      <h6 class="my-0">
+        {{ this.curVisTotali.desTipEnt }}: <span class="bold">{{ this.curVisTotali.desEnt }} </span>
+      </h6>
+    </div>
+  </div>
+  <!--<div class="row" *ngIf="this.titlePage">
+    <div class="col d-flex">
+      <h6>
+        Progetto padre: <span class="bold">{{ this.progettoPadreLabel }} </span>
+      </h6>
+    </div>
+  </div> -->
+  <!--alert modifica / inserimento -->
+  <jhi-alert *ngIf="viewAlert"></jhi-alert>
+  <jhi-alert-error *ngIf="viewError"></jhi-alert-error>
+
+  <!-- Form modifica / inserimento nuovo -->
+  <form *ngIf="formVisTotali" [formGroup]="formVisTotali">
+    <div class="row">
+      <div class="col-3 mb-1">
+        <button class="btn btn-primary btn-sml btn-xs btn-me h-100 w-100 btnReload" (click)="reload()">
+          <div class="rotateRefresh d-inline-block">
+            <svg class="icon icon-white ms-1">
+              <use href="content/bootstrap-italia/svg/sprites.svg#it-restore"></use>
+            </svg>
+          </div>
+          <span jhiTranslate="global.buttons.labelReload">Ricarica informazioni</span>
+        </button>
+      </div>
+    </div>
+    <!-- Tab schede progetto -->
+    <ul class="nav nav-tabs auto mt-5" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a
+          class="nav-link active"
+          id="data-ex-tab1-tab"
+          data-bs-toggle="tab"
+          href="#tab1"
+          role="tab"
+          aria-controls="tab1"
+          aria-selected="true"
+          jhiTranslate="visTotali.tabAccertImpegni.title"
+        >
+          Accertamenti / Impegni
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          id="data-ex-tab2-tab"
+          data-bs-toggle="tab"
+          href="#tab2"
+          role="tab"
+          aria-controls="tab2"
+          aria-selected="false"
+          jhiTranslate="visTotali.tabDDRPrev.title"
+        >
+          DDR / Previsioni
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          id="data-ex-tab3-tab"
+          data-bs-toggle="tab"
+          href="#tab3"
+          role="tab"
+          aria-controls="tab3"
+          aria-selected="false"
+          jhiTranslate="visTotali.tabTabellaRis.title"
+        >
+          Tabella risorse
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          id="data-ex-tab4-tab"
+          data-bs-toggle="tab"
+          href="#tab4"
+          role="tab"
+          aria-controls="tab4"
+          aria-selected="false"
+          jhiTranslate="visTotali.tabTabellaRisDiCui.title"
+        >
+          Tabella risorse di cui
+        </a>
+      </li>
+    </ul>
+    <!-- Schede -->
+    <div class="tab-content">
+      <!-- Accertamenti / Impegni -->
+      <div class="tab-pane active" id="tab1" role="tabpanel" aria-labelledby="data-ex-tab1-tab">
+        <!-- Prima riga con "Totale risorse", "Num. progetti" e "Accertamenti" -->
+        <div class="row mt-4">
+          <div class="col-md-3 mb-3">
+            <label for="imprisfon" class="form-label-sm" jhiTranslate="visTotali.tabAccertImpegni.totRisorse">Totale risorse</label>
+            <input
+              type="text"
+              class="form-control text-end"
+              id="imprisfon"
+              formControlName="imprisfon"
+              value="imprisfon"
+              placeholder=" "
+              importo
+              [attr.disabled]="true"
+            />
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="nroprofon" class="form-label-sm" jhiTranslate="visTotali.tabAccertImpegni.numProgetti">Num. Progetti</label>
+            <input
+              type="number"
+              class="form-control text-end"
+              id="nroprofon"
+              formControlName="nroprofon"
+              value="nroprofon"
+              placeholder=" "
+              [attr.disabled]="true"
+            />
+          </div>
+        </div>
+        <!-- Seconda riga con "Da accertare", "Insussist" e "Reversali" -->
+        <div class="row mt-4">
+          <div class="col-md-3 mb-3">
+            <label for="impacc" class="form-label-sm" jhiTranslate="visTotali.tabAccertImpegni.accertamenti">Accertamenti</label>
+            <input
+              type="text"
+              class="form-control text-end"
+              id="impacc"
+              formControlName="impacc"
+              value="impacc"
+              placeholder=" "
+              importo
+              [attr.disabled]="true"
+            />
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="impdaacc" class="form-label-sm" jhiTranslate="visTotali.tabAccertImpegni.daAccertare">Da accertare</label>
+            <input
+              type="text"
+              class="form-control text-end"
+              id="impdaacc"
+              formControlName="impdaacc"
+              value="impdaacc"
+              placeholder=" "
+              importo
+              [attr.disabled]="true"
+            />
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="imprev" class="form-label-sm" jhiTranslate="visTotali.tabAccertImpegni.reversali">Reversali</label>
+            <input
+              type="text"
+              class="form-control text-end"
+              id="imprev"
+              formControlName="imprev"
+              value="imprev"
+              placeholder=" "
+              importo
+              [attr.disabled]="true"
+            />
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="impecoacc" class="form-label-sm" jhiTranslate="visTotali.tabAccertImpegni.insussist">Insussist.</label>
+            <input
+              type="text"
+              class="form-control text-end"
+              id="impecoacc"
+              formControlName="impecoacc"
+              value="impecoacc"
+              placeholder=" "
+              importo
+              [attr.disabled]="true"
+            />
+          </div>
+        </div>
+        <!-- Terza riga con "Impegni", "Da impegnare" e "Economie" -->
+        <div class="row mt-4">
+          <div class="col-md-3 mb-3">
+            <label for="impimp" class="form-label-sm" jhiTranslate="visTotali.tabAccertImpegni.impegni">Impegni</label>
+            <input
+              type="text"
+              class="form-control text-end"
+              id="impimp"
+              formControlName="impimp"
+              value="impimp"
+              placeholder=" "
+              importo
+              [attr.disabled]="true"
+            />
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="impdaimp" class="form-label-sm" jhiTranslate="visTotali.tabAccertImpegni.daImpegnare">Da impegnare</label>
+            <input
+              type="text"
+              class="form-control text-end"
+              id="impdaimp"
+              formControlName="impdaimp"
+              value="impdaimp"
+              placeholder=" "
+              importo
+              [attr.disabled]="true"
+            />
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="impman" class="form-label-sm" jhiTranslate="visTotali.tabAccertImpegni.mandati">Mandati</label>
+            <input
+              type="text"
+              class="form-control text-end"
+              id="impman"
+              formControlName="impman"
+              value="impman"
+              placeholder=" "
+              importo
+              [attr.disabled]="true"
+            />
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="impecoimp" class="form-label-sm" jhiTranslate="visTotali.tabAccertImpegni.economie">Economie</label>
+            <input
+              type="text"
+              class="form-control text-end"
+              id="impecoimp"
+              formControlName="impecoimp"
+              value="impecoimp"
+              placeholder=" "
+              importo
+              [attr.disabled]="true"
+            />
+          </div>
+        </div>
+        <!-- Quarta riga con "Liquidazioni" e "Mandati" -->
+        <div class="row mt-4">
+          <div class="col-md-3 mb-3">
+            <label for="impliq" class="form-label-sm" jhiTranslate="visTotali.tabAccertImpegni.liquidazioni">Liquidazioni</label>
+            <input
+              type="text"
+              class="form-control text-end"
+              id="impliq"
+              formControlName="impliq"
+              value="impliq"
+              placeholder=" "
+              importo
+              [attr.disabled]="true"
+            />
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="impliq" class="form-label-sm">Importo IGV</label>
+            <input
+              type="text"
+              class="form-control text-end"
+              id="impigv"
+              formControlName="impigv"
+              value="impigv"
+              placeholder=" "
+              importo
+              [attr.disabled]="true"
+            />
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="impigvdel" class="form-label-sm">Importo IGV Del.</label>
+            <input
+              type="text"
+              class="form-control text-end"
+              id="impigvdel"
+              formControlName="impigvdel"
+              value="impigvdel"
+              placeholder=" "
+              importo
+              [attr.disabled]="true"
+            />
+          </div>
+        </div>
+      </div>
+      <!-- DDR / Previsioni -->
+      <div class="tab-pane" id="tab2" role="tabpanel" aria-labelledby="data-ex-tab2-tab">
+        <!-- Prima riga con "Totale risorse", "DDR" e "DDR ammesso" -->
+        <div class="row mt-4">
+          <div class="col-md-3 mb-3">
+            <label for="imprisfonDDR" class="form-label-sm" jhiTranslate="visTotali.tabDDRPrev.totRisorse">Totale risorse</label>
+            <input
+              type="text"
+              class="form-control text-end"
+              id="imprisfonDDR"
+              formControlName="imprisfonDDR"
+              value="imprisfon"
+              placeholder=" "
+              importo
+              [attr.disabled]="true"
+            />
+          </div>
+        </div>
+        <!-- Seconda riga con "DDR trasferito" e "DDR incassato" -->
+        <div class="row mt-4">
+          <div class="col-md-3 mb-3">
+            <label for="impddr" class="form-label-sm" jhiTranslate="visTotali.tabDDRPrev.ddr">DDR</label>
+            <input
+              type="text"
+              class="form-control text-end"
+              id="impddr"
+              formControlName="impddr"
+              value="impddr"
+              placeholder=" "
+              importo
+              [attr.disabled]="true"
+            />
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="impamm" class="form-label-sm" jhiTranslate="visTotali.tabDDRPrev.ddrAmmesso">DDR ammesso</label>
+            <input
+              type="text"
+              class="form-control text-end"
+              id="impamm"
+              formControlName="impamm"
+              value="impamm"
+              placeholder=" "
+              importo
+              [attr.disabled]="true"
+            />
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="imptra" class="form-label-sm" jhiTranslate="visTotali.tabDDRPrev.ddrTrasferito">DDR trasferito</label>
+            <input
+              type="text"
+              class="form-control text-end"
+              id="imptra"
+              formControlName="imptra"
+              value="imptra"
+              placeholder=" "
+              importo
+              [attr.disabled]="true"
+            />
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="impinc" class="form-label-sm" jhiTranslate="visTotali.tabDDRPrev.ddrIncassato">DDR incassato</label>
+            <input
+              type="text"
+              class="form-control text-end"
+              id="impinc"
+              formControlName="impinc"
+              value="impinc"
+              placeholder=" "
+              importo
+              [attr.disabled]="true"
+            />
+          </div>
+        </div>
+        <!-- Terza riga con "Previsioni anno", "Previsioni anno+1" e "Previsioni anni suc." -->
+        <div class="row mt-4">
+          <div class="col-md-3 mb-3">
+            <label for="impprvese" class="form-label-sm" jhiTranslate="visTotali.tabDDRPrev.previsioniAnno">Previsioni anno</label>
+            <input
+              type="text"
+              class="form-control text-end"
+              id="impprvese"
+              formControlName="impprvese"
+              value="impprvese"
+              placeholder=" "
+              importo
+              [attr.disabled]="true"
+            />
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="impprvese1" class="form-label-sm" jhiTranslate="visTotali.tabDDRPrev.previsioniAnno1">Previsioni anno+1</label>
+            <input
+              type="text"
+              class="form-control text-end"
+              id="impprvese1"
+              formControlName="impprvese1"
+              value="impprvese1"
+              placeholder=" "
+              importo
+              [attr.disabled]="true"
+            />
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="impprvsuc" class="form-label-sm" jhiTranslate="visTotali.tabDDRPrev.previsioniAnniSuc">Previsioni anni suc.</label>
+            <input
+              type="text"
+              class="form-control text-end"
+              id="impprvsuc"
+              formControlName="impprvsuc"
+              value="impprvsuc"
+              placeholder=" "
+              importo
+              [attr.disabled]="true"
+            />
+          </div>
+        </div>
+      </div>
+      <!-- Scheda tabella risorse -->
+      <div class="tab-pane" id="tab3" role="tabpanel" aria-labelledby="data-ex-tab3-tab">
+        <h5 class="mt-4" jhiTranslate="visTotali.tabTabellaRis.titleTabellaRisorse">Tabella risorse</h5>
+        <table class="table table-borderless table-responsive mt-2">
+          <thead>
+            <tr>
+              <th scope="col"><span jhiTranslate="visTotali.tabTabellaRis.tipoImporto">Tipo importo</span></th>
+              <th scope="col"><span jhiTranslate="visTotali.tabTabellaRis.importo">Importo</span></th>
+              <th scope="col"><span jhiTranslate="visTotali.tabTabellaRis.accertato">Accertato</span></th>
+              <th scope="col"><span jhiTranslate="visTotali.tabTabellaRis.reversali">Reversali</span></th>
+              <th scope="col"><span jhiTranslate="visTotali.tabTabellaRis.impegni">Impegni</span></th>
+              <th scope="col"><span jhiTranslate="visTotali.tabTabellaRis.mandati">Mandati</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-smoke border-left" *ngFor="let risorsa of getRisorseFormArray().controls">
+              <td>
+                <input
+                  type="text"
+                  [formControl]="convertToFormControl(risorsa.get('destipimp'))"
+                  [attr.disabled]="true"
+                  class="form-control"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  class="text-end"
+                  [formControl]="convertToFormControl(risorsa.get('imppro'))"
+                  [attr.disabled]="true"
+                  class="form-control"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  class="text-end"
+                  [formControl]="convertToFormControl(risorsa.get('sumImpAcc'))"
+                  [attr.disabled]="true"
+                  class="form-control"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  class="text-end"
+                  [formControl]="convertToFormControl(risorsa.get('sumImpRev'))"
+                  [attr.disabled]="true"
+                  class="form-control"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  class="text-end"
+                  [formControl]="convertToFormControl(risorsa.get('sumImpImp'))"
+                  [attr.disabled]="true"
+                  class="form-control"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  class="text-end"
+                  [formControl]="convertToFormControl(risorsa.get('sumImpMan'))"
+                  [attr.disabled]="true"
+                  class="form-control"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Scheda risorse del fondo di cui -->
+      <div class="tab-pane" id="tab4" role="tabpanel" aria-labelledby="data-ex-tab4-tab">
+        <h5 class="mt-4" jhiTranslate="visTotali.tabTabellaRisDiCui.titleTabellaRisDiCui">Tabella risorse di cui</h5>
+        <table class="table table-borderless table-responsive mt-2 w-50">
+          <thead>
+            <tr>
+              <th scope="col"><span jhiTranslate="visTotali.tabTabellaRisDiCui.tipoImporto">Tipo importo</span></th>
+              <th scope="col"><span jhiTranslate="visTotali.tabTabellaRisDiCui.importo">Importo</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-smoke border-left" *ngFor="let risorsa of getRisorseDiCuiFormArray().controls">
+              <td>
+                <input
+                  type="text"
+                  [formControl]="convertToFormControl(risorsa.get('destipimp'))"
+                  [attr.disabled]="true"
+                  class="form-control"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  class="text-end"
+                  [formControl]="convertToFormControl(risorsa.get('imppro'))"
+                  [attr.disabled]="true"
+                  class="form-control"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </form>
+</div>

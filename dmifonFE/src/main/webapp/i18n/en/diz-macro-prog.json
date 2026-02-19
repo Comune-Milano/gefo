@@ -1,0 +1,29 @@
+{
+  "dizMacroProg": {
+    "home": {
+      "title": "Macro projects",
+      "titleSearchToolbar": "Macro projects",
+      "labelSearchString": "Search Macro project"
+    },
+    "detail": {
+      "title": "Macro project",
+      "titleModify": "Macro project detail",
+      "titleNew": "New macro project"
+    },
+    "codmacpro": "Code",
+    "codmacproForm": "Code*",
+    "desmacpro": "Description",
+    "desmacproForm": "Description*",
+    "id_tipfinda": "Fin. type Da",
+    "id_tipfindaForm": "Fin. type Da*",
+    "id_tipfina": "Fin. type A",
+    "id_tipfinaForm": "Fin. type A*",
+    "num_progetti": "Num.progetti",
+    "resources": "Risorse del fondo",
+    "select": {
+      "title": "Livello",
+      "default": "Scegli un'opzione"
+    },
+    "csvFileName": "Macro_Projects"
+  }
+}

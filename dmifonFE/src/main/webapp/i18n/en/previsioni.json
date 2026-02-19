@@ -1,0 +1,35 @@
+{
+  "Prev": {
+    "home": {
+      "title": "Forecasts",
+      "titleSearchToolbar": "Forecasts"
+    },
+    "detail": {
+      "title": "Forecast",
+      "titleModify": "Forecast detail",
+      "titleNew": "New Forecast"
+    },
+    "idProg": "Project",
+    "dtapre": "Date",
+    "dtapreForm": "Date*",
+    "imppre": "Amount",
+    "imppreForm": "Amount*",
+    "notpre": "Note",
+    "id_prog": "Project",
+    "id_progForm": "Project*",
+    "id_tipfin": "Financing type",
+    "id_dir": "Direction",
+    "dataPreDa": "From date",
+    "dataPreA": "To date",
+    "select": {
+      "title": "Layer type",
+      "default": "Choose an option",
+      "livuno": "Level one",
+      "livdue": "Level two",
+      "livtre": "Level three",
+      "livba": "Low level",
+      "livpb": "Previous level to low"
+    },
+    "csvFileName": "Forecast_management"
+  }
+}

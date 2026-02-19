@@ -1,0 +1,41 @@
+{
+  "commRic": {
+    "home": {
+      "title": "Commenti / richieste",
+      "titleSearchToolbar": "Commenti / richieste",
+      "labelSearchString": "Cerca commenti / richieste"
+    },
+    "detail": {
+      "title": "Commento / richiesta",
+      "titleModify": "Dettaglio Commento / richiesta",
+      "titleNew": "Nuovo Commento / richiesta"
+    },
+    "filter": {
+      "idPro": "Progetto",
+      "idTipFin": "Tipo finanziamento",
+      "tipric": "Tipo",
+      "optionsTipRic": {
+        "ric": "Richiesta",
+        "com": "Commento"
+      },
+      "staric": "Stato",
+      "optionsStaRic": {
+        "ini": "Iniziale",
+        "inv": "Richiesta inviata",
+        "ese": "Richiesta eseguita",
+        "res": "Richiesta respinta",
+        "ann": "Richiesta annullata"
+      },
+      "proRicute": "Utente",
+      "idRicpad": "Commento padre"
+    },
+    "idPro": "Progetto",
+    "tipRicR": "Tipo richiesta",
+    "tipRicC": "Tipo commento",
+    "desric": "Descrizione",
+    "user": "Username",
+    "staric": "Stato della richiesta",
+    "dtasca": "Data scadenza richiesta",
+    "risric": "Risposta richiesta"
+  }
+}

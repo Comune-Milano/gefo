@@ -1,0 +1,681 @@
+<jhi-spinner></jhi-spinner>
+<div class="container-fluid mt-4">
+  <div class="row justify-content-between mb-1">
+    <div class="col d-flex align-items-center">
+      <h5 class="bold"><span jhiTranslate="gestProg.detail.titleCapitoli">Capitoli</span></h5>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="this.capitoli">
+    <div class="col d-flex">
+      <h6 class="my-0">
+        Progetto: <span class="bold">{{ this.capitoli.progetto.codpro }} - {{ this.capitoli.progetto.despro }} </span>
+      </h6>
+    </div>
+  </div>
+  <div class="row" *ngIf="this.capitoli">
+    <div class="col d-flex">
+      <h6>
+        Progetto padre: <span class="bold">{{ this.capitoli.progettoPadreLabel }} </span>
+      </h6>
+    </div>
+  </div>
+
+  <!-- Alert di conferma / errore -->
+  <jhi-alert *ngIf="viewAlert"></jhi-alert>
+  <jhi-alert-error *ngIf="viewError"></jhi-alert-error>
+
+  <!-- Bottoni salva, ricarica e tre puntini -->
+  <div class="d-grid gap-3 d-md-block">
+    <button
+      class="btn btn-primary btn-sml btn-xs btn-me min-wh-25"
+      (click)="submitModifiche()"
+      *ngIf="rolesCheckService.isPresent('/modificaCapitoliProgetto')"
+    >
+      <svg class="icon icon-white">
+        <use href="content/bootstrap-italia/svg/sprites.svg#it-pencil"></use>
+      </svg>
+      <span jhiTranslate="global.buttons.labelSave">Salva</span>
+    </button>
+    <button class="btn btn-primary btn-sml btn-xs btn-me min-wh-25" (click)="reload()">
+      <svg class="icon icon-white">
+        <use href="content/bootstrap-italia/svg/sprites.svg#it-refresh"></use>
+      </svg>
+      <span jhiTranslate="global.buttons.labelReload">Ricarica informazioni</span>
+    </button>
+  </div>
+
+  <!-- Lista tab -->
+  <ul class="nav nav-tabs auto mt-5" id="myTabCap" role="tablist">
+    <li class="nav-item">
+      <a
+        class="nav-link active"
+        id="data-ex-tab1-tab"
+        data-bs-toggle="tab"
+        href="#tabCap1"
+        role="tab"
+        aria-controls="tabCap1"
+        aria-selected="true"
+        >Capitoli di entrata</a
+      >
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        id="data-ex-tab2-tab"
+        data-bs-toggle="tab"
+        href="#tabCap2"
+        role="tab"
+        aria-controls="tabCap2"
+        aria-selected="false"
+        >Capitoli di uscita</a
+      >
+    </li>
+  </ul>
+  <!-- Schede -->
+  <div class="tab-content">
+    <!-- Scheda capitoli di entrata -->
+    <div class="tab-pane active" id="tabCap1" role="tabpanel" aria-labelledby="data-ex-tab1-tab">
+      <button
+        class="btn btn-danger btn-sml btn-xs btn-me min-wh-25 mt-5"
+        type="button"
+        data-bs-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+        (click)="setModalCape()"
+      >
+        <svg class="icon icon-white">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-plus"></use>
+        </svg>
+        <span jhiTranslate="DetCon.ins.cap">Inserisci nuovo capitolo</span>
+      </button>
+      <div class="dropdown-menu dismissible w-50" role="menu" [ngClass]="{ show: showModalCape }">
+        <div class="container-fluid">
+          <div class="row mt-2">
+            <div class="col">
+              <h5 class="fw-bold" jhiTranslate="DetCon.ins.capEnt">Inserisci nuovo capitolo di entrata</h5>
+            </div>
+            <div class="col">
+              <button type="button" class="btn-close float-right" data-bs-dismiss="menu" aria-label="Chiudi avviso"></button>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-4 mb-5">
+              <label for="codentconForm" class="form-label-sm" jhiTranslate="DetCon.ins.codcap">Codice capitolo</label>
+              <input id="codentconForm" type="text" [(ngModel)]="codiceCapitolo" />
+            </div>
+            <div
+              class="col-4 mb-5 mt-3 c-pointer"
+              data-bs-toggle="modal"
+              href="#modalSearch"
+              (click)="setModalPage('Capitoli entrata'); $event.stopPropagation()"
+            >
+              <svg class="icon icon-md mt-4" (click)="setModalPage('Capitoli entrata')">
+                <use href="content/bootstrap-italia/svg/sprites.svg#it-more-actions"></use>
+              </svg>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-4" (click)="$event.stopPropagation()">
+              <button class="btn btn-danger btn-sml btn-xs btn-me h-100 w-100" type="button" (click)="inserisciCapitoloEntrata()">
+                <span>Inserisci</span>
+              </button>
+            </div>
+            <div class="col-4">
+              <button class="btn btn-primary btn-sml btn-xs btn-me h-100 w-100" type="button">
+                <span>Annulla</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-borderless mt-5">
+          <thead>
+            <tr>
+              <th scope="col" class="min-wh-130"><span jhiTranslate="DetCon.idcap">Capitolo</span></th>
+              <th scope="col" class="min-wh-250">
+                <span jhiTranslate="DetCon.desimp">Descrizione</span>
+              </th>
+              <th scope="col" class="min-wh-100">
+                <span jhiTranslate="DetCon.codtit">Titolo</span>
+              </th>
+              <th scope="col" class="min-wh-100">
+                <span jhiTranslate="DetCon.codmacTip">Tipologia</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="DetCon.impprv">Previsione anno</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="DetCon.impass">Assestato anno</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="DetCon.impimpAcc">Accertato anno</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="DetCon.impprv1">Previsione anno + 1</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="DetCon.impass1">Assestato anno + 1</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="DetCon.impimpAcc1">Accertato anno + 1</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="DetCon.impprv2">Previsione anno + 2</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="DetCon.impass2">Assestato anno + 2</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="DetCon.impimpAcc2">Accertato anno + 2</span>
+              </th>
+              <th scope="col" class="min-wh-300">
+                <span jhiTranslate="DetCon.notent">Note</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody *ngIf="formCapitoliEnt">
+            <tr class="border-smoke" *ngFor="let capitolo of formCapitoliEnt.controls; index as i">
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('codentcon')).value">
+                <input
+                  type="text"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('codentcon'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('descrizione')).value">
+                <input
+                  type="text"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('descrizione'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('titolo')).value">
+                <input
+                  type="text"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('titolo'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('macro')).value">
+                <input
+                  type="text"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('macro'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('previsione')).value">
+                <input
+                  type="text"
+                  class="text-end"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('previsione'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('assestato')).value">
+                <input
+                  type="text"
+                  class="text-end"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('assestato'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('impegnato')).value">
+                <input
+                  type="text"
+                  class="text-end"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('impegnato'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('previsione_1')).value">
+                <input
+                  type="text"
+                  class="text-end"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('previsione_1'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('assestato_1')).value">
+                <input
+                  type="text"
+                  class="text-end"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('assestato_1'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('impegnato_1')).value">
+                <input
+                  type="text"
+                  class="text-end"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('impegnato_1'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('previsione_2')).value">
+                <input
+                  type="text"
+                  class="text-end"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('previsione_2'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('assestato_2')).value">
+                <input
+                  type="text"
+                  class="text-end"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('assestato_2'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('impegnato_2')).value">
+                <input
+                  type="text"
+                  class="text-end"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('impegnato_2'))"
+                />
+              </td>
+              <td>
+                <input type="text" [formControl]="convertToFormControl(capitolo.get('notent'))" />
+                <small
+                  class="form-text text-danger"
+                  *ngIf="convertToFormControl(capitolo.get('notent')).errors?.['pattern']"
+                  jhiTranslate="entity.validation.sanitize"
+                  >Ci sono caratteri non validi</small
+                >
+              </td>
+              <td>
+                <span tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Elimina riga">
+                  <svg
+                    class="icon icon-danger icon-sm"
+                    data-bs-toggle="modal"
+                    href="#modalCancel1"
+                    (click)="this.curIndex = i"
+                    *ngIf="convertToFormControl(capitolo.get('isNew')).value == false"
+                  >
+                    <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use></svg
+                ></span>
+                <span tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Elimina riga">
+                  <svg
+                    class="icon icon-danger icon-sm"
+                    (click)="this.formCapitoliEnt.removeAt(i)"
+                    *ngIf="convertToFormControl(capitolo.get('isNew')).value == true"
+                  >
+                    <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use>
+                  </svg>
+                </span>
+              </td>
+              <!-- Modale conferma cancellazione -->
+              <div class="modal fade" tabindex="-2" role="dialog" id="modalCancel1" aria-labelledby="exampleModalTitle">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h2 class="modal-title h5 no_toc" id="exampleModalTitle1" jhiTranslate="modals.warn">Attenzione</h2>
+                    </div>
+                    <div class="modal-body">
+                      <p jhiTranslate="modals.canc">Confermi la cancellazione?</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-danger btn-sm" data-bs-dismiss="modal" type="button" jhiTranslate="modals.cancel">
+                        Annulla
+                      </button>
+                      <button
+                        class="btn btn-success btn-sm"
+                        data-bs-dismiss="modal"
+                        type="button"
+                        (click)="onRemoveRow(formCapitoliEnt)"
+                        jhiTranslate="modals.confirm"
+                      >
+                        Ok
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Scheda capitoli di uscita -->
+    <div class="tab-pane" id="tabCap2" role="tabpanel" aria-labelledby="data-ex-tab2-tab">
+      <button
+        class="btn btn-danger btn-sml btn-xs btn-me min-wh-25 mt-5"
+        type="button"
+        data-bs-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+        (click)="setModalCapu()"
+      >
+        <svg class="icon icon-white">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-plus"></use>
+        </svg>
+        <span jhiTranslate="DetCon.ins.cap">Inserisci nuovo capitolo</span>
+      </button>
+      <div class="dropdown-menu dismissible w-50" role="menu" [ngClass]="{ show: showModalCapu }">
+        <div class="container-fluid">
+          <div class="row mt-2">
+            <div class="col">
+              <h5 class="fw-bold" jhiTranslate="DetCon.ins.capUsc">Inserisci nuovo capitolo di uscita</h5>
+            </div>
+            <div class="col">
+              <button type="button" class="btn-close float-right" data-bs-dismiss="menu" aria-label="Chiudi avviso"></button>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-4 mb-5">
+              <label for="codentconUscForm" class="form-label-sm" jhiTranslate="DetCon.ins.codcap">Codice capitolo</label>
+              <input id="codentconUscForm" type="text" [(ngModel)]="codiceCapitolo" />
+            </div>
+            <div
+              class="col-4 mb-5 mt-3 c-pointer"
+              data-bs-toggle="modal"
+              href="#modalSearch"
+              (click)="setModalPage('Capitoli uscita'); $event.stopPropagation()"
+            >
+              <svg class="icon icon-md mt-4" (click)="setModalPage('Capitoli uscita')">
+                <use href="content/bootstrap-italia/svg/sprites.svg#it-more-actions"></use>
+              </svg>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-4" (click)="$event.stopPropagation()">
+              <button class="btn btn-danger btn-sml btn-xs btn-me h-100 w-100" type="button" (click)="inserisciCapitoloUscita()">
+                <span>Inserisci</span>
+              </button>
+            </div>
+            <div class="col-4">
+              <button class="btn btn-primary btn-sml btn-xs btn-me h-100 w-100" type="button">
+                <span>Annulla</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-borderless mt-5">
+          <thead>
+            <tr>
+              <th scope="col" class="min-wh-130"><span jhiTranslate="DetCon.idcap">Capitolo</span></th>
+              <th scope="col" class="min-wh-130"><span>Cap. entrata</span></th>
+              <th scope="col" class="min-wh-250">
+                <span jhiTranslate="DetCon.desimp">Descrizione</span>
+              </th>
+              <th scope="col" class="min-wh-100">
+                <span jhiTranslate="DetCon.codtit">Titolo</span>
+              </th>
+              <th scope="col" class="min-wh-100">
+                <span>Macro</span>
+              </th>
+              <th scope="col" class="min-wh-100">
+                <span>Miss.</span>
+              </th>
+              <th scope="col" class="min-wh-100">
+                <span>Prg.</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="DetCon.impprv">Previsione anno</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="DetCon.impass">Assestato anno</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="DetCon.impimp">Impegnato anno</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="DetCon.impprv1">Previsione anno + 1</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="DetCon.impass1">Assestato anno + 1</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="DetCon.impimp1">Impegnato anno + 1</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="DetCon.impprv2">Previsione anno + 2</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="DetCon.impass2">Assestato anno + 2</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="DetCon.impimp2">Impegnato anno + 2</span>
+              </th>
+              <th scope="col" class="min-wh-300">
+                <span jhiTranslate="DetCon.notent">Note</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-smoke" *ngFor="let capitolo of formCapitoliUsc.controls; index as i">
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('codentcon')).value">
+                <input
+                  type="text"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('codentcon'))"
+                />
+              </td>
+              <td><input type="text" [formControl]="convertToFormControl(capitolo.get('codentcol'))" /></td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('descrizione')).value">
+                <input
+                  type="text"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('descrizione'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('titolo')).value">
+                <input
+                  type="text"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('titolo'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('macro')).value">
+                <input
+                  type="text"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('macro'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('missione')).value">
+                <input
+                  type="text"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('missione'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('programma')).value">
+                <input
+                  type="text"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('programma'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('previsione')).value">
+                <input
+                  type="text"
+                  class="text-end"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('previsione'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('assestato')).value">
+                <input
+                  type="text"
+                  class="text-end"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('assestato'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('impegnato')).value">
+                <input
+                  type="text"
+                  class="text-end"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('impegnato'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('previsione_1')).value">
+                <input
+                  type="text"
+                  class="text-end"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('previsione_1'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('assestato_1')).value">
+                <input
+                  type="text"
+                  class="text-end"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('assestato_1'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('impegnato_1')).value">
+                <input
+                  type="text"
+                  class="text-end"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('impegnato_1'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('previsione_2')).value">
+                <input
+                  type="text"
+                  class="text-end"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('previsione_2'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('assestato_2')).value">
+                <input
+                  type="text"
+                  class="text-end"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('assestato_2'))"
+                />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(capitolo.get('impegnato_2')).value">
+                <input
+                  type="text"
+                  class="text-end"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  [formControl]="convertToFormControl(capitolo.get('impegnato_2'))"
+                />
+              </td>
+              <td>
+                <input type="text" [formControl]="convertToFormControl(capitolo.get('notent'))" />
+                <small
+                  class="form-text text-danger"
+                  *ngIf="convertToFormControl(capitolo.get('notent')).errors?.['pattern']"
+                  jhiTranslate="entity.validation.sanitize"
+                  >Ci sono caratteri non validi</small
+                >
+              </td>
+              <td>
+                <span tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Elimina riga">
+                  <svg
+                    class="icon icon-danger icon-sm"
+                    data-bs-toggle="modal"
+                    href="#modalCancel2"
+                    (click)="this.curIndex = i"
+                    *ngIf="convertToFormControl(capitolo.get('isNew')).value == false"
+                  >
+                    <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use></svg
+                ></span>
+                <span tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Elimina riga">
+                  <svg
+                    class="icon icon-danger icon-sm"
+                    (click)="this.formCapitoliUsc.removeAt(i)"
+                    *ngIf="convertToFormControl(capitolo.get('isNew')).value == true"
+                  >
+                    <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use>
+                  </svg>
+                </span>
+              </td>
+              <!-- Modale conferma cancellazione -->
+              <div class="modal fade" tabindex="-2" role="dialog" id="modalCancel2" aria-labelledby="exampleModalTitle">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h2 class="modal-title h5 no_toc" id="exampleModalTitle2" jhiTranslate="modals.warn">Attenzione</h2>
+                    </div>
+                    <div class="modal-body">
+                      <p jhiTranslate="modals.canc">Confermi la cancellazione?</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-danger btn-sm" data-bs-dismiss="modal" type="button" jhiTranslate="modals.cancel">
+                        Annulla
+                      </button>
+                      <button
+                        class="btn btn-success btn-sm"
+                        data-bs-dismiss="modal"
+                        type="button"
+                        (click)="onRemoveRow(formCapitoliUsc)"
+                        jhiTranslate="modals.confirm"
+                      >
+                        Ok
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    tabindex="-2"
+    role="dialog"
+    id="modalSearch"
+    aria-labelledby="exampleModalTitle"
+    style="z-index: 20000"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="modal-dialog mw-100" role="document" id="modalCapitoli">
+      <div class="modal-content">
+        <div class="modal-header">
+          <svg class="icon icon-md c-pointer" data-bs-dismiss="modal" (click)="this.showModal = false">
+            <use href="content/bootstrap-italia/svg/sprites.svg#it-close"></use>
+          </svg>
+        </div>
+        <div class="modal-body mb-4" *ngIf="showModal">
+          <jhi-det-con-cap [tipo]="tipo" (codCap)="updateCodCap($event)"></jhi-det-con-cap>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

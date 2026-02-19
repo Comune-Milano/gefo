@@ -1,0 +1,19 @@
+{
+  "ammDir": {
+    "home": {
+      "title": "Direzioni centrali",
+      "titleSearchToolbar": "Direzioni centrali",
+      "labelSearchString": "Cerca direzione"
+    },
+    "detail": {
+      "title": "Direzione centrale",
+      "titleModify": "Dettaglio direzione",
+      "titleNew": "Nuova direzione"
+    },
+    "coddir": "Codice direzione",
+    "coddirForm": "Codice direzione*",
+    "desdir": "Descrizione direzione",
+    "desdirForm": "Descrizione direzione*",
+    "csvFileName": "Direzioni_centrali"
+  }
+}

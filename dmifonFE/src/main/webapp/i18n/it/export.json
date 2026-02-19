@@ -1,0 +1,43 @@
+{
+  "export": {
+    "home": {
+      "titleProg": "Export progetti",
+      "titleImp": "Export impegni / accertamenti",
+      "titleCap": "Export capitoli",
+      "titleDDR": "Export DDR",
+      "titleAvaFas": "Export Avanzamenti / Fasi",
+      "titleMan": "Export Mandati",
+      "labelExport": "Esporta"
+    },
+    "idPro": "Progetto",
+    "tipLiv": "Livello",
+    "idTipFin": "Tipo finanziamento",
+    "idDir": "Direzione",
+    "idMacPro": "Macro progetto",
+    "idBan": "Bando",
+    "idTem": "Tematica",
+    "idStaPro": "Stato progetto",
+    "idStaFin": "Stato finanziario",
+    "flgDatAnaPro": "Dati anagrafici progetto",
+    "flgIgv": "Dati Riferimenti/IGV/Importi rettifica",
+    "flgInfAgg": "Dati Info Aggiuntive",
+    "flgRis": "Dati Risorse",
+    "flgRisDiCui": "Dati Risorse di cui",
+    "flgRes": "Dati Responsabili",
+    "flgAva": "Dati Avanzamento",
+    "flgPre": "Dati Previsioni",
+    "flgMil": "Dati Milestone",
+    "flgSolImpPro": "Solo impegni / accertamenti del progetto",
+    "flgCapEnt": "Dettaglio capitoli di entrata",
+    "tipPer": "Tipo periodo previsione",
+    "annPreDa": "Anno previsione da",
+    "annPreA": "Anno previsione a",
+    "tipPerSelect": {
+      "tri": "Trimestrale",
+      "sem": "Semestrale",
+      "ann": "Annuale"
+    },
+    "parEst": "Parametri di estrazione",
+    "tipDat": "Tipologia di dati da esportare"
+  }
+}

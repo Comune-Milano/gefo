@@ -1,0 +1,21 @@
+{
+  "mun": {
+    "home": {
+      "title": "Town halls",
+      "titleSearchToolbar": "Town halls",
+      "labelSearchString": "Search town hall"
+    },
+    "detail": {
+      "title": "Town hall",
+      "titleModify": "Town hall detail",
+      "titleNew": "New town hall"
+    },
+    "codmacpro": "Codice",
+    "codmacproForm": "Codice*",
+    "desmacpro": "Description",
+    "desmunForm": "Description*",
+    "num_progetti": "Project Num.",
+    "resources": "Fund resources",
+    "csvFileName": "Town_Halls"
+  }
+}

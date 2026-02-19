@@ -1,0 +1,42 @@
+{
+  "export": {
+    "home": {
+      "titleProg": "Export projects",
+      "titleImp": "Export Commitments",
+      "titleCap": "Export chapters",
+      "titleDDR": "Export DDR",
+      "titleAvaFas": "Export Progress / Stages",
+      "titleMan": "Export Mandates",
+      "labelExport": "Export"
+    },
+    "idPro": "Project",
+    "tipLiv": "Level",
+    "idTipFin": "Financing type",
+    "idDir": "Direction",
+    "idMacPro": "Macro project",
+    "idBan": "Ban",
+    "idTem": "Thematic",
+    "idStaPro": "Project status",
+    "idStaFin": "Financial status",
+    "flgDatAnaPro": "Project master data",
+    "flgIgv": "Data References/IGV/Adjustment amounts",
+    "flgInfAgg": "Additional Info Data",
+    "flgRis": "Resource data",
+    "flgRisDiCui": "Data Resources of which",
+    "flgRes": "Responsible Data",
+    "flgAva": "Advancement data",
+    "flgPre": "Forecast data",
+    "flgSolImpPro": "Project commitments / assessments only",
+    "flgCapEnt": "Details of entry chapters",
+    "tipPer": "Forecast period type",
+    "annPreDa": "Forecast year from",
+    "annPreA": "Forecast year a",
+    "tipPerSelect": {
+      "tri": "Quarterly",
+      "sem": "Half yearly",
+      "ann": "Yearly"
+    },
+    "parEst": "Extraction parameters",
+    "tipDat": "Type of data to export"
+  }
+}

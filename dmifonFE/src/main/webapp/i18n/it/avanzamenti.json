@@ -1,0 +1,62 @@
+{
+  "proAva": {
+    "home": {
+      "title": "Avanzamenti",
+      "titleSearchToolbar": "Avanzamenti",
+      "labelSearchString": "Cerca avanzamento"
+    },
+    "detail": {
+      "title": "Avanzamento",
+      "titleModify": "Dettaglio avanzamento",
+      "titleNew": "Nuovo avanzamento"
+    },
+    "prog": "Progetto",
+    "pro": "Progetto*",
+    "proPad": "Progetto padre",
+    "usrUpdate": "Utente aggiornamento",
+    "tab": {
+      "ava": "Avanzamento",
+      "fas": "Fasi"
+    },
+    "viewHideCol": "Mostra / nascondi colonne",
+    "creaFas": "Crea fasi",
+    "viewAll": "Visualizza tutto",
+    "dtarilava": "Data ril.",
+    "desstaava": "Stato avanzamento",
+    "desstaavaForm": "Stato avanz. tecnico*",
+    "percAvaForm": "Perc. Avanz.*",
+    "dtainlav": "Data inizio lav.",
+    "dtafinlav": "Data fin lav.",
+    "id_lisvalfasintForm": "Fase intervento*",
+    "id_lisvallivcriForm": "Livello criticità*",
+    "notcri": "Note criticità",
+    "id_lisvaltipappForm": "Tipo appalto*",
+    "desapp": "N.appalto",
+    "id_lisvalstaant": "Stato anticipazione*",
+    "impant": "Importo anticipazione*",
+    "id_lisvaltipolfas": "Tipologia di fase",
+    "tipfas": "Tipo fase",
+    "tipfasForm": "Tipo fase*",
+    "dtaoriiniForm": "Data ini. origine*",
+    "dtaoriini": "Data ini. origine",
+    "dtaorifinForm": "Data fine origine*",
+    "dtaorifin": "Data fine origine",
+    "dtapreini": "Data inizio prev.",
+    "dtaprefin": "Data fine prev.",
+    "dtaeffini": "Data inizio eff.",
+    "dtaefffin": "Data fine eff.",
+    "notfas": "Resp. / note",
+    "vallisfasint": "Fase intervento",
+    "vallislivcri": "Livello criticità",
+    "fas": "Fase",
+    "perfas": "% Fas.",
+    "mil": "Mil.",
+    "permil": "% Mil.",
+    "semaforo": "Semaforo",
+    "coddir": "Codice direzione",
+    "coddirForm": "Codice direzione*",
+    "desdir": "Descrizione direzione",
+    "desdirForm": "Descrizione direzione*",
+    "csvFileName": "Avanzamenti"
+  }
+}

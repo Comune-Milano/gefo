@@ -1,0 +1,47 @@
+<footer class="it-footer">
+  <!--<span jhiTranslate="footer" [translateValues]="{version: version}"></span>-->
+  <div class="it-footer-main">
+    <!-- <div class="row h-100 w-100 align-items-center m-0" style="min-height: 300px;">
+      <div class="col-sm-12 col-md-6 mt-sm-3 mt-md-0 text-center">
+        <img src="../../../content/images/logo-comune.png" class="mb-2" style="max-width:150px;"/>
+        <h5 style="color:white;" jhiTranslate="home.ente">Datamanagement Italia</h5>
+      </div>
+      <div class="col-sm-12 col-md-6 mt-sm-3 mt-md-0 mb-sm-3 mb-md-0 text-center">
+        <hr class="d-md-none"/>
+        <ul class="mb-lg-0 p-0">
+          <li>
+            <h3>Contatti</h3>
+          </li>
+          <li>
+            <span><i class="fa fa-map-marker mr-2" aria-hidden="true"></i><span id="ctl00_lblIndirizzo" jhiTranslate="home.footer.via"></span></span>
+          </li>
+          <li>
+            <span><i class="fa-solid fa-city mr-2" aria-hidden="true"></i><span id="ctl00_lblCitta" jhiTranslate="home.footer.citta"></span></span>
+          </li>
+          <li>
+            <span>&nbsp;</span>
+          </li>
+          <li>
+            <span><i class="fa fa-phone mr-2" aria-hidden="true"></i><span>Tel </span><span id="ctl00_lblTelefono" jhiTranslate="home.footer.tel"></span></span>
+          </li>
+          <li>
+            <span><i class="fa fa-fax mr-2" aria-hidden="true"></i><span>Fax </span><span id="ctl00_lblFax" jhiTranslate="home.footer.fax">0923/972383</span></span>
+          </li>
+          <li>
+            <span><i class="fa-solid fa-envelope mr-2" aria-hidden="true"></i><span>PEC </span><a style='display:inline;' jhiTranslate="home.footer.pec"></a></span>
+          </li>
+        </ul>
+      </div>
+    </div> -->
+  </div>
+  <div class="it-footer-small-prints clearfix red">
+    <div *ngIf="mostraLogo">
+      <img src="content/images/footer.png" alt="Logo footer" class="imgFooter" />
+      <p class="text-black">
+        "PROGETTO COFINANZIATO DALL'UNIONE EUROPEA - FONDI STRUTTURALI E DI INVESTIMENTO | PROGRAMMA OPERATIVO CITTA' METROPOLITANE
+        2014-2020"
+      </p>
+    </div>
+    <p class="text-black">{{ 'Copyright © ' + year + ' - v' + version }}</p>
+  </div>
+</footer>

@@ -1,0 +1,62 @@
+{
+  "proAva": {
+    "home": {
+      "title": "Advancements",
+      "titleSearchToolbar": "Avanzamenti",
+      "labelSearchString": "Search advancement"
+    },
+    "detail": {
+      "title": "Advancement",
+      "titleModify": "Advancement detail",
+      "titleNew": "Nuovo avanzamento"
+    },
+    "prog": "Project",
+    "pro": "Project*",
+    "proPad": "Father project",
+    "dtarilava": "Rel. date",
+    "usrUpdate": "User last update",
+    "tab": {
+      "ava": "Advancement",
+      "fas": "Phases"
+    },
+    "viewHideCol": "Show / hide columns",
+    "creaFas": "Create phases",
+    "viewAll": "View all",
+    "desstaava": "Advancement status",
+    "desstaavaForm": "State tech. progress*",
+    "percAvaForm": "Advancement perc.*",
+    "dtainlav": "Work start date",
+    "dtafinlav": "Work end date",
+    "id_lisvalfasintForm": "Intervention phase*",
+    "id_lisvallivcriForm": "Criticality level*",
+    "notcri": "Criticality notes",
+    "id_lisvaltipappForm": "Contract type*",
+    "desapp": "Contract No",
+    "id_lisvalstaant": "State anticipation*",
+    "impant": "Advance amount*",
+    "id_lisvaltipolfas": "Phase typology",
+    "tipfas": "Phase type",
+    "tipfasForm": "Phase type*",
+    "dtaoriiniForm": "Start date origin*",
+    "dtaoriini": "Start date origin",
+    "dtaorifinForm": "Origin end date*",
+    "dtaorifin": "Origin end date",
+    "dtapreini": "Exp. start date",
+    "dtaprefin": "Exp. end date",
+    "dtaeffini": "Eff. start date",
+    "dtaefffin": "Eff. end date",
+    "notfas": "Resp. / notes",
+    "vallisfasint": "Intervention phase",
+    "vallislivcri": "Criticality level",
+    "fas": "Phase",
+    "perfas": "% Fas.",
+    "mil": "Mil.",
+    "permil": "% Mil.",
+    "semaforo": "Traffic lights",
+    "coddir": "Codice direzione",
+    "coddirForm": "Codice direzione*",
+    "desdir": "Descrizione direzione",
+    "desdirForm": "Descrizione direzione*",
+    "csvFileName": "Advancements"
+  }
+}

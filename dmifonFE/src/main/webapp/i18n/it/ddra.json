@@ -1,0 +1,27 @@
+{
+  "ddra": {
+    "home": {
+      "title": "DDRA",
+      "titleSearchToolbar": "DDRA",
+      "labelSearchString": "Cerca DDRA"
+    },
+    "detail": {
+      "title": "DDRA",
+      "titleModify": "Dettaglio DDRA",
+      "titleNew": "Nuovo DDRA"
+    },
+    "codddra": "Codice",
+    "codddraForm": "Codice*",
+    "desddra": "Descrizione",
+    "desddraForm": "Descrizione*",
+    "id_ddr": "DDR",
+    "id_ddraForm": "DDRA*",
+    "dtaddra": "Data DDRA",
+    "dtaddraForm": "Data DDRA*",
+    "importoddra": "Importo",
+    "dtaddraForm": "Data DDRA*",
+    "importoddra": "Importo DDRA",
+    "notddra": "Note",
+    "csvFileName": "Gestione_ddra"
+  }
+}

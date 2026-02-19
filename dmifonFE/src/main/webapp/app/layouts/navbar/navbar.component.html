@@ -1,0 +1,251 @@
+<jhi-spinner *ngIf="loading"></jhi-spinner>
+<nav data-cy="navbar" class="navbar navbar-expand-md">
+  <div class="d-flex justify-content-between" style="width: 100vw">
+    <div class="p2 float-start">
+      <div class="d-flex flex-row align-items-center">
+        <a
+          class="navbar-brand logo"
+          href="javascript:void(0);"
+          [routerLink]="['/']"
+          (click)="collapseNavbar()"
+          title="Comune di Milano"
+          *ngIf="LogoNavbar === 'S'"
+        >
+          <span class="logo-img"></span>
+        </a>
+        <span class="font-philosopher pr-3" *ngIf="this.account && ente">{{ ente.descrizione }}</span>
+        <hr class="mx-2 line" *ngIf="ente && LogoNavbar" />
+        <span
+          class="font-philosopher px-3"
+          joyrideStep="firstStep"
+          [stepContent]="primoStep"
+          [nextTemplate]="nextButton"
+          [prevTemplate]="prevButton"
+          [doneTemplate]="doneButton"
+          [doneTemplate]="doneButton"
+          >Gestionale Fondi <span style="font-size: 12px">v{{ version }}</span></span
+        >
+      </div>
+    </div>
+    <!-- <div class="w-auto mt-2" style="margin: 0 auto position: relative;">
+      <a class="navbar-brand logo" href="javascript:void(0);" (click)="collapseNavbar()" title="Comune di Milano">
+        <span class="logo-img"></span>
+      </a>
+    </div> -->
+
+    <a
+      class="navbar-toggler d-lg-none align-self-center"
+      href="javascript:void(0);"
+      data-toggle="collapse"
+      data-target="#navbarResponsive"
+      aria-controls="navbarResponsive"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+      (click)="toggleNavbar()"
+    >
+      <fa-icon icon="bars"></fa-icon>
+    </a>
+    <div class="d-flex flex-row align-items-center">
+      <div class="navbar-collapse collapse float-end" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed" [ngSwitch]="account !== null">
+        <!-- <span class="text-white mt-0">{{ version }}</span> -->
+        <ul class="navbar-nav ms-auto">
+          <li
+            ngbDropdown
+            class="nav-item dropdown pointer"
+            display="dynamic"
+            *ngIf="account && this.roles"
+            joyrideStep="secondStep"
+            [stepContent]="secondoStep"
+            stepPosition="left"
+          >
+            <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="rolesnavBarDropdown">
+              <span>
+                <svg class="icon icon-md icon-white"><use href="../../../content/bootstrap-italia/svg/sprites.svg#it-key"></use></svg>
+                <span *ngIf="!this.selectedRole">Seleziona ruolo</span>
+                <span *ngIf="this.selectedRole">{{
+                  selectedRole.ammRuoByIdRuo?.desruo +
+                    ' - ' +
+                    (selectedRole.ammDirByIdDir?.coddir ? selectedRole.ammDirByIdDir?.coddir : '.')
+                }}</span>
+                <svg class="icon-expand icon icon-sm icon-white">
+                  <use href="../../../content/bootstrap-italia/svg/sprites.svg#it-expand"></use>
+                </svg>
+              </span>
+            </a>
+            <ul class="dropdown-menu bg-white shadow" ngbDropdownMenu aria-labelledby="languagesnavBarDropdown">
+              <li *ngFor="let role of roles">
+                <a
+                  class="dropdown-item text-black"
+                  href="javascript:void(0);"
+                  (click)="refreshPagina(); changeRole(role); collapseNavbar()"
+                  >{{ role.ammRuoByIdRuo?.desruo + ' - ' + (role.ammDirByIdDir?.coddir ? role.ammDirByIdDir?.coddir : '.') }}</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item" *ngIf="!roles && account">
+            <a class="nav-link dropdown-toggle">
+              <svg class="icon icon-md icon-white">
+                <use href="../../../content/bootstrap-italia/svg/sprites.svg#it-key"></use>
+              </svg>
+              <span>Nessun ruolo</span>
+            </a>
+          </li>
+          <!-- Dropdown lingua -->
+          <li
+            ngbDropdown
+            class="nav-item dropdown pointer"
+            display="dynamic"
+            *ngIf="languages && languages.length > 1"
+            joyrideStep="thirdStep"
+            [stepContent]="terzoStep"
+            stepPosition="left"
+          >
+            <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="languagesnavBarDropdown">
+              <span>
+                <img
+                  [src]="'content/images/flag/' + lingua + '.png'"
+                  width="38px"
+                  height="26px"
+                  class="mb-1"
+                  style="border-width: 1px; border-style: solid; border-color: rgba(255, 255, 255, 0.7)"
+                />
+                <svg class="icon-expand icon icon-sm icon-white">
+                  <use href="../../../content/bootstrap-italia/svg/sprites.svg#it-expand"></use>
+                </svg>
+              </span>
+            </a>
+            <ul class="dropdown-menu bg-white shadow" ngbDropdownMenu aria-labelledby="languagesnavBarDropdown">
+              <li *ngFor="let language of languages">
+                <a
+                  class="dropdown-item text-black"
+                  [jhiActiveMenu]="language"
+                  href="javascript:void(0);"
+                  (click)="changeLanguage(language); collapseNavbar()"
+                >
+                  <img
+                    [src]="'content/images/flag/' + language + '.png'"
+                    width="38px"
+                    height="26px"
+                    class="mb-1"
+                    style="border-width: 1px; border-style: solid; border-color: rgba(255, 255, 255, 0.7)"
+                  />
+                  {{ language | findLanguageFromKey }}</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li
+            ngbDropdown
+            class="nav-item dropdown pointer nav-item-w-divider"
+            display="dynamic"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <a
+              class="nav-link dropdown-toggle"
+              ngbDropdownToggle
+              href="javascript:void(0);"
+              id="account-menu"
+              data-cy="accountMenu"
+              *ngIf="account"
+            >
+              <span *ngIf="!account?.imageUrl">
+                <div class="avatar" *ngIf="account == null || account.firstName == null">
+                  <svg class="icon icon-secondary"><use href="content/bootstrap-italia/svg/sprites.svg#it-user"></use></svg>
+                </div>
+                <div
+                  class="avatar"
+                  *ngIf="account != null && account.firstName != null"
+                  joyrideStep="fourthStep"
+                  [stepContent]="quartoStep"
+                  stepPosition="left"
+                >
+                  <p aria-hidden="true" class="text-black">{{ iniziali || '-' }}</p>
+                  <span class="visually-hidden">{{ account?.login }}</span>
+                </div>
+                <!-- <svg class="bg-light icon"><use href="../../../content/bootstrap-italia/dist/svg/sprites.svg#it-user"></use></svg> -->
+                <!-- <span jhiTranslate="global.menu.account.main">Utente</span> -->
+              </span>
+              <span *ngIf="account?.imageUrl">
+                <img [src]="account!.imageUrl" class="profile-image rounded-circle" alt="Avatar" />
+              </span>
+            </a>
+            <ul class="dropdown-menu bg-white shadow" ngbDropdownMenu aria-labelledby="account-menu">
+              <li *ngSwitchCase="true">
+                <div class="dropdown-item text-black py-0">
+                  <h6 class="mt-2"><span jhiTranslate="global.menu.account.ciao">Ciao, </span>{{ account?.login }}</h6>
+                </div>
+                <hr />
+                <a class="dropdown-item text-black py-0 mb-2" (click)="goToProfile()" id="profileDetail" data-cy="logout" *ngIf="roles">
+                  <svg class="icon icon-sm">
+                    <use
+                      href="content/bootstrap-italia/svg/sprites.svg#it-user"
+                      xlink:href="/bootstrap-italia/dist/svg/sprites.svg#it-tool"
+                    ></use>
+                  </svg>
+                  <span jhiTranslate="global.menu.account.profile">Dettaglio profilo</span>
+                </a>
+                <a class="dropdown-item text-black py-0 mb-2" (click)="logout()" id="logout" data-cy="logout">
+                  <svg class="icon icon-sm">
+                    <use
+                      href="content/bootstrap-italia/svg/sprites.svg#it-logout"
+                      xlink:href="/bootstrap-italia/dist/svg/sprites.svg#it-tool"
+                    ></use>
+                  </svg>
+                  <span jhiTranslate="global.menu.account.logout">Esci</span>
+                </a>
+              </li>
+              <li *ngSwitchCase="false">
+                <a class="dropdown-item text-black" (click)="login()" id="login" data-cy="login">
+                  <fa-icon icon="sign-in-alt" [fixedWidth]="true"></fa-icon>
+                  <span jhiTranslate="global.menu.account.login">Accesso</span>
+                </a>
+              </li>
+            </ul>
+            <button class="btn btn-white btn-icon btn-me" (click)="login()" *ngIf="!account">
+              <span class="rounded-icon b-primary">
+                <svg class="icon" style="fill: #d6012e">
+                  <use href="content/bootstrap-italia/svg/sprites.svg#it-user"></use>
+                </svg>
+              </span>
+              <span style="color: #d6012e" jhiTranslate="login.title">Accedi</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<ng-template #nextButton>
+  <button class="btn btn-xs btn-primary">Vai avanti</button>
+</ng-template>
+
+<ng-template #prevButton>
+  <button class="btn btn-xs btn-primary">Torna indietro</button>
+</ng-template>
+
+<ng-template #doneButton>
+  <button class="btn btn-xs btn-success">Fine</button>
+</ng-template>
+
+<ng-template #primoStep>
+  <h5 class="card-title h5 px-2">Inizio tour</h5>
+  <p class="py-2 px-2">Vai avanti per iniziare il tour guidato</p>
+</ng-template>
+
+<ng-template #secondoStep>
+  <h5 class="card-title h5 px-2">Lista ruoli</h5>
+  <p class="py-2 px-2">Da qui puoi selezionare un ruolo a te associato</p>
+</ng-template>
+
+<ng-template #terzoStep>
+  <h5 class="card-title h5 px-2">Cambio lingua</h5>
+  <p class="py-2 px-2">Clicca sulla bandiera per cambiare la lingua corrente</p>
+</ng-template>
+
+<ng-template #quartoStep>
+  <h5 class="card-title h5 px-2">Account</h5>
+  <p class="py-2 px-2">Clicca sulle iniziali per andare ai dettagli del tuo profilo o effettuare il log-out</p>
+</ng-template>

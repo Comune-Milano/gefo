@@ -1,0 +1,43 @@
+{
+  "ddr": {
+    "home": {
+      "title": "DDR",
+      "titleSearchToolbar": "DDR",
+      "labelSearchString": "Cerca DDR"
+    },
+    "detail": {
+      "title": "DDR",
+      "titleModify": "Dettaglio DDR",
+      "titleNew": "Nuovo DDR"
+    },
+    "codddr": "Codice",
+    "codddrForm": "Codice*",
+    "desddr": "Descrizione",
+    "desddrForm": "Descrizione*",
+    "id_ddra": "DDRA",
+    "id_prog": "Progetto",
+    "id_progForm": "Progetto*",
+    "id_tipfin": "Tipo finanziamento",
+    "id_dir": "Direzione",
+    "flgnoddra": "Flag senza DDRA",
+    "dtaddr": "Data DDR",
+    "dtaddrForm": "Data DDR*",
+    "impddr": "Importo DDR",
+    "impddrForm": "Importo DDR*",
+    "impamm": "Importo ammissibile*",
+    "imptra": "Importo trasferito*",
+    "impinc": "Importo incassato*",
+    "prgrev": "Progressivo riscossione",
+    "notddr": "Note",
+    "select": {
+      "title": "Tipo livello",
+      "default": "Scegli un'opzione",
+      "livuno": "Livello uno",
+      "livdue": "Livello due",
+      "livtre": "Livello tre",
+      "livba": "Livello basso",
+      "livpb": "Livello prec. al basso"
+    },
+    "csvFileName": "Gestione_ddr"
+  }
+}

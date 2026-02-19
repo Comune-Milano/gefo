@@ -1,0 +1,41 @@
+{
+  "tipFin": {
+    "home": {
+      "title": "Tipi finanziamento",
+      "titleSearchToolbar": "Tipi finanziamento",
+      "labelSearchString": "Trova tipo finanziamento"
+    },
+    "detail": {
+      "title": "Tipo finanziamento",
+      "titleModify": "Dettaglio tipo finanziamento",
+      "titleNew": "Nuovo tipo finanziamento"
+    },
+    "livuno": "Livello uno",
+    "livunoForm": "Livello uno*",
+    "livdue": "Livello due",
+    "livdueForm": "Livello due*",
+    "livtre": "Livello tre",
+    "livtreForm": "Livello tre*",
+    "livqua": "Livello quattro",
+    "livquaForm": "Livello quattro*",
+    "livcin": "Livello cinque",
+    "livcinForm": "Livello cinque*",
+    "livsei": "Livello sei",
+    "livseiForm": "Livello sei*",
+    "codtipfin": "Codice",
+    "codtipfinForm": "Codice*",
+    "destipfin": "Descrizione",
+    "destipfinForm": "Descrizione*",
+    "num_progetti": "Num.progetti",
+    "resources": "Risorse del fondo",
+    "impimp": "Impegni",
+    "impigv": "Importo IGV nel SI",
+    "impddr": "DDR rendicontato",
+    "impinc": "Introitato",
+    "select": {
+      "title": "Livello",
+      "default": "Scegli un'opzione"
+    },
+    "csvFileName": "Tipi_finanziamento"
+  }
+}

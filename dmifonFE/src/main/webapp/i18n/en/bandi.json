@@ -1,0 +1,46 @@
+{
+  "bandi": {
+    "home": {
+      "title": "Ban",
+      "titleSearchToolbar": "Ban",
+      "labelSearchString": "Search ban"
+    },
+    "detail": {
+      "title": "Ban",
+      "titleModify": "Ban detail",
+      "titleNew": "New ban",      
+      "titleTotali": "Totals"
+    },
+    "codban": "Code",
+    "codbanForm": "Code*",
+    "desban": "Description",
+    "desbanForm": "Description*",
+    "tipfin": "Financing type",
+    "tipfinForm": "Financing type*",
+    "num_progetti": "Num.progetti",
+    "imprisfon": "Fund resources",
+    "stateban": "Ban status",
+    "statebanForm": "Ban status*",
+    "statefin": "Financial status*",
+    "id_ban": "Ban",
+    "id_banForm": "Ban",
+    "id_tem": "Thematic",    
+    "id_temForm": "Thematic",
+    "desent": "Investment ministry",
+    "desprvent": "Min. provision",
+    "refmin": "Representative of the Min.",
+    "desben": "Beneficiary",
+    "impinvForm": " Invest. value*",
+    "impbanForm": "Tender value*",
+    "impmasproForm": "Max amount for project*",
+    "impmasparForm": "Max amount for partecipant*",
+    "dtapubban": "Ban pubblication date",
+    "dtachiatt": "Date Deadline closing activity",
+    "dtascaban": "Ban Expiry Date",
+    "desdecfin": "Decree financing",
+    "select": {      
+      "default": "Scegli un'opzione"      
+    },       
+    "csvFileName": "ban_management"
+  }
+}

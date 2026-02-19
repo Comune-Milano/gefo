@@ -1,0 +1,19 @@
+{
+  "mun": {
+    "home": {
+      "title": "Municipi",
+      "titleSearchToolbar": "Municipi",
+      "labelSearchString": "Trova municipio"
+    },
+    "detail": {
+      "title": "Municipio",
+      "titleModify": "Dettaglio municipio",
+      "titleNew": "Nuovo municipio"
+    },
+    "desmacpro": "Descrizione",
+    "desmunForm": "Descrizione*",
+    "num_progetti": "Num.progetti",
+    "resources": "Risorse del fondo",
+    "csvFileName": "Municipi"
+  }
+}

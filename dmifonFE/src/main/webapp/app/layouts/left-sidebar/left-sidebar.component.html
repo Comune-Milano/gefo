@@ -1,0 +1,79 @@
+<div class="full" *ngIf="!isCollapsedMenu"></div>
+<div class="sidebar-wrapper sidebar-padding">
+  <div
+    id="bars-wrapper"
+    class="barsWrapper"
+    *ngIf="isAuthenticated() && isCollapsedMenu && hasRoles()"
+    [ngClass]="{ 'bars-uncollpased': !isCollapsedMenu, 'bars-collapsed': isCollapsedMenu }"
+  >
+    <div>
+      <span id="bars" (click)="collapseOnClickBarsMenu()">
+        <fa-icon [fixedWidth]="true" icon="bars"></fa-icon>
+      </span>
+    </div>
+  </div>
+  <div
+    id="sidebar"
+    *ngIf="isAuthenticated() && hasRoles()"
+    class="card jh-card side-menu sidebar-inverse"
+    [ngClass]="{ collapsedSidebar: isCollapsedMenu, 'bg-transparent': !isOpened }"
+  >
+    <!--
+		<div (mouseover)="collapseOverMenu()" (mouseout)="collapseOutMenu()" [ngClass]="{'collapsedSidebar': isCollapsedMenu}" > -->
+    <div [ngClass]="{ collapsedSidebar: isCollapsedMenu }">
+      <!-- <div>-->
+      <nav [ngbCollapse]="isCollapsedMenu" class="navbar navbar-default left-sidebar" role="navigation">
+        <div
+          id="div-x-elem"
+          *ngIf="!isCollapsedMenu"
+          [ngClass]="{ 'bars-uncollpased': !isCollapsedMenu, 'bars-collapsed': isCollapsedMenu }"
+          (mouseenter)="preventAction($event)"
+          (mouseleave)="preventAction($event)"
+        >
+          <span id="x-elem" (click)="collapseOnClickCloseButtonMenu()">
+            <fa-icon [fixedWidth]="true" class="mx-3 hv-red" icon="xmark"></fa-icon>
+          </span>
+        </div>
+
+        <div class="side-menu-container">
+          <!--   <span id="x-elem"
+         class="bars-uncollpased"
+			         (mouseenter)="preventAction($event);"
+					 (mouseleave)="preventAction($event);"
+			       (click)="collapseOnClickCloseButtonMenu()"
+			       >
+			        <fa-icon  [fixedWidth]="true" icon="xmark"></fa-icon>
+			      </span>
+			        (mouseover)="preventAction($event);"
+					 (mouseout)="preventAction($event);"
+			    (mouseover)="collapseOverMenu()"
+    (mouseout)="collapseOutMenu()"
+			    -->
+          <ng-template #recursiveMenu let-menus let-idx="idx">
+            <ng-container *ngFor="let menu of menus; let n = index">
+              <li *jhiProfilePermission="menu?.profilePermission" class="nav-item pointer" jhiSelectedLink #selected="jhiSelectedLink">
+                <a class="nav-link" (click)="collapseOnClickLink(menu.link ? '/' + menu.link : null)">
+                  <span class="label">{{ menu.label }}</span>
+                  <span *ngIf="menu.items" style="position: absolute; right: 15px">
+                    <!-- <fa-icon [fixedWidth]="true"  [icon]="selected.checkStatus()" ></fa-icon>-->
+                    <svg class="icon-expand icon icon-sm right" aria-hidden="true">
+                      <use href="../../../content/bootstrap-italia/svg/sprites.svg#it-expand"></use>
+                    </svg>
+                  </span>
+                </a>
+                <ul #collapsed class="d-none">
+                  <ng-container *ngTemplateOutlet="recursiveMenu; context: { $implicit: menu.items, idx: n }"></ng-container>
+                </ul>
+              </li>
+            </ng-container>
+          </ng-template>
+          <ul #leftMenu class="dropdown-menu" class="nav" id="sidebar-menu-uncollapsed">
+            <ng-container *ngTemplateOutlet="recursiveMenu; context: { $implicit: menus }"></ng-container>
+          </ul>
+        </div>
+      </nav>
+    </div>
+    <!-- (mouseover)="preventAction($event);"
+      (mouseout)="preventAction($event);"-->
+  </div>
+</div>

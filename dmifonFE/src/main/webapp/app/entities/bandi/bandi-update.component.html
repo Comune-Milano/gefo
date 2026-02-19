@@ -1,0 +1,358 @@
+<jhi-spinner></jhi-spinner>
+<div class="container-fluid mt-4">
+  <div class="row justify-content-between mb-4">
+    <div class="col d-flex align-items-center">
+      <h5 class="bold" *ngIf="this.id != ''" jhiTranslate="bandi.detail.titleModify">Dettaglio bando</h5>
+      <h5 class="bold" *ngIf="this.id == ''" jhiTranslate="bandi.detail.titleNew">Nuovo bando</h5>
+    </div>
+  </div>
+  <!--alert modifica / inserimento -->
+  <jhi-alert *ngIf="viewAlert"></jhi-alert>
+  <jhi-alert-error *ngIf="viewError"></jhi-alert-error>
+
+  <!-- Form modifica / inserimento nuovo -->
+  <form [formGroup]="formBando" *ngIf="formBando">
+    <div class="d-grid gap-3 d-md-block mb-1">
+      <button
+        class="btn btn-primary btn-sml btn-xs btn-me min-wh-25"
+        [disabled]="formBando.pristine || !formBando.valid"
+        (click)="submitForm()"
+        *ngIf="modifica ? rolesCheckService.isPresent('/modificaBando') : rolesCheckService.isPresent('/inserisciBando')"
+        data-bs-target="#myNotification"
+        data-bs-timeout="5000"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-pencil" *ngIf="modifica"></use>
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-plus" *ngIf="!modifica"></use>
+        </svg>
+        <span>{{ stringSalva }}</span>
+      </button>
+      <button class="btn btn-primary btn-sml btn-xs btn-me min-wh-25 btnReload" (click)="reload()" *ngIf="this.id != ''">
+        <div class="rotateRefresh d-inline-block">
+          <svg class="icon icon-white ms-1">
+            <use href="content/bootstrap-italia/svg/sprites.svg#it-restore"></use>
+          </svg>
+        </div>
+        <span jhiTranslate="global.buttons.labelReload">Ricarica informazioni</span>
+      </button>
+      <!-- Pulsante più azioni (tre puntini)-->
+      <button
+        class="btn btn-danger btn-sml btn-xs btn-me min-wh-25"
+        *ngIf="this.id != ''"
+        data-bs-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-more-actions"></use>
+        </svg>
+      </button>
+      <div class="dropdown-menu">
+        <div class="link-list-wrapper">
+          <ul class="link-list">
+            <li>
+              <a class="list-item right-icon" (click)="goToTotali()">
+                <span jhiTranslate="gestProg.detail.titleTotali">Totali</span>
+                <svg class="icon icon-sm icon-primary float-right">
+                  <use href="content/bootstrap-italia/svg/sprites.svg#it-file"></use>
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- Prima riga con codice, descrizione e stato -->
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="codban" class="form-label-sm" jhiTranslate="bandi.codbanForm">Codice*</label>
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="!getFormElement('codban').valid && getFormElement('codban').touched ? 'is-invalid' : ''"
+            id="codban"
+            formControlName="codban"
+            value="codban"
+            placeholder=" "
+          />
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('codban').errors?.['required'] && getFormElement('codban').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio
+          </small>
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('codban').errors?.['pattern']"
+            jhiTranslate="entity.validation.sanitize"
+            >Ci sono caratteri non validi</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('codban').errors?.['maxlength'] && getFormElement('codban').touched"
+            jhiTranslate="entity.validation.maxlength"
+            >Superato il numero massimo di caratteri
+          </small>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="desban" class="form-label-sm" jhiTranslate="bandi.desbanForm">Descrizione*</label>
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="!getFormElement('desban').valid && getFormElement('desban').touched ? 'is-invalid' : ''"
+            id="desban"
+            formControlName="desban"
+            value="desban"
+            placeholder=" "
+          />
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('desban').errors?.['required'] && getFormElement('desban').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio
+          </small>
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('desban').errors?.['maxlength'] && getFormElement('desban').touched"
+            jhiTranslate="entity.validation.maxlength"
+            >Superato il numero massimo di caratteri
+          </small>
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('desban').errors?.['pattern']"
+            jhiTranslate="entity.validation.sanitize"
+            >Ci sono caratteri non validi</small
+          >
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="stateban" class="form-label-sm" jhiTranslate="bandi.stateban">Stato bando</label>
+          <div class="select-wrapper">
+            <select id="stateban" formControlName="staban">
+              <option selected value="null" jhiTranslate="bandi.select.default">Scegli un'opzione</option>
+              <option *ngFor="let staBan of statBan" [value]="staBan.id">{{ staBan.dessta }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Seconda riga con tipo fin., tematica, min. investimento-->
+    <div class="row mt-4">
+      <div class="col-md-4 mb-3">
+        <label for="tipFin" class="form-label-sm" jhiTranslate="bandi.tipfinForm">Tipo finanziamento*</label>
+        <div class="input-group">
+          <input
+            id="tipFin"
+            type="text"
+            class="form-control"
+            [ngbTypeahead]="searchTipFin"
+            [resultFormatter]="formatterTipFin"
+            [inputFormatter]="formatterTipFin"
+            [editable]="false"
+            formControlName="proTipfinByIdTipfin"
+          />
+          <span class="autocomplete-icon" aria-hidden="true">
+            <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+          </span>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="tem" class="form-label-sm" jhiTranslate="bandi.id_temForm">Tematica</label>
+        <div class="input-group">
+          <input
+            id="tem"
+            type="text"
+            class="form-control"
+            [ngbTypeahead]="searchTem"
+            [resultFormatter]="formatterTem"
+            [inputFormatter]="formatterTem"
+            [editable]="false"
+            formControlName="proTemByIdTem"
+          />
+          <span class="autocomplete-icon" aria-hidden="true">
+            <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+          </span>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="desent" class="form-label-sm" jhiTranslate="bandi.desent">Ministero investimento</label>
+        <input
+          type="text"
+          class="form-control"
+          id="desent"
+          aria-describedby="desent"
+          formControlName="desent"
+          [ngClass]="!getFormElement('desent').valid && getFormElement('desent').touched ? 'is-invalid' : ''"
+        />
+        <small
+          class="form-text text-danger"
+          *ngIf="getFormElement('desent').errors?.['maxlength'] && getFormElement('desent').touched"
+          jhiTranslate="entity.validation.maxlength"
+        >
+          Superato il numero massimo di caratteri
+        </small>
+        <small class="form-text text-danger" *ngIf="getFormElement('desent').errors?.['pattern']" jhiTranslate="entity.validation.sanitize"
+          >Ci sono caratteri non validi</small
+        >
+      </div>
+    </div>
+    <!-- Terza riga con provvedimento min., referente min., beneficiario -->
+    <div class="row mt-4">
+      <div class="col-md-4 mb-3">
+        <label for="desprvent" class="form-label-sm" jhiTranslate="bandi.desprvent">Provvedimento Min.</label>
+        <input
+          type="text"
+          class="form-control"
+          id="desprvent"
+          aria-describedby="desprvent"
+          formControlName="desprvent"
+          [ngClass]="!getFormElement('desprvent').valid && getFormElement('desprvent').touched ? 'is-invalid' : ''"
+        />
+        <small
+          class="form-text text-danger"
+          *ngIf="getFormElement('desprvent').errors?.['maxlength'] && getFormElement('desprvent').touched"
+          jhiTranslate="entity.validation.maxlength"
+        >
+          Superato il numero massimo di caratteri
+        </small>
+        <small
+          class="form-text text-danger"
+          *ngIf="getFormElement('desprvent').errors?.['pattern']"
+          jhiTranslate="entity.validation.sanitize"
+          >Ci sono caratteri non validi</small
+        >
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="refmin" class="form-label-sm" jhiTranslate="bandi.refmin">Referente Min.</label>
+        <input
+          type="text"
+          class="form-control"
+          id="refmin"
+          aria-describedby="refmin"
+          formControlName="refmin"
+          [ngClass]="!getFormElement('refmin').valid && getFormElement('refmin').touched ? 'is-invalid' : ''"
+        />
+        <small
+          class="form-text text-danger"
+          *ngIf="getFormElement('refmin').errors?.['maxlength'] && getFormElement('refmin').touched"
+          jhiTranslate="entity.validation.maxlength"
+        >
+          Superato il numero massimo di caratteri
+        </small>
+        <small class="form-text text-danger" *ngIf="getFormElement('refmin').errors?.['pattern']" jhiTranslate="entity.validation.sanitize"
+          >Ci sono caratteri non validi</small
+        >
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="desben" class="form-label-sm" jhiTranslate="bandi.desben">Beneficiario</label>
+        <input
+          type="text"
+          class="form-control"
+          id="desben"
+          aria-describedby="desben"
+          formControlName="desben"
+          [ngClass]="!getFormElement('desben').valid && getFormElement('desben').touched ? 'is-invalid' : ''"
+        />
+        <small
+          class="form-text text-danger"
+          *ngIf="getFormElement('desben').errors?.['maxlength'] && getFormElement('desben').touched"
+          jhiTranslate="entity.validation.maxlength"
+        >
+          Superato il numero massimo di caratteri
+        </small>
+        <small class="form-text text-danger" *ngIf="getFormElement('desben').errors?.['pattern']" jhiTranslate="entity.validation.sanitize"
+          >Ci sono caratteri non validi</small
+        >
+      </div>
+    </div>
+    <!-- Quarta riga con valore Invest., valore Bando, imp. mas. fin. per progetto -->
+    <div class="row mt-4">
+      <div class="col-md-4 mb-3">
+        <label for="impinv" class="form-label-sm" jhiTranslate="bandi.impinvForm">Valore Invest.*</label>
+        <input type="text" class="form-control" id="impinv" aria-describedby="impinv" formControlName="impinv" value="impinv" importo />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="impban" class="form-label-sm" jhiTranslate="bandi.impbanForm">Valore Bando*</label>
+        <input type="text" class="form-control" id="impban" aria-describedby="impban" formControlName="impban" value="impban" importo />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="impmaspro" class="form-label-sm" jhiTranslate="bandi.impmasproForm">Imp. mas. fin. per progetto*</label>
+        <input
+          type="text"
+          class="form-control"
+          id="impmaspro"
+          aria-describedby="impmaspro"
+          formControlName="impmaspro"
+          value="impmaspro"
+          importo
+        />
+      </div>
+    </div>
+    <!-- Quinta riga con tot. mas. fin. per partecipante, Data Pubblicazione Bando, Data Deadline chiusura attività  -->
+    <div class="row mt-4">
+      <div class="col-md-4 mb-3">
+        <label for="impmaspar" class="form-label-sm" jhiTranslate="bandi.impmasparForm">Tot. mas. fin. per partecipante*</label>
+        <input
+          type="text"
+          class="form-control"
+          id="impmaspar"
+          aria-describedby="impmaspar"
+          formControlName="impmaspar"
+          value="impmaspar"
+          importo
+        />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="dtapubban" class="form-label-sm active" jhiTranslate="bandi.dtapubban">Data Pubblicazione Bando</label>
+        <input
+          type="date"
+          class="form-control"
+          id="dtapubban"
+          aria-describedby="dtapubban"
+          formControlName="dtapubban"
+          value="dtapubban"
+          maxlength="10"
+        />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="dtachiatt" class="form-label-sm active" jhiTranslate="bandi.dtachiatt">Data Deadline chiusura attività</label>
+        <input type="date" class="form-control" id="dtachiatt" aria-describedby="dtachiatt" formControlName="dtachiatt" value="dtachiatt" />
+      </div>
+    </div>
+    <!-- Sesta riga con Data Scadenza Bando, Decreto di finanz.  -->
+    <div class="row mt-4">
+      <div class="col-md-4 mb-3">
+        <label for="dtascaban" class="form-label-sm" jhiTranslate="bandi.dtascaban">Data Scadenza Bando</label>
+        <input type="date" class="form-control" id="dtascaban" aria-describedby="dtascaban" formControlName="dtascaban" value="dtascaban" />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="desdecfin" class="form-label-sm" jhiTranslate="bandi.desdecfin">Decreto di finanz.</label>
+        <input
+          type="text"
+          class="form-control"
+          id="desdecfin"
+          aria-describedby="desdecfin"
+          formControlName="desdecfin"
+          [ngClass]="!getFormElement('desdecfin').valid && getFormElement('desdecfin').touched ? 'is-invalid' : ''"
+        />
+        <small
+          class="form-text text-danger"
+          *ngIf="getFormElement('desdecfin').errors?.['maxlength'] && getFormElement('desdecfin').touched"
+          jhiTranslate="entity.validation.maxlength"
+        >
+          Superato il numero massimo di caratteri
+        </small>
+        <small
+          class="form-text text-danger"
+          *ngIf="getFormElement('desdecfin').errors?.['pattern']"
+          jhiTranslate="entity.validation.sanitize"
+          >Ci sono caratteri non validi</small
+        >
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,174 @@
+<jhi-spinner></jhi-spinner>
+<!--alert modifica / inserimento -->
+<jhi-alert *ngIf="viewAlert"></jhi-alert>
+<jhi-alert-error *ngIf="viewError"></jhi-alert-error>
+<div class="container-fluid mt-4">
+  <div class="row justify-content-between mb-2">
+    <div class="col d-flex align-items-center">
+      <h5 class="bold">
+        <span jhiTranslate="gestProg.detail.titleAllegati">Allegati</span>
+        <span *ngIf="this.codDesPro">{{ this.mapTipEnt.get(curTipEnt) }}</span>
+      </h5>
+    </div>
+  </div>
+  <div class="row mb-2">
+    <div class="col d-flex">
+      <h6 class="my-0">
+        <span *ngIf="curTipEnt == 'DDR'">DDR:</span><span *ngIf="curTipEnt != 'DDR'">Progetto:</span>
+        <span class="bold">{{ this.codDesPro }} </span>
+      </h6>
+    </div>
+  </div>
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <button class="btn btn-danger btn-sml btn-xs btn-me h-100 w-100" (click)="attivaCard()">
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-plus"></use>
+        </svg>
+        <span jhiTranslate="global.buttons.labelNew">Inserisci nuovo</span>
+      </button>
+    </div>
+  </div>
+  <div class="card card-teaser rounded shadow mb-3" *ngIf="mostraCard">
+    <div class="card-body">
+      <form
+        class="upload-dragdrop"
+        [formGroup]="formUpload"
+        enctype="multipart/form-data"
+        id="uploadChangeStateTarget"
+        data-bs-upload-dragdrop
+      >
+        <div class="upload-dragdrop-image" jhiAppDrag (files)="filesDropped($event)">
+          <img src="/bootstrap-italia/dist/assets/upload-drag-drop-icon.svg" alt="descrizione immagine" aria-hidden="true" />
+          <div class="upload-dragdrop-loading">
+            <div class="progress-donut" data-bs-progress-donut></div>
+          </div>
+          <div class="upload-dragdrop-success">
+            <svg class="icon" aria-hidden="true">
+              <use href="/bootstrap-italia/dist/svg/sprites.svg#it-check"></use>
+            </svg>
+          </div>
+        </div>
+        <div class="upload-dragdrop-text">
+          <p class="upload-dragdrop-weight">
+            <svg class="icon icon-xs" aria-hidden="true">
+              <use href="/bootstrap-italia/dist/svg/sprites.svg#it-file"></use>
+            </svg>
+            {{ allegato?.size / 1024 | number: '1.2' }} KB
+          </p>
+          <h5 id="simTitle1" *ngIf="!allegato">Trascina il file per caricarlo</h5>
+          <div class="row">
+            <div class="col">
+              <label for="nomfil" *ngIf="allegato">Nome file*</label>
+              <input type="text" id="nomfil" *ngIf="allegato" formControlName="nomfil" class="form-control" />
+              <small
+                class="form-text text-danger"
+                *ngIf="formUpload.get('nomfil').errors?.['pattern']"
+                jhiTranslate="entity.validation.sanitize"
+                >Ci sono caratteri non validi</small
+              >
+            </div>
+            <div class="col">
+              <label for="notfil" *ngIf="allegato">Note</label>
+              <input type="text" id="notfil" *ngIf="allegato" formControlName="notfil" />
+              <small
+                class="form-text text-danger"
+                *ngIf="formUpload.get('notfil').errors?.['pattern']"
+                jhiTranslate="entity.validation.sanitize"
+                >Ci sono caratteri non validi</small
+              >
+            </div>
+          </div>
+          <p id="simText">
+            <span *ngIf="allegato == null">oppure</span>
+            <input type="file" name="upload8" id="upload8" class="upload-dragdrop-input" (change)="onFileChange($event)" /><label
+              *ngIf="allegato == null"
+              for="upload8"
+              >selezionalo dal dispositivo</label
+            >
+            <label *ngIf="allegato != null && !isFetchingAll" for="upload8" class="pt-1">Cambia file</label>
+          </p>
+        </div>
+        <input value="Submit" type="submit" class="d-none" />
+      </form>
+      <!-- Bottoni carica / annulla -->
+      <div class="d-flex">
+        <button type="button" class="btn btn-primary mx-3" [ngClass]="isFetchingAll ? 'btn-progress' : ''" (click)="sendAllegato()">
+          <span *ngIf="!isFetchingAll">Carica file</span>
+          <span *ngIf="isFetchingAll">Invio in corso...</span>
+          <div class="progress progress-indeterminate" *ngIf="isFetchingAll">
+            <span class="visually-hidden">In elaborazione...</span>
+            <div class="progress-bar" role="progressbar"></div>
+          </div>
+        </button>
+        <button type="button" class="btn btn-danger mx-4" (click)="disattivaCard()">Annulla</button>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngFor="let all of listAllegati">
+    <div class="col-auto mt-1">
+      <svg class="icon icon-primary icon-lg">
+        <use href="content/bootstrap-italia/svg/sprites.svg#it-file"></use>
+      </svg>
+    </div>
+    <div class="col-md-2">
+      <p class="fs-6 mb-0" jhiTranslate="gestProg.allegati.fileName">Nome file</p>
+      <p class="fs-6 bold">{{ all.nomfil }}</p>
+    </div>
+    <div class="col-md-2">
+      <p class="fs-6 mb-0" jhiTranslate="gestProg.allegati.dataCaricamento">Data caricamento</p>
+      <p class="fs-6 bold">{{ all.dtLstupd | date: 'dd/MM/yyyy' }}</p>
+    </div>
+    <div class="col-md-3" *ngIf="!formAllMod || formAllMod.get('id')?.value != all.id">
+      <p class="fs-6 mb-0" jhiTranslate="gestProg.allegati.nota">Nota</p>
+      <p class="fs-6 bold">{{ all.notfil || ' - ' }}</p>
+    </div>
+    <div class="col-md-3 mb-2" *ngIf="formAllMod && formAllMod.get('id')?.value == all.id">
+      <label for="notfil" class="fs-6 mb-0">Nota</label>
+      <form [formGroup]="formAllMod" *ngIf="formAllMod">
+        <input type="text" class="p-0 fs-6" formControlName="notfil" />
+      </form>
+    </div>
+    <div
+      class="col-md-auto"
+      *ngIf="!formAllMod || formAllMod.get('id')?.value != all.id"
+      (click)="createFormAllDaModificare(all)"
+      title="Modifica allegato"
+    >
+      <svg class="icon icon-primary ms-1">
+        <use href="content/bootstrap-italia/svg/sprites.svg#it-pencil"></use>
+      </svg>
+    </div>
+    <div
+      class="col-md-auto"
+      *ngIf="formAllMod && formAllMod.get('id')?.value == all.id"
+      (click)="modificaAllegato()"
+      title="Applica modifiche"
+    >
+      <img src="content/images/icon-save.png" class="icon ms-1" />
+    </div>
+    <div
+      class="col-md-auto"
+      *ngIf="formAllMod && formAllMod.get('id')?.value == all.id"
+      (click)="annullaModificaAllegato()"
+      title="Annulla modifiche"
+    >
+      <svg class="icon icon-danger ms-1">
+        <use href="content/bootstrap-italia/svg/sprites.svg#it-close-circle"></use>
+      </svg>
+    </div>
+    <div class="col-md-auto" (click)="cancellaAllegato(all.id)" title="Cancella">
+      <svg class="icon icon-danger ms-1">
+        <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use>
+      </svg>
+    </div>
+    <div class="col-md-auto" (click)="scaricaAllegato(all.idFil, all.nomfil)" title="Scarica allegato">
+      <svg class="icon icon-primary ms-1">
+        <use href="content/bootstrap-italia/svg/sprites.svg#it-download"></use>
+      </svg>
+    </div>
+  </div>
+  <div *ngIf="listAllegati && listAllegati.length == 0" class="mt-2">
+    <p class="bold border-white">Nessun allegato caricato</p>
+  </div>
+</div>

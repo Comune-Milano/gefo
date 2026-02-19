@@ -1,0 +1,299 @@
+<jhi-spinner></jhi-spinner>
+<div class="container-fluid mt-4">
+  <div class="row justify-content-between mb-4">
+    <div class="col d-flex align-items-center">
+      <h5 class="bold" *ngIf="this.id != ''" jhiTranslate="tipFin.detail.titleModify">Dettaglio tipo finanziamento</h5>
+      <h5 class="bold" *ngIf="this.id == ''" jhiTranslate="tipFin.detail.titleNew">Nuovo tipo finanziamento</h5>
+    </div>
+  </div>
+  <!--alert modifica / inserimento -->
+  <jhi-alert *ngIf="viewAlert"></jhi-alert>
+  <jhi-alert-error *ngIf="viewError"></jhi-alert-error>
+
+  <!-- Form modifica / inserimento nuovo -->
+  <form [formGroup]="formTipFin" *ngIf="formTipFin">
+    <div class="d-grid gap-4 d-md-block">
+      <button
+        class="btn btn-primary btn-sml btn-xs btn-me min-wh-20"
+        (click)="submitForm()"
+        data-bs-target="#myNotification"
+        data-bs-timeout="5000"
+        *ngIf="
+          modifica ? rolesCheckService.isPresent('/modificaTipoFinanziamento') : rolesCheckService.isPresent('/inserisciTipoFinanziamento')
+        "
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-pencil"></use>
+        </svg>
+        <span>{{ stringSalva }}</span>
+        <!--<svg class="fa-save icon icon-white ms-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+          </svg> -->
+      </button>
+      <button
+        class="btn btn-danger btn-sml btn-xs btn-me min-wh-20"
+        *ngIf="this.id != '' && rolesCheckService.isPresent('/cancellaTipoFinanziamento')"
+        (click)="submitDelete()"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use>
+        </svg>
+        <span jhiTranslate="global.buttons.labelDelete">Cancella</span>
+      </button>
+      <button class="btn btn-primary btn-sml btn-xs btn-me min-wh-20 btnReload" *ngIf="this.id != ''" (click)="reload()">
+        <div class="rotateRefresh d-inline-block">
+          <svg class="icon icon-white ms-1">
+            <use href="content/bootstrap-italia/svg/sprites.svg#it-restore"></use>
+          </svg>
+        </div>
+        <span jhiTranslate="global.buttons.labelReload">Ricarica informazioni</span>
+      </button>
+      <!-- Pulsante più azioni (tre puntini)-->
+      <button
+        class="btn btn-danger btn-sml btn-xs btn-me min-wh-20"
+        *ngIf="this.id != ''"
+        data-bs-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-more-actions"></use>
+        </svg>
+      </button>
+      <div class="dropdown-menu">
+        <div class="link-list-wrapper">
+          <ul class="link-list">
+            <li>
+              <a class="list-item right-icon" (click)="goToTotali()">
+                <span jhiTranslate="gestProg.detail.titleTotali">Totali</span>
+                <svg class="icon icon-sm icon-primary float-right">
+                  <use href="content/bootstrap-italia/svg/sprites.svg#it-file"></use>
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- Prima riga con livello uno, livello due, livello tre, livello quattro, livello cinque e livello sei-->
+    <div class="row mt-4">
+      <div class="col-md-2">
+        <div class="mb-3">
+          <label for="livuno" class="form-label-sm" jhiTranslate="tipFin.livunoForm">Livello 1*</label>
+          <input
+            [attr.disabled]="modifica ? '' : null"
+            type="number"
+            class="form-control"
+            [ngClass]="!getFormElement('livuno').valid && getFormElement('livuno').touched ? 'is-invalid' : ''"
+            id="livuno"
+            formControlName="livuno"
+            value="livuno"
+            min="0"
+            placeholder=" "
+          />
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('livuno').errors?.['required'] && getFormElement('livuno').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('livuno').errors?.['min'] && getFormElement('livuno').touched"
+            jhiTranslate="entity.validation.min"
+            >Il valore deve essere maggiore o uguale a 0</small
+          >
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="mb-3">
+          <label for="livdue" class="form-label-sm" jhiTranslate="tipFin.livdueForm">Livello 2*</label>
+          <input
+            type="number"
+            [attr.disabled]="modifica ? '' : null"
+            class="form-control"
+            [ngClass]="!getFormElement('livdue').valid && getFormElement('livdue').touched ? 'is-invalid' : ''"
+            id="livdue"
+            formControlName="livdue"
+            value="livdue"
+            min="0"
+            placeholder=" "
+          />
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('livdue').errors?.['required'] && getFormElement('livdue').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('livdue').errors?.['min'] && getFormElement('livdue').touched"
+            jhiTranslate="entity.validation.min"
+            >Il valore deve essere maggiore o uguale a 0</small
+          >
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="mb-3">
+          <label for="livtre" class="form-label-sm" jhiTranslate="tipFin.livtreForm">Livello 3*</label>
+          <input
+            [attr.disabled]="modifica ? '' : null"
+            type="number"
+            class="form-control"
+            [ngClass]="!getFormElement('livtre').valid && getFormElement('livtre').touched ? 'is-invalid' : ''"
+            id="livtre"
+            formControlName="livtre"
+            value="livtre"
+            min="0"
+            placeholder=" "
+          />
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('livtre').errors?.['required'] && getFormElement('livtre').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('livtre').errors?.['min'] && getFormElement('livtre').touched"
+            jhiTranslate="entity.validation.min"
+            >Il valore deve essere maggiore o uguale a 0</small
+          >
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="mb-3">
+          <label for="livqua" class="form-label-sm" jhiTranslate="tipFin.livquaForm">Livello 4*</label>
+          <input
+            type="number"
+            class="form-control"
+            [attr.disabled]="modifica ? '' : null"
+            [ngClass]="!getFormElement('livqua').valid && getFormElement('livqua').touched ? 'is-invalid' : ''"
+            id="livqua"
+            formControlName="livqua"
+            value="livqua"
+            min="0"
+            placeholder=" "
+          />
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('livqua').errors?.['required'] && getFormElement('livqua').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('livqua').errors?.['min'] && getFormElement('livqua').touched"
+            jhiTranslate="entity.validation.min"
+            >Il valore deve essere maggiore o uguale a 0</small
+          >
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="mb-3">
+          <label for="livcin" class="form-label-sm" jhiTranslate="tipFin.livcinForm">Livello 5*</label>
+          <input
+            type="number"
+            class="form-control"
+            [attr.disabled]="modifica ? '' : null"
+            [ngClass]="!getFormElement('livcin').valid && getFormElement('livcin').touched ? 'is-invalid' : ''"
+            id="livcin"
+            formControlName="livcin"
+            value="livcin"
+            min="0"
+            placeholder=" "
+          />
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('livcin').errors?.['required'] && getFormElement('livcin').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('livcin').errors?.['min'] && getFormElement('livcin').touched"
+            jhiTranslate="entity.validation.min"
+            >Il valore deve essere maggiore o uguale a 0</small
+          >
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="mb-3">
+          <label for="livsei" class="form-label-sm" jhiTranslate="tipFin.livseiForm">Livello 6*</label>
+          <input
+            type="number"
+            class="form-control"
+            [attr.disabled]="modifica ? '' : null"
+            [ngClass]="!getFormElement('livsei').valid && getFormElement('livsei').touched ? 'is-invalid' : ''"
+            id="livsei"
+            formControlName="livsei"
+            value="livsei"
+            min="0"
+            placeholder=" "
+          />
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('livsei').errors?.['required'] && getFormElement('livsei').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('livsei').errors?.['min'] && getFormElement('livsei').touched"
+            jhiTranslate="entity.validation.min"
+            >Il valore deve essere maggiore o uguale a 0</small
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Seconda riga con codice e  descrizione-->
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="codtipfin" class="form-label-sm" jhiTranslate="tipFin.codtipfinForm">Codice*</label>
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="!getFormElement('codtipfin').valid && getFormElement('codtipfin').touched ? 'is-invalid' : ''"
+            id="codtipfin"
+            formControlName="codtipfin"
+            value="codtipfin"
+            placeholder=" "
+          />
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('codtipfin').errors?.['required'] && getFormElement('codtipfin').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('codtipfin').errors?.['pattern']"
+            jhiTranslate="entity.validation.sanitize"
+            >Ci sono caratteri non validi</small
+          >
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="destipfin" class="form-label-sm" jhiTranslate="tipFin.destipfinForm">Descrizione*</label>
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="!getFormElement('destipfin').valid && getFormElement('destipfin').touched ? 'is-invalid' : ''"
+            id="destipfin"
+            formControlName="destipfin"
+            value="destipfin"
+            placeholder=" "
+          />
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('destipfin').errors?.['required'] && getFormElement('destipfin').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio</small
+          >
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

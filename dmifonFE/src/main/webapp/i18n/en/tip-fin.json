@@ -1,0 +1,41 @@
+{
+  "tipFin": {
+    "home": {
+      "title": "Financing types",
+      "titleSearchToolbar": "Financing types",
+      "labelSearchString": "Search financing type"
+    },
+    "detail": {
+      "title": "Financing type",
+      "titleModify": "Financing type detail",
+      "titleNew": "New Financing type"
+    },
+    "livuno": "Level one",
+    "livunoForm": "Level one*",
+    "livdue": "Level two",
+    "livdueForm": "Level two*",
+    "livtre": "Level three",
+    "livtreForm": "Level three*",
+    "livqua": "Level four",
+    "livquaForm": "Level four*",
+    "livcin": "Level five",
+    "livcinForm": "Level five*",
+    "livsei": "Level six",
+    "livseiForm": "Level six*",
+    "codtipfin": "Code",
+    "codtipfinForm": "Code*",
+    "destipfin": "Description",
+    "destipfinForm": "Description*",
+    "num_progetti": "Project num.",
+    "resources": "Fund resources",
+    "impimp": "Commitments",
+    "impigv": "IGV ammount in IS",
+    "impddr": "Reported DDR",
+    "impinc": "introited",
+    "select": {
+      "title": "Level",
+      "default": "Select an option"
+    },
+    "csvFileName": "Financing_types"
+  }
+}

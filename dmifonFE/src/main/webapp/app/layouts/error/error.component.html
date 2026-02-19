@@ -1,0 +1,22 @@
+<div>
+  <div class="text-center">
+    <h1><span jhiTranslate="error.title">Pagina di errore!</span></h1>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-4">
+      <div class="callout danger" *ngIf="errorMessage">
+        <div class="callout-title">
+          <svg class="icon">
+            <use href="/bootstrap-italia/dist/svg/sprites.svg#it-close-circle"></use>
+          </svg>
+          <span jhiTranslate="error.warning">Attenzione</span>
+        </div>
+        <h4 class="text-center">Error {{ this.errorKey?.replace('error.http.', '') }}</h4>
+        <span class="text-xl-start">{{ errorMessage }}</span>
+        <div class="callout-more">
+          <p class="text-end"><a routerLink="/" jhiTranslate="error.backHome">Torna alla home</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

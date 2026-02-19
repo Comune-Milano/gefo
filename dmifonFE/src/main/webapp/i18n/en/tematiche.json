@@ -1,0 +1,29 @@
+{
+  "tematiche": {
+    "home": {
+      "title": "Thematic",
+      "titleSearchToolbar": "Thematics",
+      "labelSearchString": "Search Thematic"
+    },
+    "detail": {
+      "title": "Thematic",
+      "titleModify": "Thematic detail",
+      "titleNew": "New Thematic"
+    },
+    "livuno": "Level one",
+    "livunoForm": "Level one*",
+    "livdue": "Level two",
+    "livdueForm": "Level two*",    
+    "codtem": "Code",
+    "codtemForm": "Code*",
+    "destem": "Description",
+    "destemForm": "Description*",
+    "num_progetti": "Project num.",
+    "resources": "Fund resources",
+    "select": {
+      "title": "Level",
+      "default": "Select an option"
+    },
+    "csvFileName": "thematic"
+  }
+}

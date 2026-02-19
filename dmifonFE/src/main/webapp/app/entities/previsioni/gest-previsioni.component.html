@@ -1,0 +1,247 @@
+<h5 class="fw-bold" jhiTranslate="Prev.home.titleSearchToolbar">Gestione macro progetti</h5>
+<jhi-alert *ngIf="viewDelete || viewAlert"></jhi-alert>
+<jhi-alert-error *ngIf="viewError"></jhi-alert-error>
+<form [formGroup]="formFilter">
+  <div class="float-left min-wh-180" joyrideStep="firstStepPrev" [stepContent]="primoStepPrev">
+    <div class="toggles">
+      <label for="flgnoddra">
+        <span class="badge bg-success" *ngIf="!statoPrev">Previsioni abilitate</span>
+        <span class="badge bg-secondary" *ngIf="statoPrev">Previsioni bloccate</span>
+        <input type="checkbox" id="flgnoddra" (change)="onCheckboxChange($event)" [checked]="statoPrev" />
+        <span class="lever"></span>
+      </label>
+    </div>
+  </div>
+  <div class="d-flex justify-content-end mb-4 mt-4">
+    <div class="d-flex justify-content-end col-7">
+      <!-- <div class="d-flex d-grid gap-2 d-md-block justify-content-end"> -->
+
+      <!-- Bottone filtra -->
+      <button
+        class="btn btn-primary btn-sml btn-xs btn-me min-wh-25 h-100 w-100"
+        type="button"
+        data-bs-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <svg class="icon icon-white">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-list"></use>
+        </svg>
+        <span jhiTranslate="global.buttons.labelFilter">Filtra</span> <span *ngIf="countFiltri != 0"> ({{ countFiltri }})</span>
+      </button>
+      <div class="dropdown-menu dismissible w-50" role="menu">
+        <div class="container-fluid">
+          <div class="row justify-content-between mb-2">
+            <div class="col">
+              <h5 class="fw-bold" jhiTranslate="entity.filters.title">Filtra ricerca</h5>
+            </div>
+            <div class="col">
+              <button type="button" class="btn-close float-right" data-bs-dismiss="menu" aria-label="Chiudi avviso"></button>
+            </div>
+          </div>
+          <div class="row" (click)="$event.stopPropagation()">
+            <div class="col-4">
+              <div class="mb-3">
+                <div class="mb-3">
+                  <label for="progetto" class="form-label-sm" jhiTranslate="Prev.id_prog">Progetto</label>
+                  <div class="input-group">
+                    <input
+                      id="progetto"
+                      type="text"
+                      class="form-control"
+                      [ngbTypeahead]="searchPro"
+                      [resultFormatter]="formatterPro"
+                      [inputFormatter]="formatterPro"
+                      [editable]="false"
+                      formControlName="progetto"
+                    />
+                    <span class="autocomplete-icon" aria-hidden="true">
+                      <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="mb-3">
+                <label for="defaultSelect" class="form-label-sm" jhiTranslate="gestProg.select.title">Tipo livello</label>
+                <div class="select-wrapper">
+                  <select id="defaultSelect" formControlName="tipLiv">
+                    <option selected value="" jhiTranslate="gestProg.select.default">Scegli un'opzione</option>
+                    <option value="01" jhiTranslate="gestProg.select.livuno">Livello 1</option>
+                    <option value="02" jhiTranslate="gestProg.select.livdue">Livello 2</option>
+                    <option value="03" jhiTranslate="gestProg.select.livtre">Livello 3</option>
+                    <option value="BA" jhiTranslate="gestProg.select.livba">Livello basso</option>
+                    <option value="PB" jhiTranslate="gestProg.select.livpb">Livello prec. al basso</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="mb-3">
+                <label for="tipFin" class="form-label-sm" jhiTranslate="Prev.id_tipfin">Tipo Finanziamento</label>
+                <div class="input-group">
+                  <input
+                    id="tipFin"
+                    type="text"
+                    class="form-control"
+                    [ngbTypeahead]="searchTipFin"
+                    [resultFormatter]="formatterTipFin"
+                    [inputFormatter]="formatterTipFin"
+                    [editable]="false"
+                    formControlName="tipFin"
+                  />
+                  <span class="autocomplete-icon" aria-hidden="true">
+                    <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-2" (click)="$event.stopPropagation()">
+            <div class="col-4">
+              <div class="mb-3">
+                <label for="dir" class="form-label-sm" jhiTranslate="Prev.id_dir">Direzione</label>
+                <div class="input-group">
+                  <input
+                    id="dir"
+                    type="text"
+                    class="form-control"
+                    [ngbTypeahead]="searchDir"
+                    [resultFormatter]="formatterDir"
+                    [inputFormatter]="formatterDir"
+                    [editable]="false"
+                    formControlName="dir"
+                  />
+                  <span class="autocomplete-icon" aria-hidden="true">
+                    <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="mb-3">
+                <label for="dataPreDa" class="form-label-sm" jhiTranslate="Prev.dataPreDa">Da data</label>
+                <input type="date" id="dataPreDa" formControlName="dataPreDa" />
+              </div>
+            </div>
+            <div class="col-4 mb-3">
+              <label for="dataPreDa" class="form-label-sm" jhiTranslate="Prev.dataPreA">A data</label>
+              <input type="date" id="dataPreA" formControlName="dataPreA" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">
+              <button class="btn btn-danger btn-sml btn-xs btn-me h-100 w-100" type="button" (click)="applicaFiltri()">
+                <span jhiTranslate="entity.filters.apply">Applica</span>
+              </button>
+            </div>
+            <div class="col-4">
+              <button class="btn btn-primary btn-sml btn-xs btn-me h-100 w-100" type="button" (click)="resetFiltri()">
+                <span jhiTranslate="entity.filters.remove">Rimuovi</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Bottone Esporta -->
+      <button class="btn btn-primary btn-sml btn-xs btn-me h-100 w-100" type="button" (click)="exportToCSV()">
+        <svg class="icon icon-white">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-download"></use>
+        </svg>
+        <span jhiTranslate="global.buttons.labelExport">Esporta dati</span>
+      </button>
+      <!-- Bottone inserimento nuovo-->
+      <button
+        class="btn btn-danger btn-sml btn-xs btn-me h-100 w-100"
+        type="button"
+        (click)="nuovaPrevisione()"
+        *ngIf="rolesCheckService.isPresent('/inserisciPrevisione')"
+      >
+        <svg class="icon icon-white">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-plus"></use>
+        </svg>
+        <span jhiTranslate="global.buttons.labelNew">Inserisci nuovo</span>
+      </button>
+    </div>
+  </div>
+
+  <!--<div class="table-responsive">   -->
+  <!-- <span class="fw-bold" *ngIf="service.loading$ | async" jhiTranslate="global.waitLoad">Attendere...</span> -->
+  <!-- Tabella ruoli -->
+  <div class="alert alert-warning" role="alert" *ngIf="warningMessage != '' && !isFetching">
+    {{ warningMessage }}
+  </div>
+  <jhi-search-spinner *ngIf="isFetching"></jhi-search-spinner>
+
+  <table class="table table-borderless table-responsive" *ngIf="!isFetching">
+    <thead>
+      <tr>
+        <th scope="col" sortable="prog" (sort)="onSort($event)" class="col-5">
+          <span jhiTranslate="Prev.id_prog">Progetto</span>
+        </th>
+        <th scope="col" sortable="dtapre" (sort)="onSort($event)" class="col-1">
+          <span jhiTranslate="Prev.dtapre">Data</span>
+        </th>
+        <th scope="col" sortable="imppre" (sort)="onSort($event)" class="col-1">
+          <span jhiTranslate="Prev.imppre">Importo</span>
+        </th>
+        <th scope="col" sortable="notpre" (sort)="onSort($event)" class="col-1">
+          <span jhiTranslate="Prev.notpre">Note</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody *ngIf="previsioni != null">
+      <tr
+        *ngFor="let prev of previsioni | paginate: config; index as i"
+        [ngClass]="i % 2 == 0 ? 'even border-smoke border-left' : 'odd border-white border-left'"
+        (click)="apriDettaglio(prev.id)"
+      >
+        <td>{{ prev.proProByIdPro.codpro + ' - ' + prev.proProByIdPro.despro || '-' }}</td>
+        <td>{{ prev.dtapre | date: 'dd/MM/yyyy' }}</td>
+        <td class="importo">{{ prev.imppre || '0' | number: '1.2' }}</td>
+        <td>{{ prev.notpre || '-' }}</td>
+      </tr>
+      <tr>
+        <td *ngIf="previsioni.length == 0" class="bold border-white" colspan="6" style="color: gray" jhiTranslate="noRes">
+          Nessun risultato trovato
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="previsioni != null">
+    <nav class="pagination-wrapper justify-content-center" aria-label="Navigazione centrata">
+      <!-- <pagination-controls class="my-pagination" [maxSize]="9" previousLabel="" nextLabel="" (pageChange)="pageChanged($event)"></pagination-controls> -->
+      <pagination-template #p="paginationApi" (pageChange)="config.currentPage = $event" [maxSize]="9">
+        <ul class="pagination custom-pagination">
+          <li class="page-item" [class.disabled]="p.isFirstPage()">
+            <a class="page-link" (click)="p.previous()" tabindex="-1" aria-hidden="true">
+              <svg class="icon icon-primary"><use href="content/bootstrap-italia/svg/sprites.svg#it-chevron-left"></use></svg>
+              <span class="visually-hidden" jhiTranslate="page.previous">Pagina precedente</span>
+            </a>
+          </li>
+          <li *ngFor="let page of p.pages" [class.current]="p.getCurrent() === page.value" class="page-item">
+            <a (click)="p.setCurrent(page.value)" *ngIf="p.getCurrent() !== page.value" class="page-link">
+              <span>{{ page.label }}</span>
+            </a>
+            <a (click)="p.setCurrent(page.value)" *ngIf="p.getCurrent() === page.value" class="page-link" aria-current="page">
+              <span class="d-inline-block d-sm-none">Pagina </span>{{ page.label }}
+            </a>
+          </li>
+          <li class="page-item pagination-next" [class.disabled]="p.isLastPage()">
+            <a class="page-link" (click)="p.next()" tabindex="-1" aria-hidden="true">
+              <span class="visually-hidden" jhiTranslate="page.next">Pagina successiva</span>
+              <svg class="icon icon-primary"><use href="content/bootstrap-italia/svg/sprites.svg#it-chevron-right"></use></svg>
+            </a>
+          </li>
+        </ul>
+        <p class="text-center">Totale {{ p.getTotalItems() }} elementi</p>
+      </pagination-template>
+    </nav>
+  </div>
+</form>
+
+<ng-template #primoStepPrev>
+  <h5 class="card-title h5 px-2">Abilita / blocca previsioni</h5>
+  <p class="py-2 px-2">Cliccando sul flag si possono abilitare / bloccare le previsioni.</p>
+</ng-template>

@@ -1,0 +1,29 @@
+{
+  "tematiche": {
+    "home": {
+      "title": "Tematica",
+      "titleSearchToolbar": "Tematiche",
+      "labelSearchString": "Trova tematica"
+    },
+    "detail": {
+      "title": "Tematica",
+      "titleModify": "Dettaglio tematica",
+      "titleNew": "Nuova tematica"
+    },
+    "livuno": "Livello uno",
+    "livunoForm": "Livello uno*",
+    "livdue": "Livello due",
+    "livdueForm": "Livello due*",    
+    "codtem": "Codice",
+    "codtemForm": "Codice*",
+    "destem": "Descrizione",
+    "destemForm": "Descrizione*",
+    "num_progetti": "Num. progetti",
+    "resources": "Risorse del fondo",
+    "select": {
+      "title": "Livello",
+      "default": "Scegli un'opzione"
+    },
+    "csvFileName": "tematiche"
+  }
+}

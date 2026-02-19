@@ -1,0 +1,922 @@
+<jhi-spinner></jhi-spinner>
+<div class="container-fluid mt-4">
+  <div class="row justify-content-between mb-1">
+    <div class="col d-flex align-items-center">
+      <h5 class="bold"><span jhiTranslate="gestProg.detail.titleAccImp">Accertamenti/Impegni</span></h5>
+    </div>
+  </div>
+  <div class="row" *ngIf="this.AccImpPro">
+    <div class="col d-flex">
+      <h6 class="my-0">
+        Progetto: <span class="bold">{{ this.AccImpPro.progetto.codpro }} - {{ this.AccImpPro.progetto.despro }} </span>
+      </h6>
+    </div>
+  </div>
+  <div class="row" *ngIf="this.AccImpPro">
+    <div class="col d-flex">
+      <h6>
+        Progetto padre: <span class="bold">{{ this.progettoPadreLabel }} </span>
+      </h6>
+    </div>
+  </div>
+  <!--alert modifica / inserimento -->
+  <jhi-alert *ngIf="viewAlert"></jhi-alert>
+  <jhi-alert-error *ngIf="viewError"></jhi-alert-error>
+
+  <div class="d-grid gap-3 d-md-block">
+    <button
+      class="btn btn-primary btn-sml btn-xs btn-me min-wh-25"
+      (click)="submitForm()"
+      *ngIf="rolesCheckService.isPresent('/modificaImpegniProgetto')"
+    >
+      <svg class="icon icon-white">
+        <use href="content/bootstrap-italia/svg/sprites.svg#it-pencil"></use>
+      </svg>
+      <span jhiTranslate="global.buttons.labelSave">Salva</span>
+    </button>
+    <button class="btn btn-primary btn-sml btn-xs btn-me min-wh-25" (click)="reload()">
+      <svg class="icon icon-white">
+        <use href="content/bootstrap-italia/svg/sprites.svg#it-refresh"></use>
+      </svg>
+      <span jhiTranslate="global.buttons.labelReload">Ricarica informazioni</span>
+    </button>
+    <!-- Pulsante più azioni (tre puntini)-->
+    <button
+      *ngIf="this.id != ''"
+      class="btn btn-danger btn-sml btn-xs btn-me min-wh-25"
+      data-bs-toggle="dropdown"
+      aria-haspopup="true"
+      aria-expanded="false"
+    >
+      <svg class="icon icon-white ms-1">
+        <use href="content/bootstrap-italia/svg/sprites.svg#it-more-actions"></use>
+      </svg>
+    </button>
+    <div class="dropdown-menu">
+      <div class="link-list-wrapper">
+        <ul class="link-list">
+          <li>
+            <a class="list-item" href="javascript:void(0)" (click)="goToAccertamenti()">
+              <span jhiTranslate="gestProg.detail.titleAcc">Accertamenti</span>
+            </a>
+          </li>
+          <li>
+            <a class="list-item" href="javascript:void(0)" (click)="goToImpegni()">
+              <span jhiTranslate="gestProg.detail.titleImp">Impegni</span>
+            </a>
+          </li>
+          <li>
+            <a class="list-item" href="javascript:void(0)" (click)="goToTotali()">
+              <span jhiTranslate="gestProg.detail.titleTotali">Totali</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- Lista tab -->
+  <ul class="nav nav-tabs auto mt-3" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a
+        class="nav-link active"
+        id="data-ex-tab1-tab"
+        data-bs-toggle="tab"
+        href="#tab1"
+        role="tab"
+        aria-controls="tab1"
+        aria-selected="true"
+        >Accertamenti</a
+      >
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="data-ex-tab2-tab" data-bs-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false"
+        >Impegni</a
+      >
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="data-ex-tab3-tab" data-bs-toggle="tab" href="#tab3" role="tab" aria-controls="tab3" aria-selected="false"
+        >Crono</a
+      >
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="data-ex-tab4-tab" data-bs-toggle="tab" href="#tab4" role="tab" aria-controls="tab4" aria-selected="false"
+        >Note/Importi pregressi</a
+      >
+    </li>
+  </ul>
+
+  <!-- Schede -->
+  <div class="tab-content">
+    <!-- Scheda accertamenti -->
+    <div class="tab-pane active" id="tab1" role="tabpanel" aria-labelledby="data-ex-tab1-tab">
+      <button
+        class="btn btn-danger btn-sml btn-xs btn-me min-wh-25 mt-3"
+        type="button"
+        data-bs-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+        (click)="initAcc()"
+      >
+        <svg class="icon icon-white">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-plus"></use>
+        </svg>
+        <span jhiTranslate="DetCon.ins.acc">Inserisci nuovo accertamento</span>
+      </button>
+      <div class="dropdown-menu dismissible w-50" role="menu" [ngClass]="{ show: showModalAcc }">
+        <div class="container-fluid">
+          <div class="row mt-2">
+            <div class="col">
+              <h5 class="fw-bold" jhiTranslate="DetCon.ins.acc">Inserisci nuovo accertamento</h5>
+            </div>
+            <div class="col">
+              <button type="button" class="btn-close float-right" data-bs-dismiss="menu" aria-label="Chiudi avviso"></button>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-4 mb-5">
+              <label for="codentconForm" class="form-label-sm" jhiTranslate="DetCon.ins.codacc">Codice accertamento</label>
+              <input id="codentconForm" type="text" [(ngModel)]="codiceAccertamento" />
+            </div>
+            <div
+              class="col-4 mb-5 mt-3 c-pointer"
+              data-bs-toggle="modal"
+              href="#modalSearch"
+              (click)="setModalPage('Accertamenti'); $event.stopPropagation()"
+            >
+              <svg class="icon icon-md mt-4" (click)="setModalPage('Accertamenti')">
+                <use href="content/bootstrap-italia/svg/sprites.svg#it-more-actions"></use>
+              </svg>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-4" (click)="$event.stopPropagation()">
+              <button class="btn btn-danger btn-sml btn-xs btn-me h-100 w-100" type="button" (click)="inserisciAccertamento()">
+                <span>Inserisci</span>
+              </button>
+            </div>
+            <div class="col-4">
+              <button class="btn btn-primary btn-sml btn-xs btn-me h-100 w-100" type="button">
+                <span>Annulla</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-borderless mt-3">
+          <thead>
+            <tr>
+              <th scope="col" style="width: 140px !important"><span jhiTranslate="gestProg.accImp.acc.codetcon">Accertamento</span></th>
+              <th scope="col" colspan="2" class="min-wh-250">
+                <span jhiTranslate="gestProg.accImp.acc.desimp">Descrizione</span>
+              </th>
+              <th scope="col" style="width: 140px !important">
+                <span jhiTranslate="gestProg.accImp.acc.idcap">Capitolo</span>
+              </th>
+              <th scope="col" style="width: 125px !important">
+                <span jhiTranslate="gestProg.accImp.acc.idcro">Crono</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="gestProg.accImp.acc.impass">Assestato</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="gestProg.accImp.acc.impeco">Insussist.</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="gestProg.accImp.acc.impman">Reversali</span>
+              </th>
+              <th scope="col" colspan="2" class="min-wh-150">
+                <span jhiTranslate="gestProg.accImp.acc.despdd">PDD</span>
+              </th>
+              <th scope="col" class="min-wh-300">
+                <span jhiTranslate="gestProg.accImp.acc.notent">Note</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody *ngIf="formAcc.controls">
+            <!--
+<tr
+  *ngFor="let prog of progetti | paginate: config; index as i"
+  [ngClass]="i % 2 == 0 ? 'even border-smoke border-left' : 'odd border-white border-left'"
+  (click)="apriDettaglio(prog.progetto.id)"
+>
+  <td class="txt-sm" [innerHtml]="prog.progetto.despro | highlight: highlightText"></td>
+  <td class="txt-sm" [innerHtml]="prog.progetto.codpro | highlight: highlightText"></td>
+  <td class="txt-sm">{{ prog.progetto.idTipfin || '0' }}</td>
+  <td class="importo">{{ prog.totali.imprisfon || '0' | number: '1.2' }}</td>
+  <td class="txt-sm">{{ prog.progetto.idStapro || '0' }}</td>
+  <td class="txt-sm">{{ prog.progetto.idStafin || '0' }}</td>
+</tr> -->
+            <tr class="border-smoke" *ngFor="let acc of formAcc.controls; index as i">
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(acc.get('codentcon')).value">
+                <input type="text" [formControl]="convertToFormControl(acc.get('codentcon'))" [attr.disabled]="true" class="form-control" />
+              </td>
+              <td
+                colspan="2"
+                data-bs-toggle="tooltip"
+                data-bs-placement="bottom"
+                [title]="convertToFormControl(acc.get('desimp')).value"
+                class="min-wh-250"
+              >
+                <input type="text" [formControl]="convertToFormControl(acc.get('desimp'))" [attr.disabled]="true" class="form-control" />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(acc.get('idcap')).value">
+                <input type="text" [formControl]="convertToFormControl(acc.get('idcap'))" [attr.disabled]="true" class="form-control" />
+              </td>
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(acc.get('idcro')).value">
+                <input type="text" [formControl]="convertToFormControl(acc.get('idcro'))" [attr.disabled]="true" class="form-control" />
+              </td>
+              <td
+                class="col-md-1"
+                data-bs-toggle="tooltip"
+                data-bs-placement="bottom"
+                [title]="convertToFormControl(acc.get('impass')).value"
+              >
+                <input
+                  type="text"
+                  [formControl]="convertToFormControl(acc.get('impass'))"
+                  [attr.disabled]="true"
+                  class="form-control text-end"
+                  importo
+                />
+              </td>
+              <td
+                class="col-md-1"
+                data-bs-toggle="tooltip"
+                data-bs-placement="bottom"
+                [title]="convertToFormControl(acc.get('impeco')).value"
+              >
+                <input
+                  type="text"
+                  [formControl]="convertToFormControl(acc.get('impeco'))"
+                  [attr.disabled]="true"
+                  class="form-control text-end"
+                  importo
+                />
+              </td>
+              <td
+                class="col-md-1"
+                data-bs-toggle="tooltip"
+                data-bs-placement="bottom"
+                [title]="convertToFormControl(acc.get('impman')).value"
+              >
+                <input
+                  type="text"
+                  [formControl]="convertToFormControl(acc.get('impman'))"
+                  [attr.disabled]="true"
+                  class="form-control text-end"
+                  importo
+                />
+              </td>
+              <td colspan="2" data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(acc.get('despdd')).value">
+                <input type="text" [formControl]="convertToFormControl(acc.get('despdd'))" [attr.disabled]="true" class="form-control" />
+              </td>
+              <td>
+                <input type="text" [formControl]="convertToFormControl(acc.get('notent'))" />
+                <small
+                  class="form-text text-danger"
+                  *ngIf="convertToFormControl(acc.get('notent')).errors?.['pattern']"
+                  jhiTranslate="entity.validation.sanitize"
+                  >Ci sono caratteri non validi</small
+                >
+              </td>
+              <td>
+                <span tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Elimina riga">
+                  <svg
+                    class="icon icon-danger icon-sm"
+                    data-bs-toggle="modal"
+                    href="#modalCancel"
+                    (click)="this.curIndex = i"
+                    *ngIf="convertToFormControl(acc.get('isNew')).value == false"
+                  >
+                    <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use></svg
+                ></span>
+                <span tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Elimina riga">
+                  <svg
+                    class="icon icon-danger icon-sm"
+                    (click)="formAcc.removeAt(i)"
+                    *ngIf="convertToFormControl(acc.get('isNew')).value == true"
+                  >
+                    <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use>
+                  </svg>
+                </span>
+              </td>
+              <!-- Modale conferma cancellazione -->
+              <div class="modal fade" tabindex="-2" role="dialog" id="modalCancel" aria-labelledby="exampleModalTitle">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h2 class="modal-title h5 no_toc" id="exampleModalTitle" jhiTranslate="modals.warn">Attenzione</h2>
+                    </div>
+                    <div class="modal-body">
+                      <p jhiTranslate="modals.canc">Confermi la cancellazione?</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-danger btn-sm" data-bs-dismiss="modal" type="button" jhiTranslate="modals.cancel">
+                        Annulla
+                      </button>
+                      <button
+                        class="btn btn-success btn-sm"
+                        data-bs-dismiss="modal"
+                        type="button"
+                        (click)="onRemoveRow(formAcc, i)"
+                        jhiTranslate="modals.confirm"
+                      >
+                        Ok
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </tr>
+            <tr *ngIf="formAcc.length == 0">
+              <td class="bold border-white" colspan="6" style="color: gray" jhiTranslate="noRes">Nessun risultato trovato</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- <div *ngIf="progetti != null">
+      <nav class="pagination-wrapper justify-content-center" aria-label="Navigazione centrata">
+        <pagination-template #p="paginationApi" (pageChange)="config.currentPage = $event" [maxSize]="9">
+          <ul class="pagination custom-pagination">
+            <li class="page-item" [class.disabled]="p.isFirstPage()">
+              <a class="page-link" (click)="p.previous()" tabindex="-1" aria-hidden="true">
+                <svg class="icon icon-primary"><use href="content/bootstrap-italia/svg/sprites.svg#it-chevron-left"></use></svg>
+                <span class="visually-hidden" jhiTranslate="page.previous">Pagina precedente</span>
+              </a>
+            </li>
+            <li *ngFor="let page of p.pages" [class.current]="p.getCurrent() === page.value" class="page-item">
+              <a (click)="p.setCurrent(page.value)" *ngIf="p.getCurrent() !== page.value" class="page-link">
+                <span>{{ page.label }}</span>
+              </a>
+              <a (click)="p.setCurrent(page.value)" *ngIf="p.getCurrent() === page.value" class="page-link" aria-current="page">
+                <span class="d-inline-block d-sm-none">Pagina </span>{{ page.label }}
+              </a>
+            </li>
+            <li class="page-item pagination-next" [class.disabled]="p.isLastPage()">
+              <a class="page-link" (click)="p.next()" tabindex="-1" aria-hidden="true">
+                <span class="visually-hidden" jhiTranslate="page.next">Pagina successiva</span>
+                <svg class="icon icon-primary"><use href="content/bootstrap-italia/svg/sprites.svg#it-chevron-right"></use></svg>
+              </a>
+            </li>
+          </ul>
+          <p class="text-center">Totale {{ p.getTotalItems() }} elementi</p>
+        </pagination-template>
+      </nav>
+    </div> -->
+    </div>
+    <!-- Scheda impegni -->
+    <div class="tab-pane" id="tab2" role="tabpanel" aria-labelledby="data-ex-tab2-tab">
+      <button
+        class="btn btn-danger btn-sml btn-xs btn-me min-wh-25 mt-3"
+        type="button"
+        data-bs-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+        (click)="initImp()"
+      >
+        <svg class="icon icon-white">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-plus"></use>
+        </svg>
+        <span jhiTranslate="DetCon.ins.imp">Inserisci nuovo impegno</span>
+      </button>
+      <div class="dropdown-menu dismissible w-50" role="menu" [ngClass]="{ show: showModalImp }">
+        <div class="container-fluid">
+          <div class="row mt-2">
+            <div class="col">
+              <h5 class="fw-bold" jhiTranslate="DetCon.ins.imp">Inserisci nuovo impegno</h5>
+            </div>
+            <div class="col">
+              <button type="button" class="btn-close float-right" data-bs-dismiss="menu" aria-label="Chiudi avviso"></button>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-4 mb-5">
+              <label for="codentconImpForm" class="form-label-sm" jhiTranslate="DetCon.ins.codimp">Codice impegno</label>
+              <input id="codentconImpForm" type="text" [(ngModel)]="codiceAccertamento" />
+            </div>
+            <div
+              class="col-4 mb-5 mt-3 c-pointer"
+              data-bs-toggle="modal"
+              href="#modalSearch"
+              (click)="setModalPage('Impegni'); $event.stopPropagation()"
+            >
+              <svg class="icon icon-md mt-4" (click)="setModalPage('Impegni')">
+                <use href="content/bootstrap-italia/svg/sprites.svg#it-more-actions"></use>
+              </svg>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-4" (click)="$event.stopPropagation()">
+              <button class="btn btn-danger btn-sml btn-xs btn-me h-100 w-100" type="button" (click)="inserisciImpegno()">
+                <span>Inserisci</span>
+              </button>
+            </div>
+            <div class="col-4">
+              <button class="btn btn-primary btn-sml btn-xs btn-me h-100 w-100" type="button">
+                <span>Annulla</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-borderless table-responsive mt-3">
+          <thead>
+            <tr>
+              <th scope="col" style="min-width: 123px !important; max-width: 125px !important">
+                <span jhiTranslate="gestProg.accImp.imp.codentcon">Impegno</span>
+              </th>
+              <th scope="col" style="min-width: 125px !important; max-width: 125px !important">
+                <span jhiTranslate="gestProg.accImp.imp.codentcol">Accertamento</span>
+              </th>
+              <th scope="col" class="col-md-1">
+                <span jhiTranslate="gestProg.accImp.imp.desimp">Descrizione</span>
+              </th>
+              <th scope="col" style="min-width: 122px !important; max-width: 125px !important">
+                <span jhiTranslate="gestProg.accImp.imp.idcap">Capitolo</span>
+              </th>
+              <th scope="col" style="min-width: 123px !important; max-width: 125px !important">
+                <span jhiTranslate="gestProg.accImp.imp.idcro">Crono</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="gestProg.accImp.imp.impass">Assestato</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="gestProg.accImp.imp.impeco">Economie</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="gestProg.accImp.imp.impliq">Liquidazioni</span>
+              </th>
+              <th scope="col" class="min-wh-150">
+                <span jhiTranslate="gestProg.accImp.imp.impman">Mandati</span>
+              </th>
+              <th scope="col" style="min-width: 130px !important">
+                <span jhiTranslate="gestProg.accImp.imp.despdd">PDD</span>
+              </th>
+              <th scope="col" style="min-width: 90px !important">
+                <span jhiTranslate="gestProg.accImp.imp.nroconapp">Num. CA</span>
+              </th>
+              <th scope="col" style="min-width: 110px !important">
+                <span jhiTranslate="gestProg.accImp.imp.codgami">Cod. Gami</span>
+              </th>
+              <th scope="col" style="min-width: 300px !important">
+                <span jhiTranslate="gestProg.accImp.imp.notent">Note</span>
+              </th>
+              <th scope="col" class="min-wh-180">
+                <span jhiTranslate="gestProg.accImp.imp.id_tipimp">Tipo importo</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <!--
+<tr
+*ngFor="let prog of progetti | paginate: config; index as i"
+[ngClass]="i % 2 == 0 ? 'even border-smoke border-left' : 'odd border-white border-left'"
+(click)="apriDettaglio(prog.progetto.id)"
+>
+<td class="txt-sm" [innerHtml]="prog.progetto.despro | highlight: highlightText"></td>
+<td class="txt-sm" [innerHtml]="prog.progetto.codpro | highlight: highlightText"></td>
+<td class="txt-sm">{{ prog.progetto.idTipfin || '0' }}</td>
+<td class="importo">{{ prog.totali.imprisfon || '0' | number: '1.2' }}</td>
+<td class="txt-sm">{{ prog.progetto.idStapro || '0' }}</td>
+<td class="txt-sm">{{ prog.progetto.idStafin || '0' }}</td>
+</tr> -->
+            <tr class="border-smoke" *ngFor="let imp of formImp.controls; index as i">
+              <td
+                colspan="1"
+                data-bs-toggle="tooltip"
+                data-bs-placement="bottom"
+                [title]="convertToFormControl(imp.get('codentcon')).value"
+              >
+                <input type="text" [formControl]="convertToFormControl(imp.get('codentcon'))" [attr.disabled]="true" class="form-control" />
+              </td>
+              <td colspan="1"><input type="text" [formControl]="convertToFormControl(imp.get('codentcol'))" /></td>
+              <td colspan="1" data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(imp.get('desimp')).value">
+                <input type="text" [formControl]="convertToFormControl(imp.get('desimp'))" [attr.disabled]="true" class="form-control" />
+              </td>
+              <td colspan="1" data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(imp.get('idcap')).value">
+                <input type="text" [formControl]="convertToFormControl(imp.get('idcap'))" [attr.disabled]="true" class="form-control" />
+              </td>
+              <td colspan="1" data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(imp.get('idcro')).value">
+                <input type="text" [formControl]="convertToFormControl(imp.get('idcro'))" [attr.disabled]="true" class="form-control" />
+              </td>
+              <td colspan="1" data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(imp.get('impass')).value">
+                <input
+                  type="text"
+                  [formControl]="convertToFormControl(imp.get('impass'))"
+                  [attr.disabled]="true"
+                  class="form-control text-end"
+                  importo
+                />
+              </td>
+              <td colspan="1" data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(imp.get('impeco')).value">
+                <input
+                  type="text"
+                  [formControl]="convertToFormControl(imp.get('impeco'))"
+                  [attr.disabled]="true"
+                  class="form-control text-end"
+                  importo
+                />
+              </td>
+              <td colspan="1" data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(imp.get('impliq')).value">
+                <input
+                  type="text"
+                  [formControl]="convertToFormControl(imp.get('impliq'))"
+                  [attr.disabled]="true"
+                  class="form-control text-end"
+                  importo
+                />
+              </td>
+              <td colspan="1" data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(imp.get('impman')).value">
+                <input
+                  type="text"
+                  [formControl]="convertToFormControl(imp.get('impman'))"
+                  [attr.disabled]="true"
+                  class="form-control text-end"
+                  importo
+                />
+              </td>
+              <td colspan="1" data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(imp.get('despdd')).value">
+                <input type="text" [formControl]="convertToFormControl(imp.get('despdd'))" [attr.disabled]="true" class="form-control" />
+              </td>
+              <td
+                colspan="1"
+                class="text-end"
+                data-bs-toggle="tooltip"
+                data-bs-placement="bottom"
+                [title]="convertToFormControl(imp.get('nroconapp')).value"
+              >
+                <input type="text" [formControl]="convertToFormControl(imp.get('nroconapp'))" [attr.disabled]="true" class="form-control" />
+              </td>
+              <td colspan="1" data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(imp.get('codgami')).value">
+                <input type="text" [formControl]="convertToFormControl(imp.get('codgami'))" [attr.disabled]="true" class="form-control" />
+              </td>
+              <td colspan="1" data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(imp.get('notent')).value">
+                <input type="text" [formControl]="convertToFormControl(imp.get('notent'))" />
+                <small
+                  class="form-text text-danger"
+                  *ngIf="convertToFormControl(imp.get('notent')).errors?.['pattern']"
+                  jhiTranslate="entity.validation.sanitize"
+                  >Ci sono caratteri non validi</small
+                >
+              </td>
+              <td colspan="1">
+                <div class="select-wrapper">
+                  <select id="tipImpImp" [formControl]="convertToFormControl(imp.get('idTipimp'))">
+                    <option selected value="null" jhiTranslate="gestProg.select.default">Scegli un'opzione</option>
+                    <option *ngFor="let tipImp of tipiImporto" [value]="tipImp.id">{{ tipImp.destipimp }}</option>
+                  </select>
+                </div>
+              </td>
+              <td>
+                <span tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Elimina riga">
+                  <svg
+                    class="icon icon-danger icon-sm"
+                    data-bs-toggle="modal"
+                    href="#modalCancel1"
+                    (click)="this.curIndex = i"
+                    *ngIf="convertToFormControl(imp.get('isNew')).value == false"
+                  >
+                    <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use></svg
+                ></span>
+                <span tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Elimina riga">
+                  <svg
+                    class="icon icon-danger icon-sm"
+                    (click)="this.formImp.removeAt(i)"
+                    *ngIf="convertToFormControl(imp.get('isNew')).value == true"
+                  >
+                    <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use>
+                  </svg>
+                </span>
+              </td>
+              <!-- Modale conferma cancellazione -->
+              <div class="modal fade" tabindex="-2" role="dialog" id="modalCancel1" aria-labelledby="exampleModalTitle">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h2 class="modal-title h5 no_toc" id="exampleModalTitle1" jhiTranslate="modals.warn">Attenzione</h2>
+                    </div>
+                    <div class="modal-body">
+                      <p jhiTranslate="modals.canc">Confermi la cancellazione?</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-danger btn-sm" data-bs-dismiss="modal" type="button" jhiTranslate="modals.cancel">
+                        Annulla
+                      </button>
+                      <button
+                        class="btn btn-success btn-sm"
+                        data-bs-dismiss="modal"
+                        type="button"
+                        (click)="onRemoveRow(formImp, i)"
+                        jhiTranslate="modals.confirm"
+                      >
+                        Ok
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </tr>
+            <tr *ngIf="formImp.length == 0">
+              <td class="bold border-white" colspan="6" style="color: gray" jhiTranslate="noRes">Nessun risultato trovato</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- <div *ngIf="progetti != null">
+      <nav class="pagination-wrapper justify-content-center" aria-label="Navigazione centrata">
+        <pagination-template #p="paginationApi" (pageChange)="config.currentPage = $event" [maxSize]="9">
+          <ul class="pagination custom-pagination">
+            <li class="page-item" [class.disabled]="p.isFirstPage()">
+              <a class="page-link" (click)="p.previous()" tabindex="-1" aria-hidden="true">
+                <svg class="icon icon-primary"><use href="content/bootstrap-italia/svg/sprites.svg#it-chevron-left"></use></svg>
+                <span class="visually-hidden" jhiTranslate="page.previous">Pagina precedente</span>
+              </a>
+            </li>
+            <li *ngFor="let page of p.pages" [class.current]="p.getCurrent() === page.value" class="page-item">
+              <a (click)="p.setCurrent(page.value)" *ngIf="p.getCurrent() !== page.value" class="page-link">
+                <span>{{ page.label }}</span>
+              </a>
+              <a (click)="p.setCurrent(page.value)" *ngIf="p.getCurrent() === page.value" class="page-link" aria-current="page">
+                <span class="d-inline-block d-sm-none">Pagina </span>{{ page.label }}
+              </a>
+            </li>
+            <li class="page-item pagination-next" [class.disabled]="p.isLastPage()">
+              <a class="page-link" (click)="p.next()" tabindex="-1" aria-hidden="true">
+                <span class="visually-hidden" jhiTranslate="page.next">Pagina successiva</span>
+                <svg class="icon icon-primary"><use href="content/bootstrap-italia/svg/sprites.svg#it-chevron-right"></use></svg>
+              </a>
+            </li>
+          </ul>
+          <p class="text-center">Totale {{ p.getTotalItems() }} elementi</p>
+        </pagination-template>
+      </nav>
+    </div> -->
+    </div>
+    <!-- Scheda crono -->
+    <div class="tab-pane" id="tab3" role="tabpanel" aria-labelledby="data-ex-tab3-tab">
+      <button
+        class="btn btn-danger btn-sml btn-xs btn-me min-wh-25 mt-3"
+        type="button"
+        data-bs-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+        (click)="initCro()"
+      >
+        <svg class="icon icon-white">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-plus"></use>
+        </svg>
+        <span jhiTranslate="DetCon.ins.cro">Inserisci nuovo crono</span>
+      </button>
+      <div class="dropdown-menu dismissible w-50" role="menu" [ngClass]="{ show: showModalCro }">
+        <div class="container-fluid">
+          <div class="row mt-2">
+            <div class="col">
+              <h5 class="fw-bold" jhiTranslate="DetCon.ins.cro">Inserisci nuovo crono</h5>
+            </div>
+            <div class="col">
+              <button type="button" class="btn-close float-right" data-bs-dismiss="menu" aria-label="Chiudi avviso"></button>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-4 mb-5">
+              <label for="codentconCroForm" class="form-label-sm" jhiTranslate="DetCon.ins.codcro">Codice crono</label>
+              <input id="codentconCroForm" type="text" [(ngModel)]="codiceAccertamento" />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-4" (click)="$event.stopPropagation()">
+              <button class="btn btn-danger btn-sml btn-xs btn-me h-100 w-100" type="button" (click)="inserisciCrono()">
+                <span>Inserisci</span>
+              </button>
+            </div>
+            <div class="col-4">
+              <button class="btn btn-primary btn-sml btn-xs btn-me h-100 w-100" type="button">
+                <span>Annulla</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-borderless table-responsive mt-3">
+          <thead>
+            <tr>
+              <th scope="col" class="col-1" style="min-width: 140px !important">
+                <span jhiTranslate="gestProg.accImp.cro.codentcon">Crono</span>
+              </th>
+              <th scope="col" class="col-4">
+                <span jhiTranslate="gestProg.accImp.cro.descro">Descrizione</span>
+              </th>
+              <th scope="col" class="col-2" style="width: 160px">
+                <span jhiTranslate="gestProg.accImp.cro.id_tipimp">Tipo importo</span>
+              </th>
+              <th scope="col" class="col-5 min-wh-300">
+                <span jhiTranslate="gestProg.accImp.cro.notent">Note</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <!--
+<tr
+  *ngFor="let prog of progetti | paginate: config; index as i"
+  [ngClass]="i % 2 == 0 ? 'even border-smoke border-left' : 'odd border-white border-left'"
+  (click)="apriDettaglio(prog.progetto.id)"
+>
+  <td class="txt-sm" [innerHtml]="prog.progetto.despro | highlight: highlightText"></td>
+  <td class="txt-sm" [innerHtml]="prog.progetto.codpro | highlight: highlightText"></td>
+  <td class="txt-sm">{{ prog.progetto.idTipfin || '0' }}</td>
+  <td class="importo">{{ prog.totali.imprisfon || '0' | number: '1.2' }}</td>
+  <td class="txt-sm">{{ prog.progetto.idStapro || '0' }}</td>
+  <td class="txt-sm">{{ prog.progetto.idStafin || '0' }}</td>
+</tr> -->
+            <tr class="border-smoke" *ngFor="let cro of formCro.controls; let i = index" [attr.data-index]="i">
+              <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="convertToFormControl(cro.get('codentcon')).value">
+                <input type="text" [formControl]="convertToFormControl(cro.get('codentcon'))" [attr.disabled]="true" class="form-control" />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  [formControl]="convertToFormControl(cro.get('desimp'))"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  [title]="convertToFormControl(cro.get('desimp')).value"
+                />
+              </td>
+              <td>
+                <div class="select-wrapper">
+                  <select id="tipimp" [formControl]="convertToFormControl(cro.get('idTipimp'))">
+                    <option selected value="null" jhiTranslate="gestProg.select.default">Scegli un'opzione</option>
+                    <option *ngFor="let tipImp of tipiImporto" [value]="tipImp.id">{{ tipImp.destipimp }}</option>
+                  </select>
+                </div>
+              </td>
+              <td>
+                <input type="text" [formControl]="convertToFormControl(cro.get('notent'))" />
+                <small
+                  class="form-text text-danger"
+                  *ngIf="convertToFormControl(cro.get('notent')).errors?.['pattern']"
+                  jhiTranslate="entity.validation.sanitize"
+                  >Ci sono caratteri non validi</small
+                >
+              </td>
+              <td>
+                <span tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Elimina riga">
+                  <svg
+                    class="icon icon-danger icon-sm"
+                    data-bs-toggle="modal"
+                    href="#modalCancel2"
+                    (click)="this.curIndex = i"
+                    *ngIf="convertToFormControl(cro.get('isNew')).value == false"
+                  >
+                    <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use></svg
+                ></span>
+                <span tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Elimina riga">
+                  <svg
+                    class="icon icon-danger icon-sm"
+                    (click)="formCro.removeAt(i)"
+                    *ngIf="convertToFormControl(cro.get('isNew')).value == true"
+                  >
+                    <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use>
+                  </svg>
+                </span>
+              </td>
+              <!-- Modale conferma cancellazione -->
+              <td>
+                <div class="modal fade" tabindex="-2" role="dialog" id="modalCancel2" aria-labelledby="exampleModalTitle">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h2 class="modal-title h5 no_toc" id="exampleModalTitle2" jhiTranslate="modals.warn">Attenzione</h2>
+                      </div>
+                      <div class="modal-body">
+                        <p jhiTranslate="modals.canc">Confermi la cancellazione?</p>
+                      </div>
+                      <div class="modal-footer">
+                        <button class="btn btn-danger btn-sm" data-bs-dismiss="modal" type="button" jhiTranslate="modals.cancel">
+                          Annulla
+                        </button>
+                        <button
+                          class="btn btn-success btn-sm"
+                          data-bs-dismiss="modal"
+                          type="button"
+                          (click)="onRemoveRow(formCro, i)"
+                          jhiTranslate="modals.confirm"
+                        >
+                          Ok
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="formCro.length == 0">
+              <td class="bold border-white" colspan="13" style="color: gray" jhiTranslate="noRes">Nessun risultato trovato</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- <div *ngIf="progetti != null">
+      <nav class="pagination-wrapper justify-content-center" aria-label="Navigazione centrata">
+        <pagination-template #p="paginationApi" (pageChange)="config.currentPage = $event" [maxSize]="9">
+          <ul class="pagination custom-pagination">
+            <li class="page-item" [class.disabled]="p.isFirstPage()">
+              <a class="page-link" (click)="p.previous()" tabindex="-1" aria-hidden="true">
+                <svg class="icon icon-primary"><use href="content/bootstrap-italia/svg/sprites.svg#it-chevron-left"></use></svg>
+                <span class="visually-hidden" jhiTranslate="page.previous">Pagina precedente</span>
+              </a>
+            </li>
+            <li *ngFor="let page of p.pages" [class.current]="p.getCurrent() === page.value" class="page-item">
+              <a (click)="p.setCurrent(page.value)" *ngIf="p.getCurrent() !== page.value" class="page-link">
+                <span>{{ page.label }}</span>
+              </a>
+              <a (click)="p.setCurrent(page.value)" *ngIf="p.getCurrent() === page.value" class="page-link" aria-current="page">
+                <span class="d-inline-block d-sm-none">Pagina </span>{{ page.label }}
+              </a>
+            </li>
+            <li class="page-item pagination-next" [class.disabled]="p.isLastPage()">
+              <a class="page-link" (click)="p.next()" tabindex="-1" aria-hidden="true">
+                <span class="visually-hidden" jhiTranslate="page.next">Pagina successiva</span>
+                <svg class="icon icon-primary"><use href="content/bootstrap-italia/svg/sprites.svg#it-chevron-right"></use></svg>
+              </a>
+            </li>
+          </ul>
+          <p class="text-center">Totale {{ p.getTotalItems() }} elementi</p>
+        </pagination-template>
+      </nav>
+    </div> -->
+    </div>
+    <!-- Scheda Note/Importi pregressi -->
+    <div class="tab-pane" id="tab4" role="tabpanel" aria-labelledby="data-ex-tab4-tab">
+      <form [formGroup]="formNote" *ngIf="formNote">
+        <!-- Prima riga -->
+        <div class="row mt-3">
+          <div class="col-4">
+            <label for="notimp" class="form-label-sm">Note impegni</label>
+            <input type="text" class="form-control no-border" formControlName="notimp" id="notimp" placeholder="-" />
+          </div>
+          <div class="col-4">
+            <label for="impimpric" class="form-label-sm">Importo impegni richiesti</label>
+            <input type="text" id="impimpric" name="impimpric" formControlName="impimpric" importo class="text-end" />
+          </div>
+          <div class="col-4">
+            <label for="impimppre" class="form-label-sm">Importo impegni pegressi</label>
+            <input type="text" id="impimppre" name="impimppre" formControlName="impimppre" importo [negativo]="true" class="text-end" />
+          </div>
+        </div>
+        <!-- Seconda riga -->
+        <div class="row mt-3">
+          <div class="col-4">
+            <label for="impmanpre" class="form-label-sm">Importo mandati pegressi</label>
+            <input type="text" id="impmanpre" name="impmanpre" formControlName="impmanpre" importo [negativo]="true" class="text-end" />
+          </div>
+          <div class="col-4">
+            <label for="impaccpre" class="form-label-sm">Importo accertamenti pegressi</label>
+            <input type="text" id="impaccpre" name="impaccpre" formControlName="impaccpre" importo [negativo]="true" class="text-end" />
+          </div>
+          <div class="col-4">
+            <label for="imprevpre" class="form-label-sm">Importo revesali pegressi</label>
+            <input type="text" id="imprevpre" name="imprevpre" formControlName="imprevpre" importo [negativo]="true" class="text-end" />
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Modale ricerca -->
+  <!--
+  <div class="modal fade bd-example-modal-xl" tabindex="-2" role="dialog" id="modalSearch" aria-labelledby="exampleModalTitle" style="z-index: 20000;">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content" style="min-width: 1500px !important;">
+        <div class="modal-body">
+          <jhi-det-con-acc></jhi-det-con-acc>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <div
+    class="modal fade"
+    tabindex="-2"
+    role="dialog"
+    id="modalSearch"
+    aria-labelledby="exampleModalTitle"
+    style="z-index: 20000"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="modal-dialog mw-100" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <svg class="icon icon-md c-pointer" data-bs-dismiss="modal" (click)="this.showModal = false">
+            <use href="content/bootstrap-italia/svg/sprites.svg#it-close"></use>
+          </svg>
+        </div>
+        <div class="modal-body mb-4" *ngIf="showModal">
+          <jhi-det-con-acc [tipo]="tipo" (codAccImp)="updateCodAccImp($event)"></jhi-det-con-acc>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

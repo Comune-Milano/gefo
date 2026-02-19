@@ -1,0 +1,1002 @@
+<jhi-spinner></jhi-spinner>
+<div class="container-fluid">
+  <div class="row justify-content-between">
+    <div class="col d-flex align-items-center">
+      <h5 class="bold" *ngIf="this.id != ''" jhiTranslate="proAva.detail.titleModify">Dettaglio avanzamanento</h5>
+      <h5 class="bold" *ngIf="this.id == ''" jhiTranslate="proAva.detail.titleNew">Nuovo avanzamanento</h5>
+    </div>
+  </div>
+  <!--alert modifica / inserimento -->
+  <jhi-alert *ngIf="viewAlert"></jhi-alert>
+  <jhi-alert-error *ngIf="viewError"></jhi-alert-error>
+
+  <!-- Form modifica / inserimento nuovo -->
+  <form [formGroup]="formAva" *ngIf="formAva">
+    <div class="d-grid gap-4 d-md-block">
+      <!-- Pulsante inserisci / modifica avanzamento-->
+      <button
+        class="btn btn-primary btn-sml btn-xs btn-me min-wh-20"
+        (click)="submitForm()"
+        *ngIf="modifica ? rolesCheckService.isPresent('/modificaAvanzamento') : rolesCheckService.isPresent('/inserisciAvanzamento')"
+        data-bs-target="#myNotification"
+        data-bs-timeout="5000"
+        joyrideStep="firstStepAvaDet"
+        [stepContent]="primoStepAvaDet"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-pencil" *ngIf="modifica"></use>
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-plus" *ngIf="!modifica"></use>
+        </svg>
+        <span>{{ stringSalva }}</span>
+      </button>
+      <!-- Pulsante ricarica informazioni-->
+      <button
+        class="btn btn-primary btn-sml btn-xs btn-me min-wh-20 btnReload"
+        (click)="reload()"
+        *ngIf="this.id != ''"
+        joyrideStep="secondStepAvaDet"
+        [stepContent]="secondoStepAvaDet"
+      >
+        <div class="rotateRefresh d-inline-block">
+          <svg class="icon icon-white ms-1">
+            <use href="content/bootstrap-italia/svg/sprites.svg#it-restore"></use>
+          </svg>
+        </div>
+        <span jhiTranslate="global.buttons.labelReload">Ricarica informazioni</span>
+      </button>
+      <!-- Pulsante ricarica informazioni-->
+      <button
+        class="btn btn-primary btn-sml btn-xs btn-me min-wh-20"
+        (click)="creaFasi()"
+        *ngIf="this.id != '' && rolesCheckService.isPresent('/creaFasiAvanzamento')"
+        joyrideStep="thirdStepAvaDet"
+        [stepContent]="terzoStepAvaDet"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-plus"></use>
+        </svg>
+        <span jhiTranslate="proAva.creaFas">Crea fasi</span>
+      </button>
+      <!-- Pulsante elimina avanzamento -->
+      <button
+        class="btn btn-danger btn-sml btn-xs btn-me min-wh-20"
+        *ngIf="this.id != '' && rolesCheckService.isPresent('/cancellaAvanzamento')"
+        (click)="eliminaAvanzamento()"
+        joyrideStep="fourthStepAvaDet"
+        [stepContent]="quartoStepAvaDet"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use>
+        </svg>
+        <span jhiTranslate="global.buttons.labelDelete">Cancella</span>
+      </button>
+      <!-- Pulsante più azioni (tre puntini)-->
+      <button
+        *ngIf="this.id != ''"
+        class="btn btn-danger btn-sml btn-xs btn-me min-wh-20"
+        data-bs-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+        joyrideStep="fifthStepAvaDet"
+        [stepContent]="quintoStepAvaDet"
+        (next)="showTabFas()"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-more-actions"></use>
+        </svg>
+      </button>
+      <div class="dropdown-menu">
+        <div class="link-list-wrapper">
+          <ul class="link-list">
+            <li>
+              <a class="list-item right-icon" (click)="goToAllegati()">
+                <span jhiTranslate="gestProg.detail.titleAllegati">Allegati</span>
+                <svg class="icon icon-sm icon-primary float-right">
+                  <use href="content/bootstrap-italia/svg/sprites.svg#it-file"></use>
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <label for="pro" class="form-label-sm" jhiTranslate="proAva.pro">Progetto*</label>
+        <input
+          id="pro"
+          *ngIf="modifica"
+          type="text"
+          class="form-control"
+          [attr.disabled]="true"
+          [ngbTypeahead]="searchPro"
+          [resultFormatter]="formatterPro"
+          [inputFormatter]="formatterPro"
+          [editable]="false"
+          formControlName="proProByIdPro"
+        />
+        <div class="input-group">
+          <input
+            id="pro"
+            *ngIf="!modifica"
+            type="text"
+            class="form-control"
+            [ngbTypeahead]="searchPro"
+            [resultFormatter]="formatterPro"
+            [inputFormatter]="formatterPro"
+            [editable]="false"
+            formControlName="proProByIdPro"
+          />
+          <span class="autocomplete-icon" aria-hidden="true">
+            <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+          </span>
+        </div>
+        <small
+          class="form-text text-danger"
+          *ngIf="getFormElement('proProByIdPro').errors?.['required'] && getFormElement('proProByIdPro').touched"
+          jhiTranslate="entity.validation.required"
+          >Questo campo è obbligatorio</small
+        >
+      </div>
+      <div class="col-md-3" *ngIf="modifica">
+        <label for="progettoPadreLabel" class="form-label-sm" jhiTranslate="proAva.proPad">Progetto padre</label>
+        <input id="progettoPadreLabel" type="text" class="form-control" [attr.disabled]="modifica" formControlName="progettoPadreLabel" />
+      </div>
+      <div class="col-md-3" *ngIf="modifica">
+        <label for="dtarilava" class="form-label-sm" jhiTranslate="proAva.dtarilava">Date Rilev. Ava.</label>
+        <input id="dtarilava" type="date" class="form-control" [attr.disabled]="modifica" formControlName="dtarilava" />
+      </div>
+      <div class="col-md-3" *ngIf="modifica">
+        <label for="usrLstupd" class="form-label-sm" jhiTranslate="proAva.usrUpdate">Utente aggiornamento</label>
+        <input id="usrLstupd" type="text" class="form-control" [attr.disabled]="modifica" formControlName="usrLstupd" />
+      </div>
+    </div>
+    <!-- Tab schede progetto -->
+    <ul class="nav nav-tabs auto" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a
+          class="nav-link active"
+          id="data-ex-tab1-tab"
+          data-bs-toggle="tab"
+          href="#tab1"
+          role="tab"
+          aria-controls="tab1"
+          aria-selected="true"
+          jhiTranslate="proAva.tab.ava"
+          >Avanzamento</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          id="data-ex-tab2-tab"
+          data-bs-toggle="tab"
+          href="#tab2"
+          role="tab"
+          aria-controls="tab2"
+          aria-selected="false"
+          jhiTranslate="proAva.tab.fas"
+          >Fasi</a
+        >
+      </li>
+    </ul>
+    <!-- Schede -->
+    <div class="tab-content">
+      <!-- Scheda Avanzamento -->
+      <div class="tab-pane active" id="tab1" role="tabpanel" aria-labelledby="data-ex-tab1-tab">
+        <!-- prima riga con Stato avanz. tecnico, Perc. avanz, Data inizio lav. -->
+        <div class="row mt-3">
+          <div class="col-md-4">
+            <label for="desstaava" class="form-label-sm" jhiTranslate="proAva.desstaavaForm">Stato avanz. tecnico*</label>
+            <input type="text" id="desstaava" class="form-control" formControlName="desstaava" />
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('desstaava').errors?.['required'] && getFormElement('desstaava').touched"
+              jhiTranslate="entity.validation.required"
+              >Questo campo è obbligatorio</small
+            >
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('desstaava').errors?.['pattern']"
+              jhiTranslate="entity.validation.sanitize"
+              >Ci sono caratteri non validi</small
+            >
+          </div>
+          <div class="col-md-4">
+            <label for="prcava" class="form-label-sm" jhiTranslate="proAva.percAvaForm">Perc. avanz.*</label>
+            <div class="input-group">
+              <input type="number" id="prcava" class="form-control" formControlName="prcava" />
+              <div class="input-group-append p-2">
+                <div class="input-group-text>">%</div>
+              </div>
+            </div>
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('prcava').errors?.['required'] && getFormElement('prcava').touched"
+              jhiTranslate="entity.validation.required"
+              >Questo campo è obbligatorio</small
+            >
+          </div>
+          <div class="col-md-4">
+            <label for="dtainlav" class="form-label-sm" jhiTranslate="proAva.dtainlav">Data inizio lav.</label>
+            <input type="date" id="dtainlav" class="form-control" [attr.disabled]="true" formControlName="dtainlav" *ngIf="modifica" />
+            <input type="date" id="dtainlavNew" class="form-control" [attr.disabled]="true" *ngIf="!modifica" />
+          </div>
+        </div>
+        <!-- seconda riga con Data fine lav., Fase intervento, Livello criticità -->
+        <div class="row mt-3">
+          <div class="col-md-4">
+            <label for="dtafinlav" class="form-label-sm" jhiTranslate="proAva.dtafinlav">Data fine lav.</label>
+            <input type="date" id="dtafinlav" class="form-control" [attr.disabled]="true" formControlName="dtafinlav" *ngIf="modifica" />
+            <input type="date" id="dtafinlav" class="form-control" [attr.disabled]="true" *ngIf="!modifica" />
+          </div>
+          <div class="col-md-4">
+            <label for="id_lisvalfasint" class="form-label-sm" jhiTranslate="proAva.id_lisvalfasintForm">Fase intervento*</label>
+            <div class="select-wrapper">
+              <select id="id_lisvalfasint" formControlName="id_lisvalfasint">
+                <option selected value="" jhiTranslate="gestProg.select.default">Scegli un'opzione</option>
+                <option *ngFor="let lisVal of lisValFasInt" [value]="lisVal.id">{{ lisVal.vallis }}</option>
+              </select>
+            </div>
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('id_lisvalfasint').errors?.['required'] && getFormElement('id_lisvalfasint').touched"
+              jhiTranslate="entity.validation.required"
+              >Questo campo è obbligatorio</small
+            >
+          </div>
+          <div class="col-md-4">
+            <label for="id_lisvallivcri" class="form-label-sm" jhiTranslate="proAva.id_lisvallivcriForm">Livello criticità</label>
+            <div class="select-wrapper">
+              <select id="id_lisvallivcri" formControlName="id_lisvallivcri">
+                <option selected value="" jhiTranslate="gestProg.select.default">Scegli un'opzione</option>
+                <option *ngFor="let lisVal of lisValLivCri" [value]="lisVal.id">{{ lisVal.vallis }}</option>
+              </select>
+            </div>
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('id_lisvallivcri').errors?.['required'] && getFormElement('id_lisvallivcri').touched"
+              jhiTranslate="entity.validation.required"
+              >Questo campo è obbligatorio</small
+            >
+          </div>
+        </div>
+        <!-- terza riga con Note criticità, Tipo appalto, n. Appalto -->
+        <div class="row mt-3">
+          <div class="col-md-4">
+            <label for="notcri" class="form-label-sm" jhiTranslate="proAva.notcri">Note criticità</label>
+            <input type="text" id="notcri" class="form-control" formControlName="notcri" />
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('notcri').errors?.['pattern']"
+              jhiTranslate="entity.validation.sanitize"
+              >Ci sono caratteri non validi</small
+            >
+          </div>
+          <div class="col-md-4">
+            <label for="id_lisvaltipapp" class="form-label-sm" jhiTranslate="proAva.id_lisvaltipappForm">Tipo appalto*</label>
+            <div class="select-wrapper">
+              <select id="id_lisvaltipapp" formControlName="id_lisvaltipapp">
+                <option selected value="" jhiTranslate="gestProg.select.default">Scegli un'opzione</option>
+                <option *ngFor="let lisVal of lisValTipApp" [value]="lisVal.id">{{ lisVal.vallis }}</option>
+              </select>
+            </div>
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('id_lisvaltipapp').errors?.['required'] && getFormElement('id_lisvaltipapp').touched"
+              jhiTranslate="entity.validation.required"
+              >Questo campo è obbligatorio</small
+            >
+          </div>
+          <div class="col-md-4">
+            <label for="desapp" class="form-label-sm" jhiTranslate="proAva.desapp">N.appalto</label>
+            <input type="text" id="desapp" class="form-control" formControlName="desapp" />
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('desapp').errors?.['pattern']"
+              jhiTranslate="entity.validation.sanitize"
+              >Ci sono caratteri non validi</small
+            >
+          </div>
+        </div>
+        <!-- Quarta riga con Stato anticipazione, Importo anticipazione e Tipologia di fase -->
+        <div class="row mt-3">
+          <div class="col-md-4">
+            <label for="id_lisvalstaant" class="form-label-sm" jhiTranslate="proAva.id_lisvalstaant">Stato anticipazione*</label>
+            <div class="select-wrapper">
+              <select id="id_lisvalstaant" formControlName="id_lisvalstaant">
+                <option selected value="" jhiTranslate="gestProg.select.default">Scegli un'opzione</option>
+                <option *ngFor="let lisVal of lisValStaAnt" [value]="lisVal.id">{{ lisVal.vallis }}</option>
+              </select>
+            </div>
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('id_lisvalstaant').errors?.['required'] && getFormElement('id_lisvalstaant').touched"
+              jhiTranslate="entity.validation.required"
+              >Questo campo è obbligatorio</small
+            >
+          </div>
+          <div class="col-md-4">
+            <label for="impant" class="form-label-sm" jhiTranslate="proAva.impant">Importo anticipazione*</label>
+            <input type="text" id="impant" class="form-control" importo formControlName="impant" />
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('impant').errors?.['required'] && getFormElement('impant').touched"
+              jhiTranslate="entity.validation.required"
+              >Questo campo è obbligatorio</small
+            >
+          </div>
+          <div class="col-md-4">
+            <label for="id_lisvaltipolfas" class="form-label-sm" jhiTranslate="proAva.id_lisvaltipolfas">Tipologia di fase</label>
+            <div class="select-wrapper">
+              <select id="id_lisvaltipolfas" formControlName="id_lisvaltipolfas">
+                <option selected value="" jhiTranslate="gestProg.select.default">Scegli un'opzione</option>
+                <option *ngFor="let lisVal of lisValTipFas" [value]="lisVal.id">{{ lisVal.vallis }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Scheda fasi -->
+      <div class="tab-pane" id="tab2" role="tabpanel" aria-labelledby="data-ex-tab2-tab">
+        <div class="dropdown dropend">
+          <button
+            type="button"
+            class="btn btn-primary btn-sm dropdown-toggle mt-3"
+            data-bs-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            joyrideStep="sixthStepAvaDet"
+            [stepContent]="sestoStepAvaDet"
+          >
+            <span jhiTranslate="proAva.viewHideCol">Mostra / nascondi colonne</span>
+            <svg class="icon-expand icon icon-sm icon-light"><use href="content/bootstrap-italia/svg/sprites.svg#it-expand"></use></svg>
+          </button>
+          <div class="dropdown-menu mt-05 dropdown-menuCol">
+            <div class="link-list-wrapper">
+              <ul class="link-list">
+                <li class="dropdown-item py-1" (click)="$event.stopPropagation()">
+                  <div class="row">
+                    <div class="col-9"><span jhiTranslate="proAva.viewAll">Visualizza tutto</span></div>
+                    <div class="col-3">
+                      <svg class="icon icon-sm icon-primary cursor-pointer" (click)="enableAllColumns()">
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-visible"></use>
+                      </svg>
+                    </div>
+                  </div>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li class="dropdown-item py-1" (click)="$event.stopPropagation()">
+                  <div class="row">
+                    <div class="col-9"><span jhiTranslate="proAva.tipfas">Tipo fase</span></div>
+                    <div class="col-3">
+                      <svg
+                        class="icon icon-sm icon-primary cursor-pointer"
+                        *ngIf="getColumnView('tipfas')"
+                        (click)="setColumnView('tipfas', false)"
+                      >
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-visible"></use>
+                      </svg>
+                      <svg
+                        class="icon icon-sm icon-danger cursor-pointer"
+                        *ngIf="!getColumnView('tipfas')"
+                        (click)="setColumnView('tipfas', true)"
+                      >
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-invisible"></use>
+                      </svg>
+                    </div>
+                  </div>
+                </li>
+                <li class="dropdown-item py-1" (click)="$event.stopPropagation()">
+                  <div class="row">
+                    <div class="col-9"><span jhiTranslate="proAva.dtaoriini">Data ini. origine</span></div>
+                    <div class="col-3">
+                      <svg
+                        class="icon icon-sm icon-primary cursor-pointer"
+                        *ngIf="getColumnView('dtaoriini')"
+                        (click)="setColumnView('dtaoriini', false)"
+                      >
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-visible"></use>
+                      </svg>
+                      <svg
+                        class="icon icon-sm icon-danger cursor-pointer"
+                        *ngIf="!getColumnView('dtaoriini')"
+                        (click)="setColumnView('dtaoriini', true)"
+                      >
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-invisible"></use>
+                      </svg>
+                    </div>
+                  </div>
+                </li>
+                <li class="dropdown-item py-1" (click)="$event.stopPropagation()">
+                  <div class="row">
+                    <div class="col-9"><span jhiTranslate="proAva.dtaorifin">Data fine origine</span></div>
+                    <div class="col-3">
+                      <svg
+                        class="icon icon-sm icon-primary cursor-pointer"
+                        *ngIf="getColumnView('dtaorifin')"
+                        (click)="setColumnView('dtaorifin', false)"
+                      >
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-visible"></use>
+                      </svg>
+                      <svg
+                        class="icon icon-sm icon-danger cursor-pointer"
+                        *ngIf="!getColumnView('dtaorifin')"
+                        (click)="setColumnView('dtaorifin', true)"
+                      >
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-invisible"></use>
+                      </svg>
+                    </div>
+                  </div>
+                </li>
+                <li class="dropdown-item py-1" (click)="$event.stopPropagation()">
+                  <div class="row">
+                    <div class="col-9"><span jhiTranslate="proAva.dtapreini">Data inizio prev.</span></div>
+                    <div class="col-3">
+                      <svg
+                        class="icon icon-sm icon-primary cursor-pointer"
+                        *ngIf="getColumnView('dtapreini')"
+                        (click)="setColumnView('dtapreini', false)"
+                      >
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-visible"></use>
+                      </svg>
+                      <svg
+                        class="icon icon-sm icon-danger cursor-pointer"
+                        *ngIf="!getColumnView('dtapreini')"
+                        (click)="setColumnView('dtapreini', true)"
+                      >
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-invisible"></use>
+                      </svg>
+                    </div>
+                  </div>
+                </li>
+                <li class="dropdown-item py-1" (click)="$event.stopPropagation()">
+                  <div class="row">
+                    <div class="col-9"><span jhiTranslate="proAva.dtaprefin">Data fine prev.</span></div>
+                    <div class="col-3">
+                      <svg
+                        class="icon icon-sm icon-primary cursor-pointer"
+                        *ngIf="getColumnView('dtaprefin')"
+                        (click)="setColumnView('dtaprefin', false)"
+                      >
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-visible"></use>
+                      </svg>
+                      <svg
+                        class="icon icon-sm icon-danger cursor-pointer"
+                        *ngIf="!getColumnView('dtaprefin')"
+                        (click)="setColumnView('dtaprefin', true)"
+                      >
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-invisible"></use>
+                      </svg>
+                    </div>
+                  </div>
+                </li>
+                <li class="dropdown-item py-1" (click)="$event.stopPropagation()">
+                  <div class="row">
+                    <div class="col-9"><span jhiTranslate="proAva.dtaeffini">Data inizio eff.</span></div>
+                    <div class="col-3">
+                      <svg
+                        class="icon icon-sm icon-primary cursor-pointer"
+                        *ngIf="getColumnView('dtaeffini')"
+                        (click)="setColumnView('dtaeffini', false)"
+                      >
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-visible"></use>
+                      </svg>
+                      <svg
+                        class="icon icon-sm icon-danger cursor-pointer"
+                        *ngIf="!getColumnView('dtaeffini')"
+                        (click)="setColumnView('dtaeffini', true)"
+                      >
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-invisible"></use>
+                      </svg>
+                    </div>
+                  </div>
+                </li>
+                <li class="dropdown-item py-1" (click)="$event.stopPropagation()">
+                  <div class="row">
+                    <div class="col-9"><span jhiTranslate="proAva.dtaefffin">Data fine eff.</span></div>
+                    <div class="col-3">
+                      <svg
+                        class="icon icon-sm icon-primary cursor-pointer"
+                        *ngIf="getColumnView('dtaefffin')"
+                        (click)="setColumnView('dtaefffin', false)"
+                      >
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-visible"></use>
+                      </svg>
+                      <svg
+                        class="icon icon-sm icon-danger cursor-pointer"
+                        *ngIf="!getColumnView('dtaefffin')"
+                        (click)="setColumnView('dtaefffin', true)"
+                      >
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-invisible"></use>
+                      </svg>
+                    </div>
+                  </div>
+                </li>
+                <li class="dropdown-item py-1" (click)="$event.stopPropagation()">
+                  <div class="row">
+                    <div class="col-9"><span jhiTranslate="proAva.fas">Fase</span></div>
+                    <div class="col-3">
+                      <svg
+                        class="icon icon-sm icon-primary cursor-pointer"
+                        *ngIf="getColumnView('fas')"
+                        (click)="setColumnView('fas', false)"
+                      >
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-visible"></use>
+                      </svg>
+                      <svg
+                        class="icon icon-sm icon-danger cursor-pointer"
+                        *ngIf="!getColumnView('fas')"
+                        (click)="setColumnView('fas', true)"
+                      >
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-invisible"></use>
+                      </svg>
+                    </div>
+                  </div>
+                </li>
+                <li class="dropdown-item py-1" (click)="$event.stopPropagation()">
+                  <div class="row">
+                    <div class="col-9"><span jhiTranslate="proAva.perfas">% Fase</span></div>
+                    <div class="col-3">
+                      <svg
+                        class="icon icon-sm icon-primary cursor-pointer"
+                        *ngIf="getColumnView('perfas')"
+                        (click)="setColumnView('perfas', false)"
+                      >
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-visible"></use>
+                      </svg>
+                      <svg
+                        class="icon icon-sm icon-danger cursor-pointer"
+                        *ngIf="!getColumnView('perfas')"
+                        (click)="setColumnView('perfas', true)"
+                      >
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-invisible"></use>
+                      </svg>
+                    </div>
+                  </div>
+                </li>
+                <li class="dropdown-item py-1" (click)="$event.stopPropagation()">
+                  <div class="row">
+                    <div class="col-9"><span jhiTranslate="proAva.mil">Milest.</span></div>
+                    <div class="col-3">
+                      <svg
+                        class="icon icon-sm icon-primary cursor-pointer"
+                        *ngIf="getColumnView('mil')"
+                        (click)="setColumnView('mil', false)"
+                      >
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-visible"></use>
+                      </svg>
+                      <svg
+                        class="icon icon-sm icon-danger cursor-pointer"
+                        *ngIf="!getColumnView('mil')"
+                        (click)="setColumnView('mil', true)"
+                      >
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-invisible"></use>
+                      </svg>
+                    </div>
+                  </div>
+                </li>
+                <li class="dropdown-item py-1" (click)="$event.stopPropagation()">
+                  <div class="row">
+                    <div class="col-9"><span jhiTranslate="proAva.permil">% Mil.</span></div>
+                    <div class="col-3">
+                      <svg
+                        class="icon icon-sm icon-primary cursor-pointer"
+                        *ngIf="getColumnView('permil')"
+                        (click)="setColumnView('permil', false)"
+                      >
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-visible"></use>
+                      </svg>
+                      <svg
+                        class="icon icon-sm icon-danger cursor-pointer"
+                        *ngIf="!getColumnView('permil')"
+                        (click)="setColumnView('permil', true)"
+                      >
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-invisible"></use>
+                      </svg>
+                    </div>
+                  </div>
+                </li>
+                <li class="dropdown-item py-1" (click)="$event.stopPropagation()">
+                  <div class="row">
+                    <div class="col-9"><span jhiTranslate="proAva.notfas">Resp / note</span></div>
+                    <div class="col-3">
+                      <svg
+                        class="icon icon-sm icon-primary cursor-pointer"
+                        *ngIf="getColumnView('notfas')"
+                        (click)="setColumnView('notfas', false)"
+                      >
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-visible"></use>
+                      </svg>
+                      <svg
+                        class="icon icon-sm icon-danger cursor-pointer"
+                        *ngIf="!getColumnView('notfas')"
+                        (click)="setColumnView('notfas', true)"
+                      >
+                        <use href="content/bootstrap-italia/svg/sprites.svg#it-password-invisible"></use>
+                      </svg>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- Tabella fasi -->
+        <div class="table-responsive">
+          <table class="table table-borderless table-responsive mt-3">
+            <caption class="d-none">
+              Tabella fasi
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col" style="min-width: 240px !important" *ngIf="getColumnView('tipfas')">
+                  <span jhiTranslate="proAva.tipfasForm">Tipo fase*</span>
+                </th>
+                <th scope="col" class="col-1 text-center" *ngIf="getColumnView('dtaoriini')">
+                  <span jhiTranslate="proAva.dtaoriiniForm">Data ini. origine*</span>
+                </th>
+                <th scope="col" class="col-1 text-center" *ngIf="getColumnView('dtaorifin')">
+                  <span jhiTranslate="proAva.dtaorifinForm">Data fine origine*</span>
+                </th>
+                <th scope="col" class="col-1 text-center" *ngIf="getColumnView('dtapreini')">
+                  <span jhiTranslate="proAva.dtapreini">Data inizio prev.</span>
+                </th>
+                <th scope="col" class="col-1 text-center" *ngIf="getColumnView('dtaprefin')">
+                  <span jhiTranslate="proAva.dtaprefin">Data fine prev.</span>
+                </th>
+                <th scope="col" class="col-1 text-center" *ngIf="getColumnView('dtaeffini')">
+                  <span jhiTranslate="proAva.dtaeffini">Data inizio eff.</span>
+                </th>
+                <th scope="col" class="col-1 text-center" *ngIf="getColumnView('dtaefffin')">
+                  <span jhiTranslate="proAva.dtaefffin">Data fine eff.</span>
+                </th>
+                <th scope="col" class="col-1 text-center" *ngIf="getColumnView('fas')">
+                  <span jhiTranslate="proAva.fas">Fase</span>
+                </th>
+                <th scope="col" class="col-1 text-center" *ngIf="getColumnView('perfas')">
+                  <span jhiTranslate="proAva.perfas">% Fas.</span>
+                </th>
+                <th scope="col" class="col-1 text-center" *ngIf="getColumnView('mil')">
+                  <span jhiTranslate="proAva.mil">Milest.</span>
+                </th>
+                <th scope="col" class="col-1 text-center" colspan="2" *ngIf="getColumnView('permil')">
+                  <span jhiTranslate="proAva.permil">% Mil.</span>
+                </th>
+                <th scope="col" style="min-width: 240px !important; width: 250px !important" *ngIf="getColumnView('notfas')">
+                  <span jhiTranslate="proAva.notfas">Resp. / note</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody *ngIf="formFasi.controls">
+              <tr *ngFor="let fas of formFasi.controls; index as i">
+                <td class="py-0" *ngIf="convertToFormControl(fas.get('isNew')).value == false && getColumnView('tipfas')">
+                  <input
+                    id="desfas"
+                    type="text"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="bottom"
+                    [title]="convertToFormControl(fas.get('desfas')).value"
+                    [formControl]="convertToFormControl(fas.get('desfas'))"
+                    [attr.disabled]="true"
+                    class="form-control"
+                  />
+                  <small
+                    class="form-text text-danger"
+                    *ngIf="convertToFormControl(fas.get('desfas')).errors?.['required'] && convertToFormControl(fas.get('desfas')).touched"
+                    jhiTranslate="entity.validation.required"
+                    >Questo campo è obbligatorio</small
+                  >
+                </td>
+                <td *ngIf="convertToFormControl(fas.get('isNew')).value == true && getColumnView('tipfas')" class="py-0 px-1">
+                  <div class="select-wrapper">
+                    <select id="desfas" [formControl]="convertToFormControl(fas.get('idTipfas'))">
+                      <option selected value="" jhiTranslate="gestProg.select.default">Scegli un'opzione</option>
+                      <option *ngFor="let tipFas of tipiFas" [value]="tipFas.id">{{ tipFas.desfas }}</option>
+                    </select>
+                  </div>
+                  <small
+                    class="form-text text-danger"
+                    *ngIf="convertToFormControl(fas.get('idTipfas')).errors?.['required'] && convertToFormControl(fas.get('idTipfas')).touched"
+                    jhiTranslate="entity.validation.required"
+                    >Questo campo è obbligatorio</small
+                  >
+                </td>
+                <td style="max-width: 180px !important" *ngIf="getColumnView('dtaoriini')" class="py-0 px-1">
+                  <input
+                    type="date"
+                    id="dtaoriini"
+                    class="form-control"
+                    [formControl]="convertToFormControl(fas.get('dtaoriini'))"
+                    [style.color]="
+                      convertToFormControl(fas.get('dtaoriini')).value == null && !convertToFormControl(fas.get('dtaoriini')).touched
+                        ? 'transparent'
+                        : ''
+                    "
+                  />
+                  <small
+                    class="form-text text-danger"
+                    *ngIf="convertToFormControl(fas.get('dtaoriini')).errors?.['required'] && convertToFormControl(fas.get('dtaoriini')).touched"
+                    jhiTranslate="entity.validation.required"
+                    >Questo campo è obbligatorio</small
+                  >
+                </td>
+                <td style="max-width: 180px !important" *ngIf="getColumnView('dtaorifin')" class="py-0 px-1">
+                  <input
+                    type="date"
+                    id="dtaorifin"
+                    class="form-control"
+                    [formControl]="convertToFormControl(fas.get('dtaorifin'))"
+                    [style.color]="
+                      convertToFormControl(fas.get('dtaorifin')).value == null && !convertToFormControl(fas.get('dtaorifin')).touched
+                        ? 'transparent'
+                        : ''
+                    "
+                  />
+                  <small
+                    class="form-text text-danger"
+                    *ngIf="convertToFormControl(fas.get('dtaorifin')).errors?.['required'] && convertToFormControl(fas.get('dtaorifin')).touched"
+                    jhiTranslate="entity.validation.required"
+                    >Questo campo è obbligatorio</small
+                  >
+                </td>
+                <td style="max-width: 180px !important" *ngIf="getColumnView('dtapreini')" class="py-0 px-1">
+                  <input
+                    type="date"
+                    id="dtaprefin"
+                    class="form-control"
+                    [formControl]="convertToFormControl(fas.get('dtapreini'))"
+                    [style.color]="
+                      convertToFormControl(fas.get('dtapreini')).value == null && !convertToFormControl(fas.get('dtapreini')).touched
+                        ? 'transparent'
+                        : ''
+                    "
+                  />
+                </td>
+                <td style="max-width: 180px !important" *ngIf="getColumnView('dtaprefin')" class="py-0 px-1">
+                  <input
+                    type="date"
+                    id="dtaeffini"
+                    class="form-control"
+                    [formControl]="convertToFormControl(fas.get('dtaprefin'))"
+                    [style.color]="
+                      convertToFormControl(fas.get('dtaprefin')).value == null && !convertToFormControl(fas.get('dtaprefin')).touched
+                        ? 'transparent'
+                        : ''
+                    "
+                  />
+                </td>
+                <td style="max-width: 180px !important" *ngIf="getColumnView('dtaeffini')" class="py-0 px-1">
+                  <input
+                    type="date"
+                    id="dtaeffini"
+                    class="form-control"
+                    [formControl]="convertToFormControl(fas.get('dtaeffini'))"
+                    [style.color]="
+                      convertToFormControl(fas.get('dtaeffini')).value == null && !convertToFormControl(fas.get('dtaeffini')).touched
+                        ? 'transparent'
+                        : ''
+                    "
+                  />
+                </td>
+                <td style="max-width: 180px !important" *ngIf="getColumnView('dtaefffin')" class="py-0 px-1">
+                  <input
+                    type="date"
+                    id="dtaefffin"
+                    class="form-control"
+                    [formControl]="convertToFormControl(fas.get('dtaefffin'))"
+                    [style.color]="
+                      convertToFormControl(fas.get('dtaefffin')).value == null && !convertToFormControl(fas.get('dtaefffin')).touched
+                        ? 'transparent'
+                        : ''
+                    "
+                  />
+                </td>
+                <td
+                  class="text-center"
+                  *ngIf="
+                    convertToFormControl(fas.get('semaforoFase')).value != 'bianco' &&
+                    convertToFormControl(fas.get('semaforoFase'))?.value &&
+                    getColumnView('fas')
+                  "
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="bottom"
+                  [title]="convertToFormControl(fas.get('semaforoFaseDes')).value"
+                  class="py-0 text-center"
+                >
+                  <img
+                    [src]="'/content/images/semaforo/' + convertToFormControl(fas.get('semaforoFase')).value + '.png'"
+                    width="24px"
+                    alt="semaforo"
+                  />
+                </td>
+                <td
+                  class="text-center bold"
+                  *ngIf="
+                    convertToFormControl(fas.get('semaforoFase')).value == 'bianco' && convertToFormControl(fas.get('semaforoFase'))?.value
+                  "
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="bottom"
+                  class="py-0 bold text-center"
+                  [title]="convertToFormControl(fas.get('semaforoFaseDes')).value"
+                >
+                  N.D.
+                </td>
+                <td class="prevent-select" *ngIf="!convertToFormControl(fas.get('semaforoFase'))?.value" class="py-0"></td>
+                <td class="prevent-select" *ngIf="getColumnView('perfas')" class="py-0">
+                  <input
+                    type="text"
+                    *ngIf="convertToFormControl(fas.get('perfas'))?.value"
+                    style="width: 60px !important"
+                    id="perfas"
+                    [formControl]="convertToFormControl(fas.get('perfas'))"
+                    [attr.disabled]="true"
+                    class="form-control"
+                  />
+                </td>
+                <td
+                  class="py-0 text-center"
+                  *ngIf="
+                    convertToFormControl(fas.get('semaforoMil')).value != 'bianco' && convertToFormControl(fas.get('semaforoMil'))?.value
+                  "
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="bottom"
+                  [title]="convertToFormControl(fas.get('semaforoMilDes')).value"
+                >
+                  <img
+                    [src]="'/content/images/semaforo/' + convertToFormControl(fas.get('semaforoMil')).value + '.png'"
+                    width="24px"
+                    alt="semaforo"
+                  />
+                </td>
+                <td
+                  class="text-center bold"
+                  *ngIf="convertToFormControl(fas.get('semaforoMil')).value == 'bianco' && getColumnView('mil')"
+                  data-bs-toggle="tooltip"
+                  class="py-0 bold text-center"
+                  data-bs-placement="bottom"
+                  [title]="convertToFormControl(fas.get('semaforoMilDes')).value"
+                >
+                  N.D.
+                </td>
+                <td
+                  class="prevent-select"
+                  *ngIf="!convertToFormControl(fas.get('semaforoMil'))?.value && getColumnView('permil')"
+                  class="py-0"
+                ></td>
+                <td class="prevent-select" class="py-0" *ngIf="getColumnView('permil')">
+                  <input
+                    type="text"
+                    style="width: 60px !important"
+                    *ngIf="convertToFormControl(fas.get('permil'))?.value"
+                    [formControl]="convertToFormControl(fas.get('permil'))"
+                    [attr.disabled]="true"
+                    class="form-control"
+                  />
+                </td>
+                <td data-bs-toggle="tooltip" data-bs-placement="top" title="Vai ai milestone" class="py-0" *ngIf="getColumnView('permil')">
+                  <svg class="icon icon-primary icon-md" (click)="goToMilestone(convertToFormControl(fas.get('id'))?.value)">
+                    <use href="content/bootstrap-italia/svg/sprites.svg#it-external-link"></use>
+                  </svg>
+                </td>
+                <td *ngIf="getColumnView('notfas')" class="py-0" style="min-width: 240px !important; width: 250px !important">
+                  <input type="text" id="notfas" class="form-control" [formControl]="convertToFormControl(fas.get('notfas'))" />
+                  <small
+                    class="form-text text-danger"
+                    *ngIf="convertToFormControl(fas.get('notfas')).errors?.['pattern']"
+                    jhiTranslate="entity.validation.sanitize"
+                    >Ci sono caratteri non validi</small
+                  >
+                </td>
+                <td class="py-0" style="width: 10px">
+                  <span tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Elimina riga">
+                    <svg
+                      class="icon icon-danger icon-sm"
+                      data-bs-toggle="modal"
+                      href="#modalCancel"
+                      *ngIf="convertToFormControl(fas.get('isNew')).value == false"
+                      (click)="this.curIndex = i"
+                    >
+                      <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use>
+                    </svg>
+                  </span>
+                  <span tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Elimina riga">
+                    <svg
+                      class="icon icon-danger icon-sm"
+                      *ngIf="convertToFormControl(fas.get('isNew')).value == true"
+                      (click)="onRemoveRow(i)"
+                    >
+                      <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use>
+                    </svg>
+                  </span>
+                </td>
+                <td *ngIf="i == formFasi.controls.length - 1" class="py-0" style="width: 10px">
+                  <span tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Inserisci riga">
+                    <svg class="icon icon-primary icon-md" (click)="addFase()">
+                      <use href="content/bootstrap-italia/svg/sprites.svg#it-plus"></use>
+                    </svg>
+                  </span>
+                </td>
+                <!-- Modale conferma cancellazione -->
+                <div class="modal fade" tabindex="-2" role="dialog" id="modalCancel" aria-labelledby="exampleModalTitle">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h2 class="modal-title h5 no_toc" id="exampleModalTitle1" jhiTranslate="modals.warn">Attenzione</h2>
+                      </div>
+                      <div class="modal-body">
+                        <p jhiTranslate="modals.canc">Confermi la cancellazione?</p>
+                      </div>
+                      <div class="modal-footer">
+                        <button class="btn btn-danger btn-sm" data-bs-dismiss="modal" type="button" jhiTranslate="modals.cancel">
+                          Annulla
+                        </button>
+                        <button
+                          class="btn btn-success btn-sm"
+                          data-bs-dismiss="modal"
+                          type="button"
+                          (click)="onRemoveRow(i)"
+                          jhiTranslate="modals.confirm"
+                        >
+                          Ok
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<ng-template #primoStepAvaDet>
+  <h5 class="card-title h5 px-2">Salva modifiche</h5>
+  <p class="py-2 px-2">Clicca il pulsante salva per applicare le modifiche all'avanzamento corrente.</p>
+</ng-template>
+
+<ng-template #secondoStepAvaDet>
+  <h5 class="card-title h5 px-2">Ricarica informazioni</h5>
+  <p class="py-2 px-2">Clicca il pulsante ricarica informazioni per caricare nuovamente i dati dell'avanzamento corrente.</p>
+</ng-template>
+
+<ng-template #terzoStepAvaDet>
+  <h5 class="card-title h5 px-2">Crea fasi</h5>
+  <p class="py-2 px-2">Cliccando crea fasi vengono create le fasi per l'avanzamento corrente.</p>
+</ng-template>
+
+<ng-template #quartoStepAvaDet>
+  <h5 class="card-title h5 px-2">Cancella avanzamento</h5>
+  <p class="py-2 px-2">Clicca il pulsante cancella per eliminare l'avanzamento corrente.</p>
+</ng-template>
+
+<ng-template #quintoStepAvaDet>
+  <h5 class="card-title h5 px-2">Più azioni</h5>
+  <p class="py-2 px-2">Clicca il pulsante più azioni per accedere agli allegati di un avanzamento.</p>
+</ng-template>
+
+<ng-template #sestoStepAvaDet>
+  <h5 class="card-title h5 px-2">Mostra / Nascondi colonne</h5>
+  <p class="py-2 px-2">Cliccando il pulsante puoi scegliere quali colonne della tabella fasi mostrare / nascondere</p>
+</ng-template>
+
+<joyrideStep joyrideStep="seventhStepAvaDet" [stepContent]="settimoStepAvaDet" stepPosition="center"></joyrideStep>
+
+<ng-template #settimoStepAvaDet>
+  <h5 class="card-title h5 px-2">Vai alle milestone di una fase</h5>
+  <p class="py-2 px-2">
+    Cliccando su
+    <span
+      ><svg class="icon icon-primary">
+        <use
+          href="content/bootstrap-italia/svg/sprites.svg#it-external-link"
+          xlink:href="/bootstrap-italia/dist/svg/sprites.svg#it-tool"
+        ></use>
+      </svg>
+    </span>
+    puoi andare alle milestone della fase selezionata
+  </p>
+</ng-template>

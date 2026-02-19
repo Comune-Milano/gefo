@@ -1,0 +1,265 @@
+<jhi-spinner></jhi-spinner>
+<div class="container-fluid mt-4">
+  <div class="row justify-content-between mb-4">
+    <div class="col d-flex align-items-center">
+      <h5 class="bold" *ngIf="this.id != ''" jhiTranslate="commRic.detail.titleModify">Dettaglio commento - richiesta</h5>
+      <h5 class="bold" *ngIf="this.id == ''" jhiTranslate="commRic.detail.titleNew">Nuovo commento - richiesta</h5>
+    </div>
+  </div>
+  <!--alert modifica / inserimento -->
+  <jhi-alert *ngIf="viewAlert"></jhi-alert>
+  <jhi-alert-error *ngIf="viewError"></jhi-alert-error>
+  <jhi-alert-warning *ngIf="viewWarning"></jhi-alert-warning>
+
+  <!-- Form modifica / inserimento nuovo -->
+  <form [formGroup]="formPrev" *ngIf="formPrev">
+    <div class="d-grid gap-3 d-md-block">
+      <button
+        class="btn btn-primary btn-sml btn-xs btn-me min-wh-25"
+        (click)="submitForm()"
+        data-bs-target="#myNotification"
+        data-bs-timeout="5000"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-pencil"></use>
+        </svg>
+        <span>{{ stringSalva }}</span>
+      </button>
+      <button class="btn btn-danger btn-sml btn-xs btn-me min-wh-25" (click)="submitDelete()" *ngIf="this.id != ''">
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use>
+        </svg>
+        <span jhiTranslate="global.buttons.labelDelete">Cancella</span>
+      </button>
+      <button class="btn btn-primary btn-sml btn-xs btn-me min-wh-25 btnReload" (click)="reload()" *ngIf="this.id != ''">
+        <div class="rotateRefresh d-inline-block">
+          <svg class="icon icon-white ms-1">
+            <use href="content/bootstrap-italia/svg/sprites.svg#it-restore"></use>
+          </svg>
+        </div>
+        <span jhiTranslate="global.buttons.labelReload">Ricarica informazioni</span>
+      </button>
+    </div>
+    <!-- Prima riga con codice, descrizione e tipfinda-->
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="proProByIdPro" class="form-label-sm" jhiTranslate="commRic.idProForm">Progetto*</label>
+          <input
+            id="proProByIdPro"
+            *ngIf="modifica"
+            type="text"
+            class="form-control"
+            [ngbTypeahead]="searchPro"
+            [resultFormatter]="formatterPro"
+            [inputFormatter]="formatterPro"
+            [editable]="false"
+            [ngClass]="!getFormElement('proProByIdPro').valid && getFormElement('proProByIdPro').touched ? 'is-invalid' : ''"
+            [attr.disabled]="true"
+            formControlName="proProByIdPro"
+          />
+          <div class="input-group">
+            <input
+              id="proProByIdPro1"
+              *ngIf="!modifica"
+              type="text"
+              class="form-control"
+              [ngbTypeahead]="searchPro"
+              [resultFormatter]="formatterPro"
+              [inputFormatter]="formatterPro"
+              [editable]="false"
+              [ngClass]="!getFormElement('proProByIdPro').valid && getFormElement('proProByIdPro').touched ? 'is-invalid' : ''"
+              formControlName="proProByIdPro"
+            />
+            <span class="autocomplete-icon" aria-hidden="true" *ngIf="!modifica">
+              <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+            </span>
+          </div>
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('proProByIdPro').value != '' && getFormElement('proProByIdPro').value == null"
+            jhiTranslate="entity.validation.nullValue"
+            >Questo campo contiene un valore non valido. Selezionare un valore valido dalla lista oppure lasciarla vuota</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('proProByIdPro').errors?.['required'] && getFormElement('proProByIdPro').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio</small
+          >
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="selectTipRic" class="form-label-sm" jhiTranslate="commRic.tipRicForm">Tipo</label>
+          <div class="select-wrapper">
+            <select id="selectTipRic" formControlName="tipric">
+              <option value="R" jhiTranslate="commRic.filter.optionsTipRic.ric">Richiesta</option>
+              <option value="C" jhiTranslate="commRic.filter.optionsTipRic.com">Commento</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="dtainv" class="form-label-sm" jhiTranslate="commRic.dtainv">Data invio</label>
+        <input type="date" class="form-control" id="dtainv" aria-describedby="dtainv" formControlName="dtainv" [attr.disabled]="true" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="callout note" style="max-width: none !important">
+          <div class="callout-title" jhiTranslate="commRic.desricForm">Descrizione</div>
+          <p><textarea id="desric" formControlName="desric" rows="1"></textarea></p>
+        </div>
+        <small class="form-text text-danger" *ngIf="getFormElement('desric').errors?.['pattern']" jhiTranslate="entity.validation.sanitize"
+          >Ci sono caratteri non validi</small
+        >
+      </div>
+    </div>
+    <!-- Seconda riga con staric, dtasca -->
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="staric" class="form-label-sm" jhiTranslate="commRic.staric">Stato della richiesta</label>
+          <div class="select-wrapper">
+            <select id="staric" formControlName="staric">
+              <option value="INI" jhiTranslate="commRic.filter.optionsStaRic.ini">Richiesta iniziale</option>
+              <option value="INV" jhiTranslate="commRic.filter.optionsStaRic.inv">Richiesta inviata</option>
+              <option value="ESE" jhiTranslate="commRic.filter.optionsStaRic.ese">Richiesta eseguita</option>
+              <option value="ANN" jhiTranslate="commRic.filter.optionsStaRic.ann">Richiesta annullata</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="imppre" class="form-label-sm"><span jhiTranslate="commRic.dtasca">Data scadenza richiesta</span>*</label>
+          <input type="date" class="form-control" id="imppre" aria-describedby="imppre" formControlName="dtasca" />
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="id_ricpad" class="form-label-sm" jhiTranslate="commRic.filter.idRicpad">Commento padre</label>
+        <div class="input-group">
+          <input
+            id="id_ricpad"
+            type="text"
+            class="form-control"
+            [ngbTypeahead]="searchRic"
+            [resultFormatter]="formatterRic"
+            [inputFormatter]="formatterRic"
+            [editable]="false"
+            [ngClass]="!getFormElement('proRicPadByIdRicPad').valid && getFormElement('proRicPadByIdRicPad').touched ? 'is-invalid' : ''"
+            formControlName="proRicPadByIdRicPad"
+          />
+          <span class="autocomplete-icon" aria-hidden="true">
+            <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+          </span>
+        </div>
+      </div>
+    </div>
+  </form>
+  <!-- Tabella proRicUte -->
+  <div class="row">
+    <div class="col-4">
+      <div class="row">
+        <form *ngIf="formRicUte.controls">
+          <table class="table table-borderless table-responsive mt-5">
+            <thead>
+              <tr>
+                <th scope="col"><span jhiTranslate="commRic.user">Utente</span></th>
+                <td scope="col" *ngIf="formRicUte.controls.length == 0" (click)="onAddRow()">
+                  <svg class="icon icon-primary icon-md">
+                    <use href="content/bootstrap-italia/svg/sprites.svg#it-plus"></use>
+                  </svg>
+                </td>
+              </tr>
+            </thead>
+            <tbody *ngIf="formRicUte.controls">
+              <tr class="border-smoke border-left-no-hover" *ngFor="let row of formRicUte.controls; index as i">
+                <td>
+                  <div class="input-group">
+                    <input
+                      type="text"
+                      class="form-control"
+                      [ngbTypeahead]="searchUte"
+                      [resultFormatter]="formatterUte"
+                      [inputFormatter]="formatterUte"
+                      [editable]="false"
+                      [formControl]="convertToFormControl(row.get('user'))"
+                    />
+                    <span class="autocomplete-icon" aria-hidden="true">
+                      <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+                    </span>
+                  </div>
+                </td>
+                <td>
+                  <span tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Elimina riga" (click)="curIndex = i">
+                    <svg
+                      class="icon icon-danger icon-sm"
+                      data-bs-toggle="modal"
+                      href="#modalCancel"
+                      *ngIf="convertToFormControl(row.get('isNew')).value == false"
+                    >
+                      <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use></svg
+                  ></span>
+                  <span tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Elimina riga" (click)="onRemoveRowLocal(i)">
+                    <svg class="icon icon-danger icon-sm" *ngIf="convertToFormControl(row.get('isNew')).value == true">
+                      <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use>
+                    </svg>
+                  </span>
+                </td>
+                <td *ngIf="formRicUte.controls.length != 0 && i == formRicUte.controls.length - 1" (click)="onAddRow()">
+                  <svg class="icon icon-primary icon-md">
+                    <use href="content/bootstrap-italia/svg/sprites.svg#it-plus"></use>
+                  </svg>
+                </td>
+              </tr>
+              <tr>
+                <!--
+          <td *ngIf="(usersFiltered$ | async)?.length == 0" class="bold border-white" colspan="6" style="color: gray">
+            Nessun risultato trovato
+          </td> -->
+              </tr>
+              <!-- Modale conferma cancellazione -->
+              <div class="modal fade" tabindex="-2" role="dialog" id="modalCancel" aria-labelledby="exampleModalTitle">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h2 class="modal-title h5 no_toc" id="exampleModalTitle" jhiTranslate="modals.warn">Attenzione</h2>
+                    </div>
+                    <div class="modal-body">
+                      <p jhiTranslate="modals.canc">Confermi la cancellazione?</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-danger btn-sm" data-bs-dismiss="modal" type="button" jhiTranslate="modals.cancel">
+                        Annulla
+                      </button>
+                      <button
+                        class="btn btn-success btn-sm"
+                        data-bs-dismiss="modal"
+                        type="button"
+                        (click)="onRemoveRow()"
+                        jhiTranslate="modals.confirm"
+                      >
+                        Ok
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </tbody>
+          </table>
+        </form>
+      </div>
+    </div>
+    <div class="col-8 mt-5">
+      <div class="callout note" style="max-width: none !important" [formGroup]="formPrev" *ngIf="formPrev">
+        <div class="callout-title" jhiTranslate="commRic.risric">Risposta</div>
+        <p><textarea id="notpre" formControlName="risric" rows="1"></textarea></p>
+      </div>
+      <small class="form-text text-danger" *ngIf="getFormElement('risric').errors?.['pattern']" jhiTranslate="entity.validation.sanitize"
+        >Ci sono caratteri non validi</small
+      >
+    </div>
+  </div>
+</div>

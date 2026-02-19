@@ -1,0 +1,78 @@
+{
+  "visTotali": {
+    "home": {
+      "title": "Totals for: "
+    },
+    "tabAccertImpegni": {
+      "title": "Investigations / Commitments",
+      "totRisorse": "Total Resources",
+      "numProgetti": "Num. of projects",
+      "accertamenti": "Investigations",
+      "daAccertare": "To be ascertained",
+      "insussist": "Insussist.",
+      "reversali": "Reverse",
+      "impegni": "Commitments",
+      "daImpegnare": "To commit",
+      "economie": "Economies",
+      "liquidazioni": "Liquidations",
+      "mandati": "Mandates"
+    },
+    "tabDDRPrev": {
+      "title": "DDR / Forecasts",
+      "ddr": "DDR",
+      "ddrAmmesso": "DDR admitted",
+      "ddrTrasferito": "DDR transferred",
+      "ddrIncassato": "DDR cashed",
+      "previsioniAnno": "Forecast year",
+      "previsioniAnno1": "Forecast year+1",
+      "previsioniAnniSuc": "Forecasts years++"
+    },
+    "tabTabellaRis": {
+      "title": "Resource table",
+      "titleTabellaRisorse": "Resource table",
+      "tipoImporto": "Amount type",
+      "importo": "Resources amount",
+      "accertato": "Ascertained",
+      "reversali": "Turn them over",
+      "impegni": "Engagements",
+      "mandati": "Mandates"
+    },
+    "tabTabellaRisDiCui": {
+      "title": "Resource table of which",
+      "titleTabellaRisDiCui": "Resource table of which",
+      "tipoImporto": "Amount type",
+      "importo": "Amount"
+    },
+    "select": {
+      "title": "Level type",
+      "default": "Select an option",
+      "livuno": "Level one",
+      "livdue": "Level two",
+      "livtre": "Level three",
+      "livpa": "Bottom level",
+      "livpb": "Previous level to the bottom"
+    },
+    "accImp": {
+      "acc": {
+        "codetcon": "Investigations",
+        "desimp": "Description",
+        "idcap": "Chapter",
+        "idcro": "Chrono",
+        "impass": "Settled down",
+        "impeco": "Insussist",
+        "impman": "Reversals",
+        "despdd": "PDD",
+        "notent": "Notes"
+      },
+      "imp": {
+        "impman": "Mandates"
+      }
+    },
+    "allegati": {
+      "fileName": "File name",
+      "dataCaricamento": "Upload date",
+      "nota": "Note"
+    },
+    "csvFileName": "Projects_management"
+  }
+}

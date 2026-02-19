@@ -1,0 +1,55 @@
+/* ==========================================================================
+Main page styles
+========================================================================== */
+
+.hipster {
+  display: inline-block;
+  width: 347px;
+  height: 497px;
+  background: url('../../content/images/jhipster_family_member_2.svg') no-repeat center top;
+  background-size: contain;
+}
+
+.alert {
+  background-color: white;
+}
+
+/* wait autoprefixer update to allow simple generation of high pixel density media query */
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+  only screen and (-moz-min-device-pixel-ratio: 2),
+  only screen and (-o-min-device-pixel-ratio: 2/1),
+  only screen and (min-resolution: 192dpi),
+  only screen and (min-resolution: 2dppx) {
+  .hipster {
+    background: url('../../content/images/jhipster_family_member_2.svg') no-repeat center top;
+    background-size: contain;
+  }
+}
+
+.field-name {
+  font-weight: 800;
+  color: black;
+}
+
+.animated {
+  animation: fadeInLeft 1s ease-in-out !important;
+}
+
+@keyframes fadeInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.red {
+  color: #d6012e;
+}
+
+.bgGray {
+  background: #efefef !important;
+}

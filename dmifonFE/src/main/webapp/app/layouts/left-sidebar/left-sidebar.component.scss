@@ -1,0 +1,225 @@
+@import '../../../content/scss/bootstrap-variables'; //
+$sidebar-collapsed-width: 40px;
+$sidebar-uncollapsed-width: 300px;
+$size-icons-collapsed: 40px;
+.barsWrapper {
+  position: absolute;
+  //top: 100;
+  left: 0;
+  z-index: 1000;
+  height: 55px;
+  background-color: $menuPrimary !important;
+  color: black;
+  //cursor: pointer;
+  width: $sidebar-uncollapsed-width;
+  top: 105px;
+  border-right: solid;
+  //border-right-color: darkgray;
+  border-right-color: darkorange;
+  border-right-width: 1px;
+  border-bottom: solid;
+  border-bottom-color: darkgray;
+  border-bottom-width: 1px;
+}
+#bars {
+  position: relative;
+  top: 15px;
+  cursor: pointer;
+  left: 18px;
+  //margin-left: -14px;
+  //left: 50%;
+}
+
+#x-elem {
+  position: relative;
+  top: 15px;
+  cursor: pointer;
+  //left: 18px;
+  margin-left: calc($sidebar-uncollapsed-width - 60px);
+  //left: 50%;
+}
+
+.bars-uncollapsed {
+  width: $sidebar-uncollapsed-width;
+  border-right: solid;
+  border-bottom: solid;
+}
+
+#div-x-elem {
+  width: $sidebar-uncollapsed-width;
+  height: 55px;
+  border-right: solid;
+  border-right-color: darkorange;
+  //border-right-color: darkorange;
+  border-right-width: 0px;
+  border-bottom: solid;
+  border-bottom-color: darkgray;
+  border-bottom-width: 1px;
+}
+
+.bars-collapsed {
+  width: $sidebar-collapsed-width;
+  border-right: hidden;
+  border-bottom: hidden;
+  left: 30px;
+}
+
+.hv-red:hover {
+  color: red;
+}
+
+#sidebar {
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  top: 105px;
+  scroll-behavior: smooth;
+  overflow: auto;
+  width: $sidebar-uncollapsed-width;
+  transition: ease-in-out 0.3s;
+  -webkit-transition: ease-in-out 0.3s;
+  border-right: solid;
+  border-right-color: darkorange;
+  border-right-width: 1px;
+  height: 100%;
+  z-index: 1000;
+  -ms-overflow-style: none;
+  /* scrollbar-width: 10px;
+  scrollbar-color: $primary transparent;
+  scrollbar-color: $primary-light transparent;
+  &::-webkit-scrollbar-thumb {
+    background: $primary-light;
+    border: 1px solid #000;
+  }*/
+  &::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  a {
+    color: $link;
+  }
+  .navbar-header {
+    text-align: center;
+  }
+  .left-sidebar {
+    background-color: $menuPrimary;
+  }
+  nav-link,
+  ul,
+  nav {
+    padding-left: 0.2em !important;
+    list-style-type: none;
+  }
+  ul > li > a {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+  }
+  ul > li > a > span:first-child {
+    width: 100%;
+    padding-left: 20px;
+  }
+  // 1° livello
+  ul > li {
+    font-weight: bold;
+  }
+  ul > li:hover {
+    transition: 0.3s;
+  }
+  // *2° livello
+  ul > li > ul > li {
+    font-size: 93%;
+    font-weight: normal;
+  }
+  // * 3° livello
+  ul > li > ul > li > ul > li {
+    font-weight: normal;
+  }
+
+  ul > li > ul a:hover {
+    text-decoration: underline;
+  }
+  a.nav-link span.label {
+    margin-right: 20px;
+  }
+
+  .side-menu-container * {
+    box-sizing: content-box;
+    padding: 0;
+    padding-top: 0.4em;
+    padding-left: 0.3em;
+  }
+  nav {
+    margin-bottom: 5em;
+  }
+  li {
+    height: auto;
+    width: 100%;
+    word-wrap: break-word;
+  }
+}
+
+.sidebar-padding {
+  padding: 0px !important;
+}
+
+#collapsedMenu > ul {
+  padding-left: 25px;
+  color: #ffffff;
+  fa-icon {
+    font-size: $size-icons-collapsed;
+  }
+}
+.collapsedSidebar {
+  width: $sidebar-collapsed-width !important;
+  border-right: hidden !important;
+}
+
+.full {
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 99;
+  position: fixed;
+}
+
+.sidebar-wrapper {
+  height: 100% !important;
+}
+div.side-menu-container {
+  height: 100%;
+  overflow: visible;
+}
+
+.collapsing {
+  -webkit-transition: none;
+  transition: none;
+  display: none;
+}
+
+.removeoverflow {
+  overflow: hidden !important;
+}
+
+.bg-transparent {
+  color: transparent !important;
+  background-color: transparent !important;
+}

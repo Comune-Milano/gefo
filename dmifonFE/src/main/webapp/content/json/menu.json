@@ -1,0 +1,184 @@
+[
+  {
+    "label": "Progetti",
+    "profilePermission": ["MENU_PROGETTI"],
+    "icon": "",
+    "items": [
+      {
+        "label": "Gestione progetti",
+        "profilePermission": ["GEST_PROGETTI"],
+        "icon": "",
+        "items": [
+          {
+            "label": "Tipi di finanziamento",
+            "link": "tip-fin",
+            "profilePermission": ["GEST_PROGETTI"]
+          },
+          {
+            "label": "Progetti",
+            "link": "gest-progetti",
+            "profilePermission": ["GEST_PROGETTI"]
+          },
+          {
+            "label": "Avanzamenti",
+            "link": "gest-avanzamenti",
+            "profilePermission": ["GEST_PROGETTI"]
+          },
+          {
+            "label": "DDR",
+            "link": "ddr",
+            "profilePermission": ["GEST_PROGETTI"]
+          },
+          {
+            "label": "DDRA",
+            "link": "ddra",
+            "profilePermission": ["GEST_PROGETTI"]
+          },
+          {
+            "label": "Previsioni",
+            "link": "gest-previsioni",
+            "profilePermission": ["GEST_PROGETTI"]
+          },
+          {
+            "label": "Commenti/Richieste",
+            "link": "gest-commenti-richieste",
+            "profilePermission": ["GEST_PROGETTI"]
+          }
+        ]
+      },
+      {
+        "label": "Dizionari progetti",
+        "profilePermission": ["DIZ_PROGETTI"],
+        "icon": "",
+        "items": [
+          {
+            "label": "Macro progetti",
+            "link": "diz-macro-prog",
+            "profilePermission": ["DIZ_PROGETTI"]
+          },
+          {
+            "label": "Bandi",
+            "link": "bandi",
+            "profilePermission": ["DIZ_PROGETTI"]
+          },
+          {
+            "label": "Tematiche",
+            "link": "tematiche",
+            "profilePermission": ["DIZ_PROGETTI"]
+          },
+          {
+            "label": "Municipi",
+            "link": "municipi",
+            "profilePermission": ["DIZ_PROGETTI"]
+          },
+          {
+            "label": "Nil",
+            "link": "nil",
+            "profilePermission": ["DIZ_PROGETTI"]
+          },
+          {
+            "label": "Lista Valori",
+            "link": "lista-valori",
+            "profilePermission": ["DIZ_PROGETTI"]
+          },
+          {
+            "label": "Tipo Fase",
+            "link": "tipo-fase",
+            "profilePermission": ["DIZ_PROGETTI"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "Dati contabili",
+    "profilePermission": ["MENU_DATI_CONTABILI"],
+    "icon": "",
+    "items": [
+      {
+        "label": "Ricerca capitoli entrata",
+        "link": "det-con-cape/capitoli-entrata",
+        "profilePermission": ["MENU_DATI_CONTABILI"]
+      },
+      {
+        "label": "Ricerca capitoli uscita",
+        "link": "det-con-capu/capitoli-uscita",
+        "profilePermission": ["MENU_DATI_CONTABILI"]
+      },
+      {
+        "label": "Ricerca accertamenti",
+        "link": "det-con-acc/accertamenti",
+        "profilePermission": ["MENU_DATI_CONTABILI"]
+      },
+      {
+        "label": "Ricerca impegni",
+        "link": "det-con-imp/impegni",
+        "profilePermission": ["MENU_DATI_CONTABILI"]
+      }
+    ]
+  },
+  {
+    "label": "Export",
+    "profilePermission": ["MENU_EXPORT"],
+    "icon": "",
+    "items": [
+      {
+        "label": "Export progetti",
+        "link": "export-progetti",
+        "profilePermission": ["MENU_EXPORT"]
+      },
+      {
+        "label": "Export impegni / accertamenti",
+        "link": "export-impe-acce",
+        "profilePermission": ["MENU_EXPORT"]
+      },
+      {
+        "label": "Export capitoli",
+        "link": "export-cap",
+        "profilePermission": ["MENU_EXPORT"]
+      },
+      {
+        "label": "Export DDR",
+        "link": "export-ddr",
+        "profilePermission": ["MENU_EXPORT"]
+      },
+      {
+        "label": "Export Avanzamenti / Fasi",
+        "link": "export-ava-fas",
+        "profilePermission": ["MENU_EXPORT"]
+      },
+      {
+        "label": "Export Mandati",
+        "link": "export-man",
+        "profilePermission": ["MENU_EXPORT"]
+      },
+      {
+        "label": "Elaborazioni",
+        "link": "ela",
+        "profilePermission": ["MENU_EXPORT"]
+      }
+    ]
+  },
+  {
+    "label": "Amministrazione",
+    "profilePermission": ["MENU_AMMINISTRAZIONE"],
+    "icon": "",
+    "items": [
+      {
+        "label": "Utenti",
+        "link": "amm-utenti",
+        "profilePermission": ["MENU_AMMINISTRAZIONE"]
+      },
+      {
+        "label": "Ruoli",
+        "link": "amm-ruoli",
+        "profilePermission": ["MENU_AMMINISTRAZIONE"]
+      },
+      {
+        "label": "Direzioni centrali",
+        "link": "amm-dir",
+        "profilePermission": ["MENU_AMMINISTRAZIONE"]
+      }
+    ]
+  }
+]

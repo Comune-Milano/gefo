@@ -1,0 +1,85 @@
+<nav class="navbar navbar-expand-lg navbar-light red py-1">
+  <a class="navbar-brand white px-4" href="javascript:void(0)">Navbar</a>
+</nav>
+<div class="container-fluid mt-4">
+  <nav class="breadcrumb-container txt-sm" aria-label="Percorso di navigazione">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="javascript:void(0)" [routerLink]="['/']">Homepage</a><span class="separator">/</span></li>
+      <li class="breadcrumb-item active" aria-current="page">Utenti</li>
+    </ol>
+  </nav>
+  <h5 class="bold">Gestione utenti</h5>
+  <div class="row justify-content-between align-items-center mb-4 mt-4">
+    <!-- Campo ricerca-->
+    <div class="col-4 align-middle">
+      <form>
+        <div class="form-group mx-sm-0 mb-0">
+          <label for="autocomplete-one" class="visually-hidden">Cerca nel sito</label>
+          <input
+            type="text"
+            class="form-control-md"
+            name="searchString"
+            placeholder="Cerca utenti"
+            [formControl]="filter"
+            id="searchString"
+          />
+          <span class="autocomplete-icon" aria-hidden="true">
+            <svg class="icon icon-sm"><use href="/bootstrap-italia/dist/svg/sprites.svg#it-search"></use></svg>
+          </span>
+        </div>
+      </form>
+    </div>
+    <!-- Bottone inserimento nuovo-->
+    <div class="col-auto align-middle">
+      <button class="btn red btn-icon mx-sm-0 mb-0">
+        <span class="white"
+          ><svg class="icon icon-white">
+            <use
+              href="/bootstrap-italia/dist/svg/sprites.svg#it-plus"
+              xlink:href="/bootstrap-italia/dist/svg/sprites.svg#it-plus"
+            ></use></svg
+          >Inserisci nuovo utente</span
+        >
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabella profili -->
+  <table class="table text-center table-borderless">
+    <thead>
+      <tr>
+        <th scope="col">Username</th>
+        <th scope="col">Nome</th>
+        <th scope="col">Cognome</th>
+        <th scope="col">Email</th>
+        <th scope="col">Email Alternativa</th>
+        <th scope="col">Abilitato</th>
+      </tr>
+    </thead>
+    <tbody *ngIf="profiliFiltered$ != null">
+      <tr
+        *ngFor="let utente of profiliFiltered$ | async; index as i"
+        [ngClass]="i % 2 == 0 ? 'even border-smoke border-left' : 'odd border-white border-left'"
+        [routerLink]="['/viewProfile/', utente.id]"
+        [state]="utente"
+      >
+        <td class="txt-sm">{{ utente.username || '-' }}</td>
+        <td class="txt-sm">{{ utente.nome || '-' }}</td>
+        <td class="txt-sm">{{ utente.cognome || '-' }}</td>
+        <td class="txt-sm">{{ utente.email || '-' }}</td>
+        <td class="txt-sm">{{ utente.emailalt || '-' }}</td>
+        <td *ngIf="utente.abilitato">
+          <svg class="icon icon-success"><use href="/bootstrap-italia/dist/svg/sprites.svg#it-check-circle"></use></svg>
+        </td>
+        <td *ngIf="!utente.abilitato">
+          <svg class="icon icon-danger"><use href="/bootstrap-italia/dist/svg/sprites.svg#it-close-circle"></use></svg>
+        </td>
+      </tr>
+      <tr>
+        <td *ngIf="(profiliFiltered$ | async)?.length == 0" class="bold border-white" colspan="6" style="color: gray">
+          Nessun risultato trovato
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

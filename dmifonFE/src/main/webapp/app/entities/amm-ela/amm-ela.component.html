@@ -1,0 +1,179 @@
+<h5 class="fw-bold" jhiTranslate="ammEla.home.title">Elaborazioni</h5>
+<!--alert modifica / inserimento -->
+<jhi-alert *ngIf="viewAlert"></jhi-alert>
+<jhi-alert-error *ngIf="viewError"></jhi-alert-error>
+<div>
+  <form [formGroup]="formFilter">
+    <div class="d-flex flex-row-reverse mb-4 mt-4">
+      <!-- Bottone filtra -->
+      <button
+        class="btn btn-primary btn-sml btn-xs btn-me min-wh-25"
+        type="button"
+        data-bs-toggle="dropdown"
+        href="#dropdownCap"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <svg class="icon icon-white">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-list"></use>
+        </svg>
+        <span jhiTranslate="global.buttons.labelFilter">Filtra</span> <span *ngIf="countFiltri != 0"> ({{ countFiltri }})</span>
+      </button>
+      <div class="dropdown-menu dismissible w-50" id="dropdownCap" role="menu">
+        <div class="container-fluid">
+          <div class="row justify-content-between mb-2">
+            <div class="col">
+              <h5 class="fw-bold" jhiTranslate="entity.filters.title">Filtra ricerca</h5>
+            </div>
+            <div class="col">
+              <button
+                type="button"
+                class="btn-close float-right"
+                data-bs-dismiss="menu"
+                data-bs-toggle="collapse"
+                href="#dropdownCap"
+                aria-label="Chiudi avviso"
+              ></button>
+            </div>
+          </div>
+          <div class="row" (click)="$event.stopPropagation()">
+            <div class="col-4">
+              <div class="mb-3">
+                <label for="ute" class="form-label-sm" jhiTranslate="ammEla.usrCreate">Utente</label>
+                <div class="input-group">
+                  <input
+                    type="text"
+                    [ngbTypeahead]="searchUte"
+                    [resultFormatter]="formatterUte"
+                    [inputFormatter]="formatterUte"
+                    [editable]="false"
+                    id="ute"
+                    formControlName="usernameAutocomplete"
+                  />
+                  <span class="autocomplete-icon" aria-hidden="true">
+                    <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="mb-3">
+                <label for="dtainida" class="form-label-sm" jhiTranslate="ammEla.dtaini">Data attivazione da</label>
+                <input id="dtainida" type="date" class="form-control" formControlName="dtainida" />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="mb-3">
+                <label for="dtainia" class="form-label-sm" jhiTranslate="ammEla.dtafin">Data attivazione a</label>
+                <input id="dtainia" type="date" class="form-control" formControlName="dtainia" />
+              </div>
+            </div>
+          </div>
+          <!-- <div class="row mb-2" *ngIf="prog">
+          <div class="col-4 mb-3">
+            <label for="prog" class="form-label-sm" jhiTranslate="DetCon.prog">Progetto</label>
+            <input id="prog" type="text" class="form-control" />
+          </div>
+        </div> -->
+          <div class="row">
+            <div class="col-4">
+              <button class="btn btn-danger btn-sml btn-xs btn-me h-100 w-100" type="button" (click)="applicaFiltri()">
+                <span jhiTranslate="entity.filters.apply">Applica</span>
+              </button>
+            </div>
+            <div class="col-4" (click)="$event.stopPropagation()">
+              <button class="btn btn-primary btn-sml btn-xs btn-me h-100 w-100" type="button" (click)="resetFilter()">
+                <span jhiTranslate="entity.filters.remove">Rimuovi</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--<div class="table-responsive">   -->
+    <!-- <span class="fw-bold" *ngIf="service.loading$ | async" jhiTranslate="global.waitLoad">Attendere...</span> -->
+    <!-- Tabella elaborazioni -->
+    <div *ngIf="isFetching" class="d-flex flex-column align-items-center top-spinner prevent-select">
+      <div class="progress-spinner progress-spinner-double progress-spinner-active">
+        <div class="progress-spinner-inner"></div>
+        <div class="progress-spinner-inner"></div>
+        <span class="visually-hidden"></span>
+      </div>
+      <h5>Caricamento risultati...</h5>
+    </div>
+
+    <table class="table table-borderless table-responsive" *ngIf="!isFetching">
+      <thead>
+        <tr>
+          <th scope="col" sortable="desela" (sort)="onSort($event)" class="min-wh-250">
+            <span jhiTranslate="ammEla.desela">Descrizione</span>
+          </th>
+          <th scope="col" sortable="staela" (sort)="onSort($event)">
+            <span jhiTranslate="ammEla.staela">Stato</span>
+          </th>
+          <th scope="col" sortable="dtaini" (sort)="onSort($event)">
+            <span jhiTranslate="ammEla.dtaini">Attivata il</span>
+          </th>
+          <th scope="col" sortable="dtafin" (sort)="onSort($event)" *ngIf="!capent">
+            <span jhiTranslate="ammEla.dtafin">Terminata il</span>
+          </th>
+          <th scope="col" sortable="curUte" (sort)="onSort($event)" *ngIf="!capent">
+            <span jhiTranslate="ammEla.usrCreate">Utente</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody *ngIf="elaborazioni != null">
+        <tr
+          *ngFor="let ela of elaborazioni | paginate: config; index as i"
+          [ngClass]="i % 2 == 0 ? 'even border-smoke border-left' : 'odd border-white border-left'"
+        >
+          <td class="min-wh-250">{{ ela.desela || ' - ' }}</td>
+          <td>
+            {{
+              ela.staela === 'T' ? 'Terminata' : ela.staela === 'A' ? 'In elaborazione' : ela.staela === 'E' ? 'In errore' : ' - ' || ' - '
+            }}
+          </td>
+          <td>{{ ela.dtaini | date: 'dd/MM/yyyy - HH:mm:ss' }}</td>
+          <td>{{ ela.dtafin | date: 'dd/MM/yyyy - HH:mm:ss' }}</td>
+          <td>{{ ela.usrCreate || ' - ' }}</td>
+        </tr>
+        <tr>
+          <td *ngIf="elaborazioni.length == 0" class="bold border-white" colspan="6" style="color: gray" jhiTranslate="noRes">
+            Nessun risultato trovato
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="!isFetching">
+      <nav class="pagination-wrapper justify-content-center" aria-label="Navigazione centrata">
+        <!-- <pagination-controls class="my-pagination" [maxSize]="9" previousLabel="" nextLabel="" (pageChange)="pageChanged($event)"></pagination-controls> -->
+        <pagination-template #p="paginationApi" (pageChange)="config.currentPage = $event" [maxSize]="9">
+          <ul class="pagination custom-pagination">
+            <li class="page-item" [class.disabled]="p.isFirstPage()">
+              <a class="page-link" (click)="p.previous()" tabindex="-1" aria-hidden="true">
+                <svg class="icon icon-primary"><use href="content/bootstrap-italia/svg/sprites.svg#it-chevron-left"></use></svg>
+                <span class="visually-hidden" jhiTranslate="page.previous">Pagina precedente</span>
+              </a>
+            </li>
+            <li *ngFor="let page of p.pages" [class.current]="p.getCurrent() === page.value" class="page-item">
+              <a (click)="p.setCurrent(page.value)" *ngIf="p.getCurrent() !== page.value" class="page-link">
+                <span>{{ page.label }}</span>
+              </a>
+              <a (click)="p.setCurrent(page.value)" *ngIf="p.getCurrent() === page.value" class="page-link" aria-current="page">
+                <span class="d-inline-block d-sm-none">Pagina </span>{{ page.label }}
+              </a>
+            </li>
+            <li class="page-item pagination-next" [class.disabled]="p.isLastPage()">
+              <a class="page-link" (click)="p.next()" tabindex="-1" aria-hidden="true">
+                <span class="visually-hidden" jhiTranslate="page.next">Pagina successiva</span>
+                <svg class="icon icon-primary"><use href="content/bootstrap-italia/svg/sprites.svg#it-chevron-right"></use></svg>
+              </a>
+            </li>
+          </ul>
+          <p class="text-center">Totale {{ p.getTotalItems() }} elementi</p>
+        </pagination-template>
+      </nav>
+    </div>
+  </form>
+</div>

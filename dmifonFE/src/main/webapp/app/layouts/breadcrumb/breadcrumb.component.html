@@ -1,0 +1,49 @@
+<nav class="breadcrumb-container breadcrumb-position breadcrumb float-start" aria-label="Percorso di navigazione">
+  <ol class="breadcrumb" *ngIf="breadcrumbs.length; else dashboard">
+    <li class="breadcrumb-item">
+      <a aria-label="Home" routerLinkActive="active" [routerLink]="['/']"><span class="icon-home">Home</span></a>
+    </li>
+    <ng-template #breadcrumbLi>
+      <li *ngFor="let breadcrumb of breadcrumbs.slice(0, breadcrumbs.length - 1); let i = index" class="breadcrumb-item">
+        <a routerLinkActive="active" [routerLink]="['/']" *ngIf="breadcrumb.label === ''; else nonHomeLink"
+          ><span class="icon-home"></span
+        ></a>
+        <ng-template #nonHomeLink>
+          <span class="separator">/</span><a [routerLink]="[breadcrumb.url]" [queryParams]="breadcrumb.params"> {{ breadcrumb.label }} </a>
+        </ng-template>
+      </li>
+    </ng-template>
+    <li *ngIf="showSpinnerAction$ | async; else breadcrumbLi">
+      <span class="breadcrumb-item icon-spin3 animate-spin" jhiTranslate="global.waitLoad">Attendere...</span>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      <span class="separator">/</span>{{ breadcrumbs[breadcrumbs.length - 1].label }}
+    </li>
+  </ol>
+  <ng-template #dashboard>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active">
+        <span class="icon-home"></span>
+      </li>
+      <li *ngIf="showSpinnerAction$ | async"><span class="breadcrumb-item icon-spin3 animate-spin"></span></li>
+    </ol>
+  </ng-template>
+</nav>
+<div *ngIf="breadcrumbs.length" class="float-end">
+  <div
+    class="avatar avatar-primary size-md cursor-pointer"
+    (click)="startTour()"
+    *ngIf="!router.url.includes('new')"
+    joyrideStep="noStepsAv"
+    [stepContent]="noStepsAv"
+  >
+    <svg class="icon icon-white" title="Help">
+      <use href="content/bootstrap-italia/svg/sprites.svg#it-help" xlink:href="/bootstrap-italia/dist/svg/sprites.svg#it-tool"></use>
+    </svg>
+  </div>
+</div>
+
+<ng-template #noStepsAv>
+  <h5 class="card-title h5 px-2">Help</h5>
+  <p class="py-2 px-2">Non ci sono suggerimenti disponibili per questa pagina.</p>
+</ng-template>

@@ -1,0 +1,1338 @@
+<jhi-spinner></jhi-spinner>
+<div class="container-fluid mt-2">
+  <div class="row justify-content-between mb-4">
+    <div class="col d-flex align-items-center">
+      <h5 class="bold" *ngIf="this.id != ''" jhiTranslate="gestProg.detail.titleModify">Dettaglio progetto</h5>
+      <h5 class="bold" *ngIf="this.id == ''" jhiTranslate="gestProg.detail.titleNew">Nuovo progetto</h5>
+    </div>
+  </div>
+  <!--alert modifica / inserimento -->
+  <jhi-alert *ngIf="viewAlert"></jhi-alert>
+  <jhi-alert-error *ngIf="viewError"></jhi-alert-error>
+
+  <!-- Form modifica / inserimento nuovo -->
+  <form [formGroup]="formProg" *ngIf="formProg">
+    <div class="d-grid gap-4 d-md-block">
+      <button
+        class="btn btn-primary btn-sml btn-xs btn-me min-wh-20"
+        [ngClass]="modifica == true ? 'btnSave' : ''"
+        (click)="submitForm()"
+        *ngIf="modifica ? rolesCheckService.isPresent('/modificaProgetto') : rolesCheckService.isPresent('/inserisciProgetto')"
+        data-bs-target="#myNotification"
+        data-bs-timeout="5000"
+      >
+        <div class="movePen d-inline-block">
+          <svg class="icon icon-white ms-1">
+            <use href="content/bootstrap-italia/svg/sprites.svg#it-pencil" *ngIf="modifica"></use>
+            <use href="content/bootstrap-italia/svg/sprites.svg#it-plus" *ngIf="!modifica"></use>
+          </svg>
+        </div>
+        <span>{{ stringSalva }}</span>
+      </button>
+      <button class="btn btn-primary btn-sml btn-xs btn-me min-wh-20 btnReload" (click)="reload()" *ngIf="this.id != ''">
+        <div class="rotateRefresh d-inline-block">
+          <svg class="icon icon-white ms-1">
+            <use href="content/bootstrap-italia/svg/sprites.svg#it-restore"></use>
+          </svg>
+        </div>
+        <span jhiTranslate="global.buttons.labelReload">Ricarica informazioni</span>
+      </button>
+      <!-- Pulsante elimina progetto -->
+      <button
+        class="btn btn-danger btn-sml btn-xs btn-me min-wh-20"
+        *ngIf="this.id != '' && rolesCheckService.isPresent('/cancellaProgetto')"
+        (click)="eliminaProgetto()"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use>
+        </svg>
+        <span jhiTranslate="global.buttons.labelDelete">Cancella</span>
+      </button>
+      <!-- Pulsante inserisci progetto figlio -->
+      <button
+        class="btn btn-danger btn-sml btn-xs btn-me min-wh-20"
+        *ngIf="this.id != '' && rolesCheckService.isPresent('/inserisciProgettoFiglio')"
+        (click)="insProFiglio()"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-plus"></use>
+        </svg>
+        <span>Ins. prog. figlio</span>
+      </button>
+      <!-- Pulsante inserisci progetto figlio -->
+      <button
+        class="btn btn-danger btn-sml btn-xs btn-me min-wh-20"
+        *ngIf="this.id != '' && rolesCheckService.isPresent('/modificaImportoRisorseFiglio')"
+        (click)="aggImpRisFon()"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-pencil"></use>
+        </svg>
+        <span>Agg. imp. ris. fon.</span>
+      </button>
+      <!-- Pulsante più azioni (tre puntini)-->
+      <button
+        *ngIf="this.id != ''"
+        class="btn btn-danger btn-sml btn-xs btn-me min-wh-20"
+        data-bs-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <svg class="icon icon-white ms-1">
+          <use href="content/bootstrap-italia/svg/sprites.svg#it-more-actions"></use>
+        </svg>
+      </button>
+      <div class="dropdown-menu">
+        <div class="link-list-wrapper">
+          <ul class="link-list">
+            <li>
+              <a class="list-item right-icon" href="javascript:void(0)" (click)="goToRes()">
+                <span jhiTranslate="gestProg.detail.titleResponsabili">Responsabili</span>
+                <svg class="icon icon-sm icon-primary float-right">
+                  <use href="content/bootstrap-italia/svg/sprites.svg#it-user"></use>
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a class="list-item right-icon" href="javascript:void(0)" (click)="goToCap()">
+                <span jhiTranslate="gestProg.detail.titleCapitoli">Capitoli</span>
+                <svg class="icon icon-sm icon-primary float-right">
+                  <use href="content/bootstrap-italia/svg/sprites.svg#it-bookmark"></use>
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a class="list-item right-icon" (click)="goToAccImp()">
+                <span jhiTranslate="gestProg.detail.titleAccImp">Accertamenti / Impegni</span>
+                <svg class="icon icon-sm icon-primary float-right">
+                  <use href="content/bootstrap-italia/svg/sprites.svg#it-check-circle"></use>
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a class="list-item right-icon" (click)="goToAva()">
+                <span jhiTranslate="gestProg.detail.titleAvanzamento">Avanzamento</span>
+                <svg class="icon icon-sm icon-primary float-right">
+                  <use href="content/bootstrap-italia/svg/sprites.svg#it-chart-line"></use>
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a class="list-item right-icon" (click)="goToTotali()">
+                <span jhiTranslate="gestProg.detail.titleTotali">Totali</span>
+                <img class="icon icon-sm float-right" src="content/images/icon-eur.png" />
+              </a>
+            </li>
+            <li>
+              <a class="list-item right-icon" (click)="goToPrev()">
+                <span jhiTranslate="gestProg.detail.titlePrevisioni">Previsioni</span>
+                <svg class="icon icon-sm icon-primary float-right">
+                  <use href="content/bootstrap-italia/svg/sprites.svg#it-password-visible"></use>
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a class="list-item right-icon" (click)="goToDdr()">
+                <span jhiTranslate="gestProg.detail.titleDDR">DDR</span>
+                <svg class="icon icon-sm icon-primary float-right">
+                  <use href="content/bootstrap-italia/svg/sprites.svg#it-copy"></use>
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a class="list-item right-icon" (click)="goToCommRic()">
+                <span jhiTranslate="gestProg.detail.titleCommRic">Commenti / richieste</span>
+                <svg class="icon icon-sm icon-primary float-right">
+                  <use href="content/bootstrap-italia/svg/sprites.svg#it-comment"></use>
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a class="list-item right-icon" (click)="goToAllegati()">
+                <span jhiTranslate="gestProg.detail.titleAllegati">Allegati</span>
+                <svg class="icon icon-sm icon-primary float-right">
+                  <use href="content/bootstrap-italia/svg/sprites.svg#it-file"></use>
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="codpro" class="form-label-sm" jhiTranslate="gestProg.codproForm">Codice*</label>
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="!getFormElement('codpro').valid && getFormElement('codpro').touched ? 'is-invalid' : ''"
+            id="codpro"
+            formControlName="codpro"
+            value="codpro"
+            placeholder=" "
+          />
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('codpro').errors?.['required'] && getFormElement('codpro').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('codpro').errors?.['pattern']"
+            jhiTranslate="entity.validation.sanitize"
+            >Ci sono caratteri non validi</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('codpro').errors?.['maxlength'] && getFormElement('codpro').touched"
+            jhiTranslate="entity.validation.maxlength"
+            >Superato il numero massimo di caratteri</small
+          >
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="despro" class="form-label-sm" jhiTranslate="gestProg.desproForm">Descrizione*</label>
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="!getFormElement('despro').valid && getFormElement('despro').touched ? 'is-invalid' : ''"
+            id="despro"
+            formControlName="despro"
+            value="despro"
+            placeholder=" "
+          />
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('despro').errors?.['pattern']"
+            jhiTranslate="entity.validation.sanitize"
+            >Ci sono caratteri non validi</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('despro').errors?.['required'] && getFormElement('despro').touched"
+            jhiTranslate="entity.validation.required"
+            >Questo campo è obbligatorio</small
+          >
+          <small
+            class="form-text text-danger"
+            *ngIf="getFormElement('despro').errors?.['maxlength'] && getFormElement('despro').touched"
+            jhiTranslate="entity.validation.maxlength"
+            >Superato il numero massimo di caratteri</small
+          >
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="proPad" class="form-label-sm" jhiTranslate="gestProg.id_propadForm">Progetto padre*</label>
+        <div class="form-group">
+          <input
+            id="proPad"
+            type="text"
+            class="form-control"
+            [ngbTypeahead]="searchPro"
+            [resultFormatter]="formatterPro"
+            [inputFormatter]="formatterPro"
+            [editable]="false"
+            formControlName="progettoPadre"
+          />
+          <span class="autocomplete-icon" aria-hidden="true">
+            <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+          </span>
+        </div>
+      </div>
+    </div>
+    <!-- Tab schede progetto -->
+    <ul class="nav nav-tabs auto mt-3" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a
+          class="nav-link active"
+          id="data-ex-tab1-tab"
+          data-bs-toggle="tab"
+          href="#tab1"
+          role="tab"
+          aria-controls="tab1"
+          aria-selected="true"
+          jhiTranslate="gestProg.detail.tabSchedaBase"
+          >Scheda base</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          id="data-ex-tab2-tab"
+          data-bs-toggle="tab"
+          href="#tab2"
+          role="tab"
+          aria-controls="tab2"
+          aria-selected="false"
+          jhiTranslate="gestProg.detail.tabDatiAnag"
+          >Dati anagrafici</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          id="data-ex-tab3-tab"
+          data-bs-toggle="tab"
+          href="#tab3"
+          role="tab"
+          aria-controls="tab3"
+          aria-selected="false"
+          jhiTranslate="gestProg.detail.tabTabellaRisorse"
+          >Tabella risorse</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          id="data-ex-tab4-tab"
+          data-bs-toggle="tab"
+          href="#tab4"
+          role="tab"
+          aria-controls="tab4"
+          aria-selected="false"
+          jhiTranslate="gestProg.detail.tabTabellaRisorseDiCui"
+          >Tabella risorse di cui</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          id="data-ex-tab5-tab"
+          data-bs-toggle="tab"
+          href="#tab5"
+          role="tab"
+          aria-controls="tab5"
+          aria-selected="false"
+          jhiTranslate="gestProg.detail.tabNote"
+          >Note</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          id="data-ex-tab6-tab"
+          data-bs-toggle="tab"
+          href="#tab6"
+          role="tab"
+          aria-controls="tab6"
+          aria-selected="false"
+          jhiTranslate="gestProg.detail.tabRiferimentiIGV"
+          >Riferimenti IGV</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          id="data-ex-tab7-tab"
+          data-bs-toggle="tab"
+          href="#tab7"
+          role="tab"
+          aria-controls="tab7"
+          aria-selected="false"
+          jhiTranslate="gestProg.detail.tabInfoAggiuntive"
+          >Informazioni aggiuntive</a
+        >
+      </li>
+    </ul>
+
+    <!-- Schede -->
+    <div class="tab-content">
+      <!-- Scheda base -->
+      <div class="tab-pane active" id="tab1" role="tabpanel" aria-labelledby="data-ex-tab1-tab">
+        <!-- Prima riga -->
+        <div class="row mt-3">
+          <div class="col-md-4">
+            <div class="mb-3">
+              <label for="stateprog" class="form-label-sm" jhiTranslate="gestProg.stateprogForm">Stato progetto*</label>
+              <div class="select-wrapper">
+                <select id="stateprog" formControlName="stapro">
+                  <option selected value="null" jhiTranslate="gestProg.select.default">Scegli un'opzione</option>
+                  <option *ngFor="let staPro of statPro" [value]="staPro.id">{{ staPro.dessta }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="mb-3">
+              <label for="statefin" class="form-label-sm" jhiTranslate="gestProg.statefinForm">Stato finanziario*</label>
+              <div class="select-wrapper">
+                <select id="statefin" formControlName="stafin">
+                  <option selected value="null" jhiTranslate="gestProg.select.default">Scegli un'opzione</option>
+                  <option *ngFor="let staFin of statFin" [value]="staFin.id">{{ staFin.dessta }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="mb-3">
+              <label for="flgopeavv" class="form-label-sm" jhiTranslate="gestProg.flgopeavv">Operazioni avviate e non completate</label>
+              <div class="form-check">
+                <input id="flgopeavv" type="checkbox" formControlName="flgopeavv" />
+                <label for="flgopeavv"></label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Seconda riga -->
+        <div class="row mt-3">
+          <div class="col-md-4 mb-3">
+            <label for="tipFin" class="form-label-sm" jhiTranslate="gestProg.tipfinForm">Tipo finanziamento*</label>
+            <div class="form-group">
+              <input
+                id="tipFin"
+                type="text"
+                class="form-control"
+                [ngbTypeahead]="searchTipFin"
+                [resultFormatter]="formatterTipFin"
+                [inputFormatter]="formatterTipFin"
+                [editable]="false"
+                formControlName="proTipfinByIdTipfin"
+              />
+              <span class="autocomplete-icon" aria-hidden="true">
+                <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+              </span>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="macroProg" class="form-label-sm" jhiTranslate="gestProg.id_macproForm">Macro progetto*</label>
+            <div class="input-group">
+              <input
+                id="macroProg"
+                type="text"
+                class="form-control"
+                [ngbTypeahead]="searchMacPro"
+                [resultFormatter]="formatterMacPro"
+                [inputFormatter]="formatterMacPro"
+                [editable]="false"
+                formControlName="proMacproByIdMacpro"
+              />
+              <span class="autocomplete-icon" aria-hidden="true">
+                <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+              </span>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="dir" class="form-label-sm" jhiTranslate="gestProg.id_dirForm">Direzione centrale*</label>
+            <div class="input-group">
+              <input
+                id="dir"
+                type="text"
+                class="form-control"
+                [ngbTypeahead]="searchDir"
+                [resultFormatter]="formatterDir"
+                [inputFormatter]="formatterDir"
+                [editable]="false"
+                formControlName="progettoDirezione"
+              />
+              <span class="autocomplete-icon" aria-hidden="true">
+                <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+              </span>
+            </div>
+          </div>
+        </div>
+        <!-- Terza riga -->
+        <div class="row mt-3">
+          <div class="col-md-4 mb-3">
+            <label for="codset" class="form-label-sm" jhiTranslate="gestProg.codsetForm">Area/Settore</label>
+            <!-- <div class="form-group mb-0">
+              <input id="codset" type="text" class="form-control" placeholder=" " formControlName="codset" />
+              <span class="autocomplete-icon" aria-hidden="true" data-bs-toggle="modal" href="#modalSett" (click)="setModalSett()">
+                <svg class="icon icon-sm"><use href="content/bootstrap-italia/svg/sprites.svg#it-more-actions"></use></svg>
+              </span>
+            </div>-->
+            <div class="form-group">
+              <input
+                id="codset"
+                type="text"
+                class="form-control"
+                [ngbTypeahead]="searchSet"
+                [resultFormatter]="formatterSet"
+                [inputFormatter]="formatterSet"
+                [editable]="false"
+                formControlName="codSetAutocomplete"
+              />
+              <span class="autocomplete-icon" aria-hidden="true">
+                <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+              </span>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="codass" class="form-label-sm" jhiTranslate="gestProg.codassForm">Assessorato</label>
+            <!--<div class="form-group mb-0">
+              <input id="codass" type="text" class="form-control" placeholder=" " formControlName="codass" />
+              <span class="autocomplete-icon" aria-hidden="true" data-bs-toggle="modal" href="#modalAss" (click)="setModalAss()">
+                <svg class="icon icon-sm"><use href="content/bootstrap-italia/svg/sprites.svg#it-more-actions"></use></svg>
+              </span>
+            </div>-->
+            <div class="form-group">
+              <input
+                id="codass"
+                type="text"
+                class="form-control"
+                [ngbTypeahead]="searchAss"
+                [resultFormatter]="formatterAss"
+                [inputFormatter]="formatterAss"
+                [editable]="false"
+                formControlName="codAssAutocomplete"
+              />
+              <span class="autocomplete-icon" aria-hidden="true">
+                <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Scheda dati anagrafici -->
+      <div class="tab-pane" id="tab2" role="tabpanel" aria-labelledby="data-ex-tab2-tab">
+        <!-- Prima riga -->
+        <div class="row mt-3">
+          <div class="col-md-4 mb-3">
+            <label for="bandi" class="form-label-sm" jhiTranslate="gestProg.id_banForm">Bando*</label>
+            <div class="form-group">
+              <input
+                id="bandi"
+                type="text"
+                class="form-control"
+                [ngbTypeahead]="searchBan"
+                [resultFormatter]="formatterBan"
+                [inputFormatter]="formatterBan"
+                [editable]="false"
+                formControlName="proBanByIdBan"
+              />
+              <span class="autocomplete-icon" aria-hidden="true">
+                <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+              </span>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="tem" class="form-label-sm" jhiTranslate="gestProg.id_temForm">Tematica*</label>
+            <div class="form-group">
+              <input
+                id="tem"
+                type="text"
+                class="form-control"
+                [ngbTypeahead]="searchTem"
+                [resultFormatter]="formatterTem"
+                [inputFormatter]="formatterTem"
+                [editable]="false"
+                formControlName="proTemByIdTem"
+              />
+              <span class="autocomplete-icon" aria-hidden="true">
+                <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+              </span>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="codappren" class="form-label-sm" jhiTranslate="gestProg.codapprenForm"
+              >Codidce applicativo di rendicontazione*</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="codappren"
+              aria-describedby="cup"
+              placeholder=" "
+              formControlName="codappren"
+              [ngClass]="!getFormElement('codappren').valid && getFormElement('codappren').touched ? 'is-invalid' : ''"
+            />
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('codappren').errors?.['maxlength'] && getFormElement('codappren').touched"
+              jhiTranslate="entity.validation.maxlength"
+            >
+              Superato il numero massimo di caratteri</small
+            >
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('codappren').errors?.['pattern']"
+              jhiTranslate="entity.validation.sanitize"
+              >Ci sono caratteri non validi</small
+            >
+          </div>
+        </div>
+        <!-- Terza riga -->
+        <div class="row mt-3">
+          <div class="col-md-4 mb-3">
+            <label for="cup" class="form-label-sm" jhiTranslate="gestProg.codcupForm">CUP*</label>
+            <input
+              type="text"
+              class="form-control"
+              id="cup"
+              aria-describedby="cup"
+              placeholder=" "
+              formControlName="codcup"
+              [ngClass]="!getFormElement('codcup').valid && getFormElement('codcup').touched ? 'is-invalid' : ''"
+            />
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('codcup').errors?.['maxlength'] && getFormElement('codcup').touched"
+              jhiTranslate="entity.validation.maxlength"
+            >
+              Superato il numero massimo di caratteri</small
+            >
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('codcup').errors?.['pattern']"
+              jhiTranslate="entity.validation.sanitize"
+              >Ci sono caratteri non validi</small
+            >
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="cig" class="form-label-sm" jhiTranslate="gestProg.codcigForm">CIG*</label>
+            <input
+              type="text"
+              class="form-control"
+              id="cig"
+              aria-describedby="cig"
+              placeholder=" "
+              formControlName="codcig"
+              [ngClass]="!getFormElement('codcig').valid && getFormElement('codcig').touched ? 'is-invalid' : ''"
+            />
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('codcig').errors?.['maxlength'] && getFormElement('codcig').touched"
+              jhiTranslate="entity.validation.maxlength"
+            >
+              Superato il numero massimo di caratteri</small
+            >
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('codcig').errors?.['pattern']"
+              jhiTranslate="entity.validation.sanitize"
+              >Ci sono caratteri non validi</small
+            >
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="cui" class="form-label-sm" jhiTranslate="gestProg.codcuiForm">CUI*</label>
+            <input
+              type="text"
+              class="form-control"
+              id="cui"
+              aria-describedby="cui"
+              formControlName="codcui"
+              [ngClass]="!getFormElement('codcui').valid && getFormElement('codcui').touched ? 'is-invalid' : ''"
+            />
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('codcui').errors?.['maxlength'] && getFormElement('codcui').touched"
+              jhiTranslate="entity.validation.maxlength"
+            >
+              Superato il numero massimo di caratteri</small
+            >
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('codcui').errors?.['pattern']"
+              jhiTranslate="entity.validation.sanitize"
+              >Ci sono caratteri non validi</small
+            >
+          </div>
+        </div>
+        <!-- Quarta riga -->
+        <div class="row mt-3">
+          <div class="col-md-4 mb-3">
+            <label for="codtippro" class="form-label-sm" jhiTranslate="gestProg.tipoProgetto">Tipo progetto*</label>
+            <div class="select-wrapper">
+              <select id="selectTipPro" formControlName="tippro">
+                <option selected value="" jhiTranslate="gestProg.select.default">Scegli un'opzione</option>
+                <option value="PTO">PTO</option>
+                <option value="PBA">PBA</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="codtippro" class="form-label-sm" jhiTranslate="gestProg.codtipproForm">Codice*</label>
+            <input
+              type="text"
+              class="form-control"
+              id="codtippro"
+              aria-describedby="codtippro"
+              placeholder=" "
+              formControlName="codtippro"
+              [ngClass]="!getFormElement('codtippro').valid && getFormElement('codtippro').touched ? 'is-invalid' : ''"
+            />
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('codtippro').errors?.['maxlength'] && getFormElement('codtippro').touched"
+              jhiTranslate="entity.validation.maxlength"
+            >
+              Superato il numero massimo di caratteri</small
+            >
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('codtippro').errors?.['pattern']"
+              jhiTranslate="entity.validation.sanitize"
+              >Ci sono caratteri non validi</small
+            >
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="codgami" class="form-label-sm" jhiTranslate="gestProg.codgamiForm">Codice*</label>
+            <input
+              type="text"
+              class="form-control"
+              id="codgami"
+              aria-describedby="codgami"
+              placeholder=" "
+              formControlName="codgami"
+              [ngClass]="!getFormElement('codgami').valid && getFormElement('codgami').touched ? 'is-invalid' : ''"
+            />
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('codgami').errors?.['maxlength'] && getFormElement('codgami').touched"
+              jhiTranslate="entity.validation.maxlength"
+            >
+              Superato il numero massimo di caratteri</small
+            >
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('codgami').errors?.['pattern']"
+              jhiTranslate="entity.validation.sanitize"
+              >Ci sono caratteri non validi</small
+            >
+          </div>
+        </div>
+        <!-- Quinta riga -->
+        <div class="row mt-3">
+          <div class="col-md-4 mb-3">
+            <label for="veraff" class="form-label-sm" jhiTranslate="gestProg.veraffForm">Data verbali ammissione al finanziamento*</label>
+            <input
+              type="text"
+              class="form-control"
+              id="veraff"
+              aria-describedby="veraff"
+              placeholder=" "
+              formControlName="veraff"
+              [ngClass]="!getFormElement('veraff').valid && getFormElement('veraff').touched ? 'is-invalid' : ''"
+            />
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('veraff').errors?.['maxlength'] && getFormElement('veraff').touched"
+              jhiTranslate="entity.validation.maxlength"
+            >
+              Superato il numero massimo di caratteri</small
+            >
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('veraff').errors?.['pattern']"
+              jhiTranslate="entity.validation.sanitize"
+              >Ci sono caratteri non validi</small
+            >
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="estaff" class="form-label-sm" jhiTranslate="gestProg.estaffForm">Estremi e data ammissione al finanziamento*</label>
+            <input
+              type="text"
+              class="form-control"
+              id="estaff"
+              aria-describedby="estaff"
+              placeholder=" "
+              formControlName="estaff"
+              [ngClass]="!getFormElement('estaff').valid && getFormElement('estaff').touched ? 'is-invalid' : ''"
+            />
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('estaff').errors?.['maxlength'] && getFormElement('estaff').touched"
+              jhiTranslate="entity.validation.maxlength"
+            >
+              Superato il numero massimo di caratteri</small
+            >
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('estaff').errors?.['pattern']"
+              jhiTranslate="entity.validation.sanitize"
+              >Ci sono caratteri non validi</small
+            >
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="notaff" class="form-label-sm" jhiTranslate="gestProg.notaffForm">Note ammissione al finanziamento*</label>
+            <input
+              type="text"
+              class="form-control"
+              id="notaff"
+              aria-describedby="notaff"
+              placeholder=" "
+              formControlName="notaff"
+              [ngClass]="!getFormElement('notaff').valid && getFormElement('notaff').touched ? 'is-invalid' : ''"
+            />
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('notaff').errors?.['maxlength'] && getFormElement('notaff').touched"
+              jhiTranslate="entity.validation.maxlength"
+            >
+              Superato il numero massimo di caratteri</small
+            >
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('notaff').errors?.['pattern']"
+              jhiTranslate="entity.validation.sanitize"
+              >Ci sono caratteri non validi</small
+            >
+          </div>
+        </div>
+        <!-- Sesta riga -->
+        <div class="row mt-3">
+          <div class="col-md-4 mb-3">
+            <label for="desaffhou" class="form-label-sm" jhiTranslate="gestProg.desaffhouForm">Aff. In house*</label>
+            <input
+              type="text"
+              class="form-control"
+              id="desaffhou"
+              aria-describedby="desaffhou"
+              placeholder=" "
+              formControlName="desaffhou"
+              [ngClass]="!getFormElement('desaffhou').valid && getFormElement('desaffhou').touched ? 'is-invalid' : ''"
+            />
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('desaffhou').errors?.['maxlength'] && getFormElement('desaffhou').touched"
+              jhiTranslate="entity.validation.maxlength"
+            >
+              Superato il numero massimo di caratteri</small
+            >
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('desaffhou').errors?.['pattern']"
+              jhiTranslate="entity.validation.sanitize"
+              >Ci sono caratteri non validi</small
+            >
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="delcan" class="form-label-sm" jhiTranslate="gestProg.delcanForm">Delibera di candidatura*</label>
+            <input
+              type="text"
+              class="form-control"
+              id="delcan"
+              aria-describedby="delcan"
+              placeholder=" "
+              formControlName="delcan"
+              [ngClass]="!getFormElement('delcan').valid && getFormElement('delcan').touched ? 'is-invalid' : ''"
+            />
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('delcan').errors?.['maxlength'] && getFormElement('delcan').touched"
+              jhiTranslate="entity.validation.maxlength"
+            >
+              Superato il numero massimo di caratteri</small
+            >
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('delcan').errors?.['pattern']"
+              jhiTranslate="entity.validation.sanitize"
+              >Ci sono caratteri non validi</small
+            >
+          </div>
+        </div>
+        <!-- settima riga -->
+        <div class="row mt-3">
+          <div class="col-md-4 mb-3">
+            <label for="promun" class="form-label-sm" jhiTranslate="gestProg.id_munForm">Municipio*</label>
+            <div class="select-wrapper">
+              <select id="promun" formControlName="idMun">
+                <option selected value="null" jhiTranslate="gestProg.select.default">Scegli un'opzione</option>
+                <option *ngFor="let mun of municipi" [value]="mun.id">{{ mun.desmun }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="nil" class="form-label-sm" jhiTranslate="gestProg.nilForm">NIL</label>
+            <div class="form-group">
+              <input
+                id="nil"
+                type="text"
+                class="form-control"
+                [ngbTypeahead]="searchNil"
+                [resultFormatter]="formatterNil"
+                [inputFormatter]="formatterNil"
+                [editable]="false"
+                formControlName="proNilByIdNil"
+              />
+              <span class="autocomplete-icon" aria-hidden="true">
+                <svg class="icon icon-xs"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Scheda tabella risorse -->
+      <div class="tab-pane" id="tab3" role="tabpanel" aria-labelledby="data-ex-tab3-tab">
+        <h5 class="mt-3" jhiTranslate="gestProg.tabellaRisorse">Tabella risorse</h5>
+        <table class="table table-borderless table-responsive mt-2 w-75">
+          <thead>
+            <tr>
+              <th scope="col"><span jhiTranslate="gestProg.destipimp">Tipo importo</span></th>
+              <th scope="col"><span jhiTranslate="gestProg.imppro">Importo</span></th>
+              <th scope="col"><span jhiTranslate="gestProg.notimp">Note</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-smoke border-left-no-hover" *ngFor="let risorsa of getRisorseFormArray().controls">
+              <td>
+                <input
+                  type="text"
+                  [formControl]="convertToFormControl(risorsa.get('idTipimp'))"
+                  [attr.disabled]="true"
+                  class="form-control"
+                />
+              </td>
+              <td><input type="text" [formControl]="convertToFormControl(risorsa.get('imppro'))" importo /></td>
+              <td>
+                <input
+                  type="text"
+                  [formControl]="convertToFormControl(risorsa.get('notimp'))"
+                  placeholder="-"
+                  [ngClass]="
+                    !convertToFormControl(risorsa.get('notimp')).valid && convertToFormControl(risorsa.get('notimp')).touched
+                      ? 'is-invalid'
+                      : ''
+                  "
+                />
+                <small
+                  class="form-text text-danger"
+                  *ngIf="convertToFormControl(risorsa.get('notimp')).errors?.['pattern']"
+                  jhiTranslate="entity.validation.sanitize"
+                  >Ci sono caratteri non validi</small
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="row" *ngIf="this.curProg?.totaliFondi">
+          <div class="col-3 offset-3">
+            <label jhiTranslate="gestProg.detail.totris">Totale risorse</label>
+            <input
+              type="text"
+              [value]="transformValueImporto(curProg.totaliFondi?.impristotpro)"
+              [attr.disabled]="true"
+              class="form-control"
+            />
+          </div>
+        </div>
+        <h5 class="mt-3" jhiTranslate="gestProg.tabellaRisorsePrgLivBasso">Tabella risorse progetto livello basso</h5>
+        <table class="table table-borderless table-responsive mt-2 w-50">
+          <thead>
+            <tr>
+              <th scope="col"><span jhiTranslate="gestProg.destipimp">Tipo importo</span></th>
+              <th scope="col"><span jhiTranslate="gestProg.imppro">Importo</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-smoke border-left-no-hover" *ngFor="let risorsa of getRisorseLivBaFormArray().controls">
+              <td>
+                <input
+                  type="text"
+                  [formControl]="convertToFormControl(risorsa.get('destipimp'))"
+                  [attr.disabled]="true"
+                  class="form-control"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  [formControl]="convertToFormControl(risorsa.get('imppro'))"
+                  [attr.disabled]="true"
+                  class="form-control"
+                  importo
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Scheda risorse del fondo di cui -->
+      <div class="tab-pane" id="tab4" role="tabpanel" aria-labelledby="data-ex-tab4-tab">
+        <table class="table table-borderless table-responsive mt-3 w-75">
+          <thead>
+            <tr>
+              <th scope="col"><span jhiTranslate="gestProg.destipimp">Tipo importo</span></th>
+              <th scope="col"><span jhiTranslate="gestProg.imppro">Importo</span></th>
+              <th scope="col"><span jhiTranslate="gestProg.notimp">Note</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-smoke border-left-no-hover" *ngFor="let risorsa of getRisorseDiCuiFormArray().controls">
+              <td>
+                <input
+                  type="text"
+                  [formControl]="convertToFormControl(risorsa.get('idTipimp'))"
+                  [attr.disabled]="true"
+                  class="form-control"
+                />
+              </td>
+              <td><input type="text" [formControl]="convertToFormControl(risorsa.get('imppro'))" importo /></td>
+              <td>
+                <input type="text" [formControl]="convertToFormControl(risorsa.get('notimp'))" placeholder="-" />
+                <small
+                  class="form-text text-danger"
+                  *ngIf="convertToFormControl(risorsa.get('notimp')).errors?.['pattern']"
+                  jhiTranslate="entity.validation.sanitize"
+                  >Ci sono caratteri non validi</small
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Scheda note -->
+      <div class="tab-pane" id="tab5" role="tabpanel" aria-labelledby="data-ex-tab5-tab">
+        <div class="row mt-3">
+          <div class="col-6" align="center">
+            <div class="callout" [ngClass]="!getFormElement('notpro').valid && getFormElement('notpro').touched ? 'danger' : ''">
+              <div class="callout-title">Note</div>
+              <p><textarea id="notpro" formControlName="notpro" rows="5"></textarea></p>
+            </div>
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('notpro').errors?.['maxlength'] && getFormElement('notpro').touched"
+              jhiTranslate="entity.validation.maxlength"
+              >Superato il numero massimo di caratteri</small
+            >
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('notpro').errors?.['pattern']"
+              jhiTranslate="entity.validation.sanitize"
+              >Ci sono caratteri non validi</small
+            >
+          </div>
+          <div class="col-6" align="center">
+            <div class="callout" [ngClass]="!getFormElement('notpre').valid && getFormElement('notpre').touched ? 'danger' : ''">
+              <div class="callout-title" jhiTranslate="gestProg.notpre">Note previsioni</div>
+              <p><textarea id="notpre" formControlName="notpre" rows="5"></textarea></p>
+            </div>
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('notpre').errors?.['maxlength'] && getFormElement('notpre').touched"
+              jhiTranslate="entity.validation.maxlength"
+              >Superato il numero massimo di caratteri</small
+            >
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('notpre').errors?.['pattern']"
+              jhiTranslate="entity.validation.sanitize"
+              >Ci sono caratteri non validi</small
+            >
+          </div>
+        </div>
+      </div>
+      <!-- Scheda Riferimenti IGV -->
+      <div class="tab-pane" id="tab6" role="tabpanel" aria-labelledby="data-ex-tab6-tab">
+        <!-- Prima riga -->
+        <div class="row mt-3">
+          <div class="col-md-4 mb-3">
+            <label for="impigv" class="form-label-sm" jhiTranslate="gestProg.impigvForm">Importo IGV</label>
+            <input type="text" class="form-control" id="impigv" aria-describedby="impigv" formControlName="impigv" value="impigv" importo />
+          </div>
+        </div>
+        <!-- Seconda riga -->
+        <div class="row mt-3">
+          <div class="col-md-4 mb-3">
+            <label for="rifigv" class="form-label-sm" jhiTranslate="gestProg.rifigvForm">Riferimento IGV</label>
+            <input
+              type="text"
+              class="form-control"
+              id="rifigv"
+              aria-describedby="rifigv"
+              formControlName="rifigv"
+              value="impigv"
+              [ngClass]="!getFormElement('rifigv').valid && getFormElement('rifigv').touched ? 'is-invalid' : ''"
+            />
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('rifigv').errors?.['maxlength'] && getFormElement('rifigv').touched"
+              jhiTranslate="entity.validation.maxlength"
+              >Superato il numero massimo di caratteri</small
+            >
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('rifigv').errors?.['pattern']"
+              jhiTranslate="entity.validation.sanitize"
+              >Ci sono caratteri non validi</small
+            >
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="impigvdel" class="form-label-sm" j
+              ><span jhiTranslate="gestProg.impigvdelForm">Importo IGV in Delfi*</span
+              ><span
+                tabindex="0"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                [title]="this.translateService.instant('gestProg.impigvdelTooltip')"
+                ><svg class="icon icon-secondary icon-sm py-1" style="float: right">
+                  <use href="content/bootstrap-italia/svg/sprites.svg#it-help-circle"></use></svg></span
+            ></label>
+            <input
+              type="text"
+              class="form-control"
+              id="impigvdel"
+              aria-describedby="impigvdel"
+              formControlName="impigvdel"
+              value="impigvdel"
+              importo
+            />
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="notigv" class="form-label-sm" jhiTranslate="gestProg.notigvForm">Note IGV*</label>
+            <input
+              type="text"
+              class="form-control"
+              id="notigv"
+              aria-describedby="notigv"
+              formControlName="notigv"
+              value="notigv"
+              placeholder=" "
+              [ngClass]="!getFormElement('notigv').valid && getFormElement('notigv').touched ? 'is-invalid' : ''"
+            />
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('notigv').errors?.['maxlength'] && getFormElement('notigv').touched"
+              jhiTranslate="entity.validation.maxlength"
+              >Superato il numero massimo di caratteri</small
+            >
+            <small
+              class="form-text text-danger"
+              *ngIf="getFormElement('notigv').errors?.['pattern']"
+              jhiTranslate="entity.validation.sanitize"
+              >Ci sono caratteri non validi</small
+            >
+          </div>
+        </div>
+      </div>
+      <!-- Scheda Informazioni aggiuntive -->
+      <div class="tab-pane" id="tab7" role="tabpanel" aria-labelledby="data-ex-tab7-tab">
+        <table class="table table-borderless table-responsive mt-3 w-50">
+          <thead>
+            <tr>
+              <th scope="col"><span jhiTranslate="gestProg.infagg">Tipo info</span></th>
+              <th scope="col"><span jhiTranslate="gestProg.destipinfagg">Valore</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-smoke border-left-no-hover" *ngFor="let infAgg of getInfAggFormArray().controls">
+              <td>
+                <input
+                  type="text"
+                  [formControl]="convertToFormControl(infAgg.get('destipinfagg'))"
+                  [attr.disabled]="true"
+                  class="form-control"
+                />
+              </td>
+              <td>
+                <input type="text" [formControl]="convertToFormControl(infAgg.get('infagg'))" />
+                <small
+                  class="form-text text-danger"
+                  *ngIf="convertToFormControl(infAgg.get('infagg')).errors?.['pattern']"
+                  jhiTranslate="entity.validation.sanitize"
+                  >Ci sono caratteri non validi</small
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Modale area/ settore -->
+    <div
+      class="modal fade"
+      tabindex="-2"
+      role="dialog"
+      id="modalSett"
+      aria-labelledby="titleModalArea"
+      style="z-index: 20000"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <svg class="icon icon-md c-pointer" data-bs-dismiss="modal">
+              <use href="content/bootstrap-italia/svg/sprites.svg#it-close"></use>
+            </svg>
+          </div>
+          <div class="modal-body mb-4">
+            <div class="form-group mx-sm-0 mb-0">
+              <label for="searchString" class="visually-hidden" jhiTranslate="ammUtenti.home.labelSearchString">Cerca assessorati</label>
+              <input
+                type="text"
+                class="form-control-md"
+                name="searchString"
+                [placeholder]="'gestProg.searchSet' | translate"
+                [formControl]="autocompleteSett"
+                id="searchStringSett"
+              />
+              <span class="autocomplete-icon" aria-hidden="true">
+                <svg class="icon icon-sm"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+              </span>
+            </div>
+            <table class="table table-borderless table-responsive">
+              <thead>
+                <tr>
+                  <th scope="col" class="col-2"><span>Id</span></th>
+                  <th scope="col" class="col-2"><span>Descrizione</span></th>
+                </tr>
+              </thead>
+              <tbody *ngIf="settoriFiltered.length != 0">
+                <tr
+                  *ngFor="let set of settoriFiltered | paginate: config1; index as i"
+                  [ngClass]="i % 2 == 0 ? 'even border-smoke border-left' : 'odd border-white border-left'"
+                  (click)="setValueSettore(set.id)"
+                  data-bs-dismiss="modal"
+                >
+                  <td class="col-1 txt-sm">{{ set.id || '-' }}</td>
+                  <td
+                    class="txt-sm d-inline-block text-truncate"
+                    style="max-width: 290px"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="bottom"
+                    [title]="set.descrizione"
+                  >
+                    {{ set.descrizione || '-' }}
+                  </td>
+                </tr>
+                <tr>
+                  <td *ngIf="settori.length == 0" class="bold border-white" colspan="6" style="color: gray">Nessun risultato trovato</td>
+                </tr>
+              </tbody>
+            </table>
+            <div *ngIf="settori.length != 0">
+              <nav class="pagination-wrapper justify-content-center" aria-label="Navigazione centrata">
+                <!-- <pagination-controls class="my-pagination" [maxSize]="9" previousLabel="" nextLabel="" (pageChange)="pageChanged($event)"></pagination-controls> -->
+                <pagination-template #p1="paginationApi" (pageChange)="config1.currentPage = $event" [maxSize]="9">
+                  <ul class="pagination custom-pagination">
+                    <li class="page-item" [class.disabled]="p1.isFirstPage()">
+                      <a class="page-link" (click)="p1.previous()" tabindex="-1" aria-hidden="true">
+                        <svg class="icon icon-primary">
+                          <use href="content/bootstrap-italia/svg/sprites.svg#it-chevron-left"></use>
+                        </svg>
+                        <span class="visually-hidden" jhiTranslate="page.previous">Pagina precedente</span>
+                      </a>
+                    </li>
+                    <li *ngFor="let page of p1.pages" [class.current]="p1.getCurrent() === page.value" class="page-item">
+                      <a (click)="p1.setCurrent(page.value)" *ngIf="p1.getCurrent() !== page.value" class="page-link">
+                        <span>{{ page.label }}</span>
+                      </a>
+                      <a (click)="p1.setCurrent(page.value)" *ngIf="p1.getCurrent() === page.value" class="page-link" aria-current="page">
+                        <span class="d-inline-block d-sm-none">Pagina </span>{{ page.label }}
+                      </a>
+                    </li>
+                    <li class="page-item pagination-next" [class.disabled]="p1.isLastPage()">
+                      <a class="page-link" (click)="p1.next()" tabindex="-1" aria-hidden="true">
+                        <span class="visually-hidden" jhiTranslate="page.next">Pagina successiva</span>
+                        <svg class="icon icon-primary">
+                          <use href="content/bootstrap-italia/svg/sprites.svg#it-chevron-right"></use>
+                        </svg>
+                      </a>
+                    </li>
+                  </ul>
+                  <p class="text-center">Totale {{ p1.getTotalItems() }} elementi</p>
+                </pagination-template>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modale assessorati -->
+    <div
+      class="modal fade"
+      tabindex="-2"
+      role="dialog"
+      id="modalAss"
+      aria-labelledby="titleModaleAss"
+      style="z-index: 20000"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <svg class="icon icon-md c-pointer" data-bs-dismiss="modal">
+              <use href="content/bootstrap-italia/svg/sprites.svg#it-close"></use>
+            </svg>
+          </div>
+          <div class="modal-body mb-4">
+            <div class="form-group mx-sm-0 mb-0">
+              <label for="searchString" class="visually-hidden" jhiTranslate="ammUtenti.home.labelSearchString">Cerca assessorati</label>
+              <input
+                type="text"
+                class="form-control-md"
+                name="searchString"
+                [placeholder]="'gestProg.searchAss' | translate"
+                [formControl]="autocomplete"
+                id="searchString"
+              />
+              <span class="autocomplete-icon" aria-hidden="true">
+                <svg class="icon icon-sm"><use href="content/bootstrap-italia/svg/sprites.svg#it-search"></use></svg>
+              </span>
+            </div>
+            <table class="table table-borderless table-responsive" *ngIf="assessorati != null">
+              <thead>
+                <tr>
+                  <th scope="col" class="min-vh-100"><span>Id</span></th>
+                  <th scope="col" class="col-2"><span>Descrizione</span></th>
+                </tr>
+              </thead>
+              <tbody *ngIf="assessoratiFiltered != null && this.showAssessorati">
+                <tr
+                  *ngFor="let ass of assessoratiFiltered | paginate: config; index as i"
+                  [ngClass]="i % 2 == 0 ? 'even border-smoke border-left' : 'odd border-white border-left'"
+                  (click)="setValueAssessorato(ass.id)"
+                  data-bs-dismiss="modal"
+                >
+                  <td class="txt-sm col-1">{{ ass.id || '-' }}</td>
+                  <td
+                    class="txt-sm d-inline-block text-truncate"
+                    style="max-width: 290px"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="bottom"
+                    [title]="ass.descrizione"
+                  >
+                    {{ ass.descrizione || '-' }}
+                  </td>
+                </tr>
+                <tr>
+                  <td *ngIf="assessoratiFiltered.length == 0" class="bold border-white" colspan="6" style="color: gray">
+                    Nessun risultato trovato
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div *ngIf="assessoratiFiltered.length != 0">
+              <nav class="pagination-wrapper justify-content-center" aria-label="Navigazione centrata">
+                <!-- <pagination-controls class="my-pagination" [maxSize]="9" previousLabel="" nextLabel="" (pageChange)="pageChanged($event)"></pagination-controls> -->
+                <pagination-template #p="paginationApi" (pageChange)="config.currentPage = $event" [maxSize]="9">
+                  <ul class="pagination custom-pagination">
+                    <li class="page-item" [class.disabled]="p.isFirstPage()">
+                      <a class="page-link" (click)="p.previous()" tabindex="-1" aria-hidden="true">
+                        <svg class="icon icon-primary">
+                          <use href="content/bootstrap-italia/svg/sprites.svg#it-chevron-left"></use>
+                        </svg>
+                        <span class="visually-hidden" jhiTranslate="page.previous">Pagina precedente</span>
+                      </a>
+                    </li>
+                    <li *ngFor="let page of p.pages" [class.current]="p.getCurrent() === page.value" class="page-item">
+                      <a (click)="p.setCurrent(page.value)" *ngIf="p.getCurrent() !== page.value" class="page-link">
+                        <span>{{ page.label }}</span>
+                      </a>
+                      <a (click)="p.setCurrent(page.value)" *ngIf="p.getCurrent() === page.value" class="page-link" aria-current="page">
+                        <span class="d-inline-block d-sm-none">Pagina </span>{{ page.label }}
+                      </a>
+                    </li>
+                    <li class="page-item pagination-next" [class.disabled]="p.isLastPage()">
+                      <a class="page-link" (click)="p.next()" tabindex="-1" aria-hidden="true">
+                        <span class="visually-hidden" jhiTranslate="page.next">Pagina successiva</span>
+                        <svg class="icon icon-primary">
+                          <use href="content/bootstrap-italia/svg/sprites.svg#it-chevron-right"></use>
+                        </svg>
+                      </a>
+                    </li>
+                  </ul>
+                  <p class="text-center">Totale {{ p.getTotalItems() }} elementi</p>
+                </pagination-template>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

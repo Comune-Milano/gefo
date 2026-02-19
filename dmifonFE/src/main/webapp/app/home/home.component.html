@@ -1,0 +1,236 @@
+<div class="row">
+  <div class="col-md-12">
+    <div [ngSwitch]="account !== null">
+      <div *ngSwitchCase="true">
+        <div class="container-fluid" *ngIf="account">
+          <div class="row align-items-start mb-1" *ngIf="accountService.getHasRoles()">
+            <div class="col-lg-5">
+              <div class="alert alert-success shadow-sm rounded" role="alert">
+                <span jhiTranslate="home.ciao">Ciao</span>, "<b>{{ account?.firstName + ' ' + account?.lastName }}</b
+                >".
+              </div>
+            </div>
+            <div class="col-lg-7 text-end">
+              <div class="avatar avatar-primary size-md cursor-pointer" (click)="onClick()" title="Help">
+                <svg class="icon icon-white">
+                  <use
+                    href="content/bootstrap-italia/svg/sprites.svg#it-help"
+                    xlink:href="/bootstrap-italia/dist/svg/sprites.svg#it-tool"
+                  ></use>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="callout danger" *ngIf="accountService.getErrorMessage()">
+          <div class="callout-title">
+            <svg class="icon">
+              <use href="/bootstrap-italia/dist/svg/sprites.svg#it-close-circle"></use>
+            </svg>
+            Attenzione
+          </div>
+          <span id="home-loggedNoRoles-message" class="fw-bold" *ngIf="account">{{ accountService.getErrorMessage() }} .</span>
+        </div>
+      </div>
+
+      <div class="" *ngSwitchCase="false"></div>
+      <div class="container-fluid" *ngIf="accountService.getHasRoles()">
+        <div class="row">
+          <div class="col-lg-4">
+            <!--start card-->
+            <div class="card-wrapper card-space animate pop">
+              <div
+                class="card card-bg card-big border-bottom-card bgGray"
+                joyrideStep="fifthStep"
+                [stepContent]="quintoStep"
+                stepPosition="right"
+              >
+                <div class="etichetta">
+                  <svg class="icon">
+                    <use href="content/bootstrap-italia/svg/sprites.svg#it-file"></use>
+                  </svg>
+                  <span jhiTranslate="home.prog">Progetti</span>
+                </div>
+                <div class="card-body mt-3">
+                  <p class="card-text" jhiTranslate="home.descrizioni.gestpro">Gestione progetti</p>
+                  <div class="card card-bg border-top-card m-0">
+                    <div class="card-title ms-4 mt-4">
+                      <h6 class="text red" jhiTranslate="home.fun">FUNZIONALITÀ</h6>
+                      <a class="card-text px-2" (click)="navigateLink('/tip-fin')" jhiTranslate="tipFin.home.title">Tipi di finanziamento</a
+                      ><br />
+                      <a
+                        class="card-text px-2"
+                        (click)="navigateLink('/gest-progetti')"
+                        joyrideStep="sixthStep"
+                        jhiTranslate="gestProg.home.title"
+                        [stepContent]="sestoStep"
+                        >Progetti</a
+                      ><br />
+                      <a class="card-text px-2" (click)="navigateLink('/gest-avanzamenti')" jhiTranslate="proAva.home.title">Avanzamenti</a
+                      ><br />
+                      <a class="card-text px-2" (click)="navigateLink('/ddr')" jhiTranslate="ddr.home.title">DDR</a><br />
+                      <a class="card-text px-2" (click)="navigateLink('/ddra')" jhiTranslate="ddra.home.title">DDRA</a><br />
+                      <a class="card-text px-2" (click)="navigateLink('/gest-previsioni')" jhiTranslate="Prev.home.title">Previsioni</a
+                      ><br />
+                      <a class="card-text px-2" (click)="navigateLink('/gest-commenti-richieste')" jhiTranslate="commRic.home.title"
+                        >Commenti - Richieste</a
+                      ><br />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--end card-->
+          </div>
+          <div class="col-lg-4">
+            <!--start card-->
+            <div class="card-wrapper card-space animate pop delay-1">
+              <div class="card card-bg card-big border-bottom-card bgGray">
+                <div class="etichetta">
+                  <svg class="icon">
+                    <use href="content/bootstrap-italia/svg/sprites.svg#it-file"></use>
+                  </svg>
+                  <span jhiTranslate="home.prog">Progetti</span>
+                </div>
+                <div class="card-body mt-3">
+                  <p class="card-text" jhiTranslate="home.descrizioni.dizpro">Dizionario progetti</p>
+                  <div class="card card-bg border-top-card m-0">
+                    <div class="card-title ms-4 mt-4">
+                      <h6 class="text red" jhiTranslate="home.fun">FUNZIONALITÀ</h6>
+                      <div class="px-2">
+                        <a class="card-text" (click)="navigateLink('/diz-macro-prog')" jhiTranslate="dizMacroProg.home.title"
+                          >Macro Progetti</a
+                        ><br />
+                        <a class="card-text" (click)="navigateLink('/bandi')" jhiTranslate="bandi.home.title">Bandi</a><br />
+                        <a class="card-text" (click)="navigateLink('/tematiche')" jhiTranslate="tematiche.home.title">Tematiche</a><br />
+                        <a class="card-text" (click)="navigateLink('/municipi')" jhiTranslate="mun.home.title">Municipi</a><br />
+                        <a class="card-text" (click)="navigateLink('/nil')" jhiTranslate="nil.home.title">Nil</a><br />
+                        <a class="card-text" (click)="navigateLink('/lista-valori')" jhiTranslate="lisVal.home.title">Lista Valori</a><br />
+                        <a class="card-text" (click)="navigateLink('/tipo-fase')" jhiTranslate="tipFas.home.title">Tipo Fase</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--end card-->
+          </div>
+          <div class="col-lg-4">
+            <!--start card-->
+            <div class="card-wrapper card-space animate pop delay-2">
+              <div class="card card-bg card-big border-bottom-card bgGray">
+                <div class="etichetta">
+                  <svg class="icon">
+                    <use href="content/bootstrap-italia/svg/sprites.svg#it-file"></use>
+                  </svg>
+                  <span jhiTranslate="home.detcon" jhiTranslate="home.detcon">DATI CONTABILI</span>
+                </div>
+                <div class="card-body mt-3">
+                  <p class="card-text" jhiTranslate="home.descrizioni.ricCon">Ricerche contabilità</p>
+                  <div class="card card-bg border-top-card m-0">
+                    <div class="card-title ms-4 mt-4">
+                      <h6 class="text red" jhiTranslate="home.fun">FUNZIONALITÀ</h6>
+                      <div class="px-2">
+                        <a class="card-text" (click)="navigateLink('/det-con-cape/capitoli-entrata')" jhiTranslate="DetCon.home.titleCapEnt"
+                          >Capitoli entrata</a
+                        ><br />
+                        <a class="card-text" (click)="navigateLink('/det-con-capu/capitoli-uscita')" jhiTranslate="DetCon.home.titleCapUsc"
+                          >Capitoli uscita</a
+                        ><br />
+                        <a class="card-text" (click)="navigateLink('/det-con-acc/accertamenti')" jhiTranslate="DetCon.home.titleAcc"
+                          >Accertamenti</a
+                        ><br />
+                        <a class="card-text" (click)="navigateLink('/det-con-imp/impegni')" jhiTranslate="DetCon.home.titleImp">Impegni</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--end card-->
+          </div>
+        </div>
+        <!-- Seconda riga -->
+        <div class="row mt-2">
+          <div class="col-lg-4">
+            <!--start card-->
+            <div class="card-wrapper card-space animate pop delay-3">
+              <div class="card card-bg card-big border-bottom-card bgGray">
+                <div class="etichetta">
+                  <svg class="icon">
+                    <use href="content/bootstrap-italia/svg/sprites.svg#it-file"></use>
+                  </svg>
+                  <span jhiTranslate="home.exp">EXPORT</span>
+                </div>
+                <div class="card-body mt-3">
+                  <p class="card-text" jhiTranslate="home.descrizioni.expfil">Esporta file</p>
+                  <div class="card card-bg border-top-card m-0">
+                    <div class="card-title ms-4 mt-4">
+                      <h6 class="text red" jhiTranslate="home.fun">FUNZIONALITÀ</h6>
+                      <div class="px-2">
+                        <a class="card-text" (click)="navigateLink('/export-progetti')" jhiTranslate="export.home.titleProg"
+                          >Export progetti</a
+                        ><br />
+                        <a class="card-text" (click)="navigateLink('/export-impe-acce')" jhiTranslate="export.home.titleImp"
+                          >Export impegni / accertamenti</a
+                        ><br />
+                        <a class="card-text" (click)="navigateLink('/export-cap')" jhiTranslate="export.home.titleCap">Export capitoli</a
+                        ><br />
+                        <a class="card-text" (click)="navigateLink('/export-ddr')" jhiTranslate="export.home.titleDDR">Export DDR</a><br />
+                        <a class="card-text" (click)="navigateLink('/export-ava-fas')" jhiTranslate="export.home.titleAvaFas"
+                          >Export Avanzamenti / fasi</a
+                        ><br />
+                        <a class="card-text" (click)="navigateLink('/export-man')" jhiTranslate="export.home.titleMan">Export Mandati</a
+                        ><br />
+                        <a class="card-text" jhiTranslate="ammEla.home.title" (click)="navigateLink('/ela')">Elaborazioni</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--end card-->
+          </div>
+          <div class="col-lg-4">
+            <!--start card-->
+            <div class="card-wrapper card-space animate pop delay-4">
+              <div class="card card-bg card-big border-bottom-card bgGray">
+                <div class="etichetta">
+                  <svg class="icon">
+                    <use href="content/bootstrap-italia/svg/sprites.svg#it-file"></use>
+                  </svg>
+                  <span jhiTranslate="home.adm">AMMINISTRAZIONE</span>
+                </div>
+                <div class="card-body mt-3">
+                  <p class="card-text" jhiTranslate="home.descrizioni.gestamm">Gestione amministrazione</p>
+                  <div class="card card-bg border-top-card m-0">
+                    <div class="card-title ms-4 mt-4">
+                      <h6 class="text red" jhiTranslate="home.fun">FUNZIONALITÀ</h6>
+                      <div class="px-2">
+                        <a class="card-text" (click)="navigateLink('/amm-utenti')" jhiTranslate="ammUtenti.home.title">Utenti</a><br />
+                        <a class="card-text" (click)="navigateLink('/amm-ruoli')" jhiTranslate="ammRuoli.home.title">Ruoli</a><br />
+                        <a class="card-text" (click)="navigateLink('/amm-dir')" jhiTranslate="ammDir.home.title">Direzioni centrali</a
+                        ><br />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--end card-->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #quintoStep>
+  <h5 class="card-title h5 px-2">Funzionalità</h5>
+  <p class="py-2 px-2">Nelle cards sono categorizzate le funzionalità in base all'ambito applicativo.</p>
+</ng-template>
+
+<ng-template #sestoStep>
+  <h5 class="card-title h5 px-2">Funzionalità selezionata</h5>
+  <p class="py-2 px-2">Cliccando sulla singola funzionalità si può entrare nella sua gestione.</p>
+</ng-template>

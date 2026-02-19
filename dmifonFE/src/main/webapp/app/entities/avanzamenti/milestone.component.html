@@ -1,0 +1,255 @@
+<jhi-spinner></jhi-spinner>
+<div class="container-fluid">
+  <div class="row justify-content-between">
+    <div class="col d-flex align-items-center" *ngIf="this.curMilFas">
+      <h5 class="bold">Dettaglio milestone fase {{ curMilFas.proTipfas.desfas }}</h5>
+    </div>
+  </div>
+  <div class="row" *ngIf="this.curMilFas">
+    <div class="col d-flex">
+      <h6 class="my-0">
+        Progetto: <span class="bold">{{ this.curMilFas.progetto.codpro }} - {{ this.curMilFas.progetto.despro }} </span>
+      </h6>
+    </div>
+  </div>
+  <div class="row" *ngIf="this.curMilFas">
+    <div class="col d-flex">
+      <h6>
+        Progetto padre: <span class="bold">{{ this.curMilFas.progettoPadreLabel }} </span>
+      </h6>
+    </div>
+  </div>
+  <!--alert modifica / inserimento -->
+  <jhi-alert *ngIf="viewAlert"></jhi-alert>
+  <jhi-alert-error *ngIf="viewError"></jhi-alert-error>
+  <div class="d-grid gap-4 d-md-block">
+    <!-- Pulsante inserisci / modifica avanzamento-->
+    <button
+      class="btn btn-primary btn-sml btn-xs btn-me min-wh-20"
+      (click)="submitForm()"
+      data-bs-target="#myNotification"
+      data-bs-timeout="5000"
+    >
+      <svg class="icon icon-white ms-1">
+        <use href="content/bootstrap-italia/svg/sprites.svg#it-pencil"></use>
+      </svg>
+      <span>Salva</span>
+    </button>
+    <!-- Pulsante ricarica informazioni-->
+    <button class="btn btn-primary btn-sml btn-xs btn-me min-wh-20" (click)="reload()">
+      <svg class="icon icon-white ms-1">
+        <use href="content/bootstrap-italia/svg/sprites.svg#it-restore"></use>
+      </svg>
+      <span jhiTranslate="global.buttons.labelReload">Ricarica informazioni</span>
+    </button>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-borderless table-responsive mt-3">
+      <thead>
+        <tr>
+          <th scope="col" class="col-1 w-mil"><span>Milestone*</span></th>
+          <th scope="col" class="col-1 text-center">
+            <span>Data deadline*</span>
+          </th>
+          <th scope="col" class="col-1 text-center">
+            <span>Data effettiva</span>
+          </th>
+          <th scope="col" class="col-1 text-center">
+            <span>Semaforo Mil.</span>
+          </th>
+          <th scope="col" class="col-2" style="width: 230px !important">
+            <span>Note</span>
+            <span
+              tabindex="0"
+              class="mx-5"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Inserisci riga"
+              *ngIf="formMil.controls.length == 0"
+            >
+              <svg class="icon icon-primary icon-md" (click)="addMil()">
+                <use href="content/bootstrap-italia/svg/sprites.svg#it-plus"></use>
+              </svg>
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody *ngIf="formMil.controls">
+        <tr *ngFor="let mil of formMil.controls; index as i">
+          <td class="w-mil">
+            <input
+              type="text"
+              id="desmil"
+              class="form-control"
+              [formControl]="convertToFormControl(mil.get('desmil'))"
+              [style.color]="
+                convertToFormControl(mil.get('desmil')).value == null && !convertToFormControl(mil.get('desmil')).touched
+                  ? 'transparent'
+                  : ''
+              "
+            />
+            <small
+              class="form-text text-danger"
+              *ngIf="convertToFormControl(mil.get('desmil')).errors?.['required'] && convertToFormControl(mil.get('desmil')).touched"
+              jhiTranslate="entity.validation.required"
+              >Questo campo è obbligatorio</small
+            >
+            <small
+              class="form-text text-danger"
+              *ngIf="convertToFormControl(mil.get('desmil')).errors?.['pattern']"
+              jhiTranslate="entity.validation.sanitize"
+              >Ci sono caratteri non validi</small
+            >
+          </td>
+          <td style="max-width: 160px !important">
+            <input
+              type="date"
+              id="dtaoriini"
+              class="form-control"
+              [formControl]="convertToFormControl(mil.get('dtaded'))"
+              [style.color]="
+                convertToFormControl(mil.get('dtaded')).value == null && !convertToFormControl(mil.get('dtaded')).touched
+                  ? 'transparent'
+                  : ''
+              "
+            />
+            <small
+              class="form-text text-danger"
+              *ngIf="convertToFormControl(mil.get('dtaded')).errors?.['required'] && convertToFormControl(mil.get('dtaded')).touched"
+              jhiTranslate="entity.validation.required"
+              >Questo campo è obbligatorio</small
+            >
+          </td>
+          <td style="max-width: 160px !important">
+            <input
+              type="date"
+              id="dtaorifin"
+              class="form-control"
+              [formControl]="convertToFormControl(mil.get('dtaeff'))"
+              [style.color]="
+                convertToFormControl(mil.get('dtaeff')).value == null && !convertToFormControl(mil.get('dtaeff')).touched
+                  ? 'transparent'
+                  : ''
+              "
+            />
+            <small
+              class="form-text text-danger"
+              *ngIf="convertToFormControl(mil.get('dtaeff')).errors?.['required'] && convertToFormControl(mil.get('dtaeff')).touched"
+              jhiTranslate="entity.validation.required"
+              >Questo campo è obbligatorio</small
+            >
+          </td>
+
+          <td
+            class="text-center"
+            *ngIf="convertToFormControl(mil.get('semaforoMil')).value != 'bianco' && convertToFormControl(mil.get('semaforoMil'))?.value"
+            data-bs-toggle="tooltip"
+            data-bs-placement="bottom"
+            [title]="convertToFormControl(mil.get('semaforoMilDes')).value"
+          >
+            <!-- <svg
+              width="27px"
+              height="27px"
+              viewBox="-2.4 -2.4 28.80 28.80"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              stroke="#000000"
+              stroke-width="0.40800000000000003"
+              stroke-linecap="round"
+              stroke-linejoin="miter"
+            >
+              <g id="SVGRepo_bgCarrier" stroke-width="0" />
+
+              <g id="SVGRepo_iconCarrier">
+                <circle cx="12" cy="12" r="10" />
+
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  [attr.fill]="dizionarioColori.get(convertToFormControl(mil.get('semaforoMil')).value)"
+                  opacity="1"
+                />
+              </g>
+            </svg> -->
+            <img [src]="'/content/images/semaforo/' + convertToFormControl(mil.get('semaforoMil')).value + '.png'" width="24px" />
+          </td>
+          <td
+            class="text-center bold"
+            *ngIf="convertToFormControl(mil.get('semaforoMil')).value == 'bianco'"
+            data-bs-toggle="tooltip"
+            data-bs-placement="bottom"
+            [title]="convertToFormControl(mil.get('semaforoMilDes')).value"
+          >
+            N.D.
+          </td>
+          <td class="prevent-select" *ngIf="!convertToFormControl(mil.get('semaforoMil'))?.value"></td>
+          <td>
+            <input type="text" [formControl]="convertToFormControl(mil.get('notmil'))" />
+            <small
+              class="form-text text-danger"
+              *ngIf="convertToFormControl(mil.get('notmil')).errors?.['pattern']"
+              jhiTranslate="entity.validation.sanitize"
+              >Ci sono caratteri non validi</small
+            >
+          </td>
+          <td>
+            <span tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Elimina riga">
+              <svg
+                class="icon icon-danger icon-sm"
+                data-bs-toggle="modal"
+                href="#modalCancel"
+                *ngIf="convertToFormControl(mil.get('isNew')).value == false"
+                (click)="this.curIndex = i"
+              >
+                <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use>
+              </svg>
+            </span>
+            <span tabindex="0" data-bs-toggle="tooltip" data-bs-placement="top" title="Elimina riga">
+              <svg class="icon icon-danger icon-sm" *ngIf="convertToFormControl(mil.get('isNew')).value == true" (click)="onRemoveRow(i)">
+                <use href="content/bootstrap-italia/svg/sprites.svg#it-delete"></use>
+              </svg>
+            </span>
+            <span
+              tabindex="0"
+              class="mx-4"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Inserisci riga"
+              *ngIf="i == formMil.controls.length - 1"
+            >
+              <svg class="icon icon-primary icon-md" (click)="addMil()">
+                <use href="content/bootstrap-italia/svg/sprites.svg#it-plus"></use>
+              </svg>
+            </span>
+          </td>
+          <!-- Modale conferma cancellazione -->
+          <div class="modal fade" tabindex="-2" role="dialog" id="modalCancel" aria-labelledby="exampleModalTitle">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h2 class="modal-title h5 no_toc" id="exampleModalTitle1" jhiTranslate="modals.warn">Attenzione</h2>
+                </div>
+                <div class="modal-body">
+                  <p jhiTranslate="modals.canc">Confermi la cancellazione?</p>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-danger btn-sm" data-bs-dismiss="modal" type="button" jhiTranslate="modals.cancel">Annulla</button>
+                  <button
+                    class="btn btn-success btn-sm"
+                    data-bs-dismiss="modal"
+                    type="button"
+                    (click)="onRemoveRow(i)"
+                    jhiTranslate="modals.confirm"
+                  >
+                    Ok
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
