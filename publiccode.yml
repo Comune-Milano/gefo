@@ -1,80 +1,51 @@
-# This repository adheres to the publiccode.yml standard by including this 
-# metadata file that makes public software easily discoverable.
-# More info at https://github.com/italia/publiccode.yml
-
-publiccodeYmlVersion: '0.4'
+publiccodeYmlVersion: 0.5.0
+name: Ge. Fo.- Gestionale Fondi
+url: https://github.com/Comune-Milano/gefo.git
+landingURL: https://github.com/Comune-Milano/gefo
+platforms:
+  - web
 categories:
   - project-management
   - resource-management
   - accounting
-dependsOn:
-  open:
-    - name: PostgreSQL
-      optional: false
-      versionMin: '12'
-    - name: Keycloak
-      versionMin: "18.0.0"
-      optional: false  
-description:
-  it:
-    longDescription: |+
-      Applicativo per la gestione dei progetti finanziati.
-
-      E' possibile gestire differenti tipi di finanziamento: finanziamenti Europei, finanziamenti nazionali,...
-
-      Le principali caratteristiche sono:
-
-      - anagrafica dei progetti: un unico punto in cui censire i progetti
-
-      - possibilita' di integrazione con la contabilit‡: per ogni progetto sar‡ possibile definirne gli impegni, gli accertamenti.
-
-      - monitoraggio dei progetti: per ogni progetto sar‡ possibile gestire l'avanzamento definendo le fasi e le milestone
-
-      - rimborso: viene fornito un supporto per predisporre le domande di rimborso
-
-    shortDescription: |-
-      Applicativo per la gestione dei progetti finanziati.
+organisation:
+  uri: urn:x-italian-pa:c_f205
+  name: Comune di Milano
 developmentStatus: stable
-intendedAudience:
-  scope:
-    - government
-  countries:
-    - it
-it:
-  conforme:
-    gdpr: true
-    lineeGuidaDesign: true
-    misureMinimeSicurezza: true
-    modelloInteroperabilita: true
-  countryExtensionVersion: '0.2'
-  piattaforme:
-    anpr: false
-    cie: false
-    pagopa: false
-    spid: false
-  riuso:
-    codiceIPA: c_f205
-landingURL: 'https://github.com/Comune-Milano/gefo'
+softwareType: standalone/web
+description:
+  en:
+    shortDescription: Applicativo per la gestione dei progetti finanziati.
+    longDescription: >-
+      Applicativo per la gestione dei progetti finanziati.
+
+            E' possibile gestire differenti tipi di finanziamento: finanziamenti Europei, finanziamenti nazionali,...
+
+            Le principali caratteristiche sono:
+
+            - anagrafica dei progetti: un unico punto in cui censire i progetti
+
+            - possibilita' di integrazione con la contabilit√†: per ogni progetto sar√† possibile definirne gli impegni, gli accertamenti.
+
+            - monitoraggio dei progetti: per ogni progetto sar√† possibile gestire l'avanzamento definendo le fasi e le milestone
+
+            - rimborso: viene fornito un supporto per predisporre le domande di rimborso
+    features:
+      - anagrafica dei progetti
+      - possibilita' di integrazione con la contabilit√†
+      - monitoraggio dei progetti
+      - rimborso
 legal:
   license: EUPL-1.2
-  mainCopyrightOwner: Comune di Milano
-  repoOwner: Comune di Milano
-logo: https://raw.githubusercontent.com/Comune-Milano/gefo/main/dmifonFE/src/main/webapp/content/images/logo-header-no-txt.png
+maintenance:
+  type: contract
+  contractors:
+    - name: Datamanagement Italia S.p.A
+      until: 2027-12-31
+      email: Ugo.Basili@datamanagementitalia.it
+      website: https://www.datamanagementitalia.it/
 localisation:
+  localisationReady: false
   availableLanguages:
     - it
-  localisationReady: true
-maintenance:
-  contacts:
-    - email: ited@comune.milano.it
-      name: Sara Belli - Direzione ITED - Comune di Milano 
-  contractors:
-    - name: 'Ugo Basili - Datamanagement Italia S.p.A'
-      until: '2028-12-31'
-  type: contract
-name: Ge. Fo.- Gestionale Fondi
-platforms:
-  - linux
-releaseDate: '2023-11-13'
-softwareType: standalone/web
-url: 'https://github.com/Comune-Milano/gefo.git'
+    - en
