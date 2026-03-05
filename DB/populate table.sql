@@ -55,14 +55,14 @@ INSERT INTO dmifonamm.amm_par (codice,valore,usr_create,dt_create,usr_lstupd,dt_
 	 ('APIUriToken','https://xxxxx.it/',NULL,NULL,NULL,NULL);
 INSERT INTO dmifonamm.amm_par (codice,valore,usr_create,dt_create,usr_lstupd,dt_lstupd) VALUES
 	 ('RicercaImpeAcce','API',NULL,NULL,NULL,NULL),
-	 ('PrevisioneBloccata','false',NULL,NULL,'davide.dellagodenza','2025-11-25 12:03:55.66'),
+	 ('PrevisioneBloccata','false',NULL,NULL,'davide.xxxxxxx','2025-11-25 12:03:55.66'),
 	 ('APIPrecedenteClientSecret','xxxxxxx',NULL,NULL,NULL,NULL);
 	 
 INSERT INTO dmifonamm.amm_ent (codent,nome,descrizione,usr_create,dt_create,usr_lstupd,dt_lstupd) VALUES
 	 ('1','COMUNE DI xxxx','Comune di xxxx',NULL,NULL,NULL,NULL);
 	 
 INSERT INTO dmifonamm.amm_dir (coddir,desdir,usr_create,dt_create,usr_lstupd,dt_lstupd) VALUES
-	 ('D','DIREZIONE XXXX','ADMIN   ','2022-08-23 10:42:42.721923','davide.dellagodenza','2023-08-30 09:48:54.477');
+	 ('D','DIREZIONE XXXX','ADMIN   ','2022-08-23 10:42:42.721923','davide.xxxxxxx','2023-08-30 09:48:54.477');
 	 
 INSERT INTO dmifonamm.amm_fun (id,nome,descrizione,usr_create,dt_create,usr_lstupd,dt_lstupd) VALUES
 	 (1,'/ricercaDirezione','Direzione elenco','ADMIN   ','2026-01-23 16:03:11.059239','ADMIN   ','2026-01-23 16:03:11.059239'),
@@ -404,8 +404,8 @@ INSERT INTO dmifonamm.amm_fun (id,nome,descrizione,usr_create,dt_create,usr_lstu
 	 (307,'/cancellaProgettoCumulativo','','ADMIN   ','2026-01-23 16:03:21.072045','ADMIN   ','2026-01-23 16:03:21.072045');
 
 INSERT INTO dmifonamm.amm_ruo (id,codruo,desruo,usr_create,dt_create,usr_lstupd,dt_lstupd) VALUES
-	 (32,'profiloOI','Profilo O. I.','davide.dellagodenza','2023-02-08 10:49:10.321','davide.dellagodenza','2023-02-08 10:49:10.321'),
-	 (2,'admin','Amministratori',NULL,NULL,'vitopio.prete','2022-10-21 15:05:48.76');
+	 (32,'profiloOI','Profilo O. I.','davide.xxxxxxx','2023-02-08 10:49:10.321','davide.xxxxxxx','2023-02-08 10:49:10.321'),
+	 (2,'admin','Amministratori',NULL,NULL,'vitopio.xxxx','2022-10-21 15:05:48.76');
 
 INSERT INTO dmifonamm.amm_per (id,id_ruo,id_fun,usr_create,dt_create,usr_lstupd,dt_lstupd) VALUES
 	 (308,2,1,'ADMIN   ','2026-01-23 16:03:21.100224','ADMIN   ','2026-01-23 16:03:21.100224'),
@@ -1079,8 +1079,8 @@ INSERT INTO dmifonamm.amm_ute (id,username,nome,cognome,email,emailalt,usr_creat
 	 (108,'achille.rossi','Achille','Rossi','','',NULL,NULL,NULL,NULL,true);
 
 INSERT INTO dmifonamm.amm_uteruo (id,id_ute,id_ruo,flgdef,tipcondat,id_dir,usr_create,dt_create,usr_lstupd,dt_lstupd) VALUES
-	 (93,108,32,'S','C',2,NULL,NULL,'davide.dellagodenza','2023-11-30 07:58:38.115'),
-	 (132,108,2,'N','C',1,NULL,NULL,'davide.dellagodenza','2023-11-30 07:58:38.115');
+	 (93,108,32,'S','C',2,NULL,NULL,'davide.xxxxxxx','2023-11-30 07:58:38.115'),
+	 (132,108,2,'N','C',1,NULL,NULL,'davide.xxxxxxx','2023-11-30 07:58:38.115');
 
 INSERT INTO dmifonpro.pro_lisval (id,tiplis,vallis,usr_create,dt_create,usr_lstupd,dt_lstupd,codlis,ordlis,tipliscol,codliscol) VALUES
 	 (1,'AVAFASINT','In progettazione','ADMIN   ','2022-10-07 16:50:01.328696','ADMIN   ','2022-10-07 16:50:01.328696',NULL,0,NULL,NULL),
@@ -1094,7 +1094,7 @@ INSERT INTO dmifonpro.pro_lisval (id,tiplis,vallis,usr_create,dt_create,usr_lstu
 	 (18,'AVASTAANT','Richiesta','ADMIN   ','2023-01-04 11:58:23.735614','ADMIN   ','2023-01-04 11:58:23.735614',NULL,0,NULL,NULL),
 	 (19,'AVASTAANT','Incassata','ADMIN   ','2023-01-04 11:58:23.843735','ADMIN   ','2023-01-04 11:58:23.843735',NULL,0,NULL,NULL);
 INSERT INTO dmifonpro.pro_lisval (id,tiplis,vallis,usr_create,dt_create,usr_lstupd,dt_lstupd,codlis,ordlis,tipliscol,codliscol) VALUES
-	 (41,'AVAFASINT','prova','davide.dellagodenza','2023-07-28 07:34:28.978','davide.dellagodenza','2023-07-28 07:34:28.978',NULL,0,NULL,NULL),
+	 (41,'AVAFASINT','prova','davide.xxxxxxx','2023-07-28 07:34:28.978','davide.xxxxxxx','2023-07-28 07:34:28.978',NULL,0,NULL,NULL),
 	 (42,'TIPSTAFIN','Finanziato','ADMIN   ','2023-10-02 09:34:37.720623','ADMIN   ','2023-10-02 09:34:37.720623','A',0,NULL,NULL),
 	 (43,'TIPSTAFIN','Candidato','ADMIN   ','2023-10-02 09:34:37.769585','ADMIN   ','2023-10-02 09:34:37.769585','P',0,NULL,NULL),
 	 (44,'TIPSTAFIN','Non finanziato','ADMIN   ','2023-10-02 09:34:37.796966','ADMIN   ','2023-10-02 09:34:37.796966','N',0,NULL,NULL),
@@ -1229,7 +1229,7 @@ INSERT INTO dmifonpro.pro_lisval (id,tiplis,vallis,usr_create,dt_create,usr_lstu
 	 (190,'AVACRI','Bassa','ADMIN   ','2024-08-19 17:06:15.219631','ADMIN   ','2024-08-19 17:06:15.219631','',1,NULL,NULL),
 	 (195,'RUOENT','Partner Associato','ADMIN   ','2024-10-23 14:12:44.631307','ADMIN   ','2024-10-23 14:12:44.631307','',0,NULL,NULL),
 	 (196,'RUOENT','Lettera di supporto','ADMIN   ','2024-10-24 14:37:12.997436','ADMIN   ','2024-10-24 14:37:12.997436','',0,NULL,NULL),
-	 (197,'TIPDDR','Anticipazione/acconto','ADMIN   ','2024-12-04 12:58:00.542569','davide.dellagodenza','2025-02-10 11:41:45.89','A',0,NULL,NULL),
+	 (197,'TIPDDR','Anticipazione/acconto','ADMIN   ','2024-12-04 12:58:00.542569','davide.xxxxxxx','2025-02-10 11:41:45.89','A',0,NULL,NULL),
 	 (201,'TIPDETCON','Libero','ADMIN   ','2025-02-13 14:56:11.44797','ADMIN   ','2025-02-13 14:56:11.44797','',0,NULL,NULL),
 	 (202,'TIPDETCON','Avanzo','ADMIN   ','2025-02-13 14:56:11.44797','ADMIN   ','2025-02-13 14:56:11.44797','',0,NULL,NULL),
 	 (194,'STAIND','in ritardo','ADMIN   ','2024-08-27 15:06:59.877817','ADMIN   ','2024-08-27 15:06:59.877817','',3,NULL,NULL),
@@ -1330,7 +1330,7 @@ INSERT INTO dmifonpro.pro_tipfas (id,desfas,tipcon,ordfas,usr_create,dt_create,u
 	 (78,'HOUSE - Chiusura attività','N',4,'ADMIN   ','2024-07-29 08:51:06.136207','ADMIN   ','2024-07-29 08:51:06.136207','C');
 
 INSERT INTO dmifonpro.pro_tipfin (id,livuno,livdue,livtre,livqua,livcin,codtipfin,destipfin,usr_create,dt_create,usr_lstupd,dt_lstupd,livsei,impdot,id_lisvalstatipfin) VALUES
-	 (1,1,0,0,0,0,'EU','FINANZIAMENTO EUROPEO','ADMIN   ','2023-05-10 12:21:22.078684','davide.dellagodenza','2024-09-03 14:42:14.804',0,10000000.730,187);
+	 (1,1,0,0,0,0,'EU','FINANZIAMENTO EUROPEO','ADMIN   ','2023-05-10 12:21:22.078684','davide.xxxxxxx','2024-09-03 14:42:14.804',0,10000000.730,187);
 	 
 INSERT INTO dmifonpro.pro_tipimp (id,destipimp,flgtipimp,flgdicui,ordtipimp,usr_create,dt_create,usr_lstupd,dt_lstupd) VALUES
 	 (1,'RIS. DEL FONDO','F','N',1,'ADMIN   ','2022-06-29 15:42:37.952818','ADMIN   ','2022-06-29 15:42:37.952818'),
