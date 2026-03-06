@@ -48,7 +48,7 @@ spring:
   liquibase:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
     contexts: dev, faker
-    url: jdbc:postgresql://10.6.1.0:5432/dmifon
+    url: jdbc:postgresql://0.0.0.0:5432/dmifon
   messages:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard
   r2dbc:

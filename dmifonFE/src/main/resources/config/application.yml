@@ -186,7 +186,7 @@ spring:
       client:
         provider:
           oidc:
-            issuer-uri: https://www.datamanagementitalia.it/iamdemo/auth/realms/DmiFon
+            issuer-uri: https://www.xxxxx.it/iamdemo/auth/realms/DmiFon
         registration:
           oidc:
             client-id: dmifon
